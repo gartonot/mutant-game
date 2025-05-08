@@ -1,33 +1,19 @@
+
+import { startGameLoop } from './core/GameLoop'
+import type { GameObject } from './core/GameLoop';
+import { Player } from './entities/player/Player';
 // Создаём канвас
 const canvas = document.getElementById('game') as HTMLCanvasElement;
 // Получаем контекст
 const ctx = canvas.getContext('2d')!;
+// Указываем размеры канваса отнсоительно экрана
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
 
-// Цикл игры
-const gameLoop = () => {
-  update();
-  render();
-  requestAnimationFrame(gameLoop);
-}
 
-const update = () => {
-  // 
-}
+// Создаём игрока
+const player: GameObject = new Player();
 
-const render = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Тестовая отрисовка
-  ctx.fillStyle = 'white';
-  ctx.font = '20px sans-serif';
-  ctx.fillText('Mutant game', 20, 30);
-}
-
-gameLoop();
+// Запускаем цикл игры, передаём в него игрока
+startGameLoop(ctx, [player]);
