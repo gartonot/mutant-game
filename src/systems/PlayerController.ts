@@ -1,4 +1,5 @@
 import { InputSystem } from '@/systems/InputSystem.ts';
+import clamp from '@/utils/clamp.ts';
 import { Bullet } from '@entities/bullet/Bullet.ts';
 import type { IDrawable, IUpdatable } from '@entities/interfaces/interfaces.ts';
 import { Player } from '@entities/player/Player.ts';
@@ -52,9 +53,10 @@ export class PlayerController implements IUpdatable, IDrawable {
         if (this.input.isPressed('a')) this.player.x -= this.player.speed;
         if (this.input.isPressed('d')) this.player.x += this.player.speed;
 
+        // Запрет выхода на сцену
         const playerRadius = this.player.radius;
-        this.player.x = Math.max(playerRadius, Math.min(window.innerWidth - playerRadius, this.player.x));
-        this.player.y = Math.max(playerRadius, Math.min(window.innerHeight - playerRadius, this.player.y));
+        this.player.x = clamp(this.player.x, playerRadius, window.innerWidth - playerRadius);
+        this.player.y = clamp(this.player.y, playerRadius, window.innerHeight - playerRadius);
     }
 
     private handleShooting() {
