@@ -2,6 +2,7 @@
 import { startGameLoop } from '@/core/GameLoop';
 import { InputSystem } from '@/systems/InputSystem.ts';
 import { PlayerController } from '@/systems/PlayerController.ts';
+import { FpsCounter } from '@/ui/FpsCounter.ts';
 import { Player } from '@entities/player/Player';
 
 // Создаём канвас
@@ -16,5 +17,8 @@ const player = new Player();
 const input = new InputSystem();
 const playerController = new PlayerController(player, input);
 
+// Счётчик FPS
+const fpsCounter = new FpsCounter();
+
 // Запускаем цикл игры, передаём в него игрока
-startGameLoop(ctx, [playerController]);
+startGameLoop(ctx, [playerController, fpsCounter]);
