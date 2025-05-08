@@ -2,8 +2,19 @@ export class InputSystem {
     private keys: Set<string> = new Set();
 
     constructor() {
-        window.addEventListener('keydown', (e) => this.keys.add(e.key));
-        window.addEventListener('keyup', (e) => this.keys.delete(e.key));
+        window.addEventListener('blur', () => {
+            this.keys.clear();
+        });
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) this.keys.clear();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            this.keys.add(e.key);
+        });
+        document.addEventListener('keyup', (e) => {
+            this.keys.delete(e.key);
+        });
     }
 
     isPressed(key: string) {
