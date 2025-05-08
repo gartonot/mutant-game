@@ -1,19 +1,20 @@
 
-import { startGameLoop } from '@/core/GameLoop'
-import type { GameObject } from '@/core/GameLoop';
+import { startGameLoop } from '@/core/GameLoop';
+import { InputSystem } from '@/systems/InputSystem.ts';
+import { PlayerController } from '@/systems/PlayerController.ts';
 import { Player } from '@entities/player/Player';
+
 // Создаём канвас
 const canvas = document.getElementById('game') as HTMLCanvasElement;
-// Получаем контекст
 const ctx = canvas.getContext('2d')!;
-// Указываем размеры канваса отнсоительно экрана
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 
-
-// Создаём игрока
-const player: GameObject = new Player();
+// Создаём игрока и его поведение
+const player = new Player();
+const input = new InputSystem();
+const playerController = new PlayerController(player, input);
 
 // Запускаем цикл игры, передаём в него игрока
-startGameLoop(ctx, [player]);
+startGameLoop(ctx, [playerController]);
