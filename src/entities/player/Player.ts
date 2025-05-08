@@ -1,12 +1,12 @@
 import type { IUpdatable, IDrawable } from '@entities/interfaces/interfaces';
 
 export class Player implements IUpdatable, IDrawable {
-    x = 100;
-    y = 100;
+    x;
+    y;
     speed = 5;
     radius = 20;
 
-    constructor(x = 100, y = 100) {
+    constructor(x = window.innerWidth / 2, y = window.innerHeight / 2) {
         this.x = x;
         this.y = y;
     }

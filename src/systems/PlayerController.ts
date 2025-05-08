@@ -51,6 +51,10 @@ export class PlayerController implements IUpdatable, IDrawable {
         if (this.input.isPressed('s')) this.player.y += this.player.speed;
         if (this.input.isPressed('a')) this.player.x -= this.player.speed;
         if (this.input.isPressed('d')) this.player.x += this.player.speed;
+
+        const playerRadius = this.player.radius;
+        this.player.x = Math.max(playerRadius, Math.min(window.innerWidth - playerRadius, this.player.x));
+        this.player.y = Math.max(playerRadius, Math.min(window.innerHeight - playerRadius, this.player.y));
     }
 
     private handleShooting() {
