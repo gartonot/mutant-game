@@ -1,4 +1,4 @@
-import type { IUpdatable, IDrawable } from '../interfaces/interfaces.ts';
+import type { IUpdatable, IDrawable } from '@entities/interfaces/interfaces';
 
 export class Player implements IUpdatable, IDrawable {
     x = 100;

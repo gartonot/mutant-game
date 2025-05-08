@@ -1,4 +1,4 @@
-import type { IUpdatable, IDrawable } from '../entities/interfaces';
+import type { IUpdatable, IDrawable } from '@entities/interfaces/interfaces';
 
 export type GameObject = IUpdatable & IDrawable;
 

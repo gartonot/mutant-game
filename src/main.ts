@@ -1,7 +1,7 @@
 
-import { startGameLoop } from './core/GameLoop'
-import type { GameObject } from './core/GameLoop';
-import { Player } from './entities/player/Player';
+import { startGameLoop } from '@/core/GameLoop'
+import type { GameObject } from '@/core/GameLoop';
+import { Player } from '@entities/player/Player';
 // Создаём канвас
 const canvas = document.getElementById('game') as HTMLCanvasElement;
 // Получаем контекст
