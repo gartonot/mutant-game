@@ -55,8 +55,20 @@ export class PlayerController implements IUpdatable, IDrawable {
 
         // Запрет выхода на сцену
         const playerRadius = this.player.radius;
-        this.player.x = clamp(this.player.x, playerRadius, window.innerWidth - playerRadius);
-        this.player.y = clamp(this.player.y, playerRadius, window.innerHeight - playerRadius);
+        this.player.x = this.clampBorderScene(
+            this.player.x,
+            playerRadius,
+            window.innerWidth - playerRadius,
+        );
+        this.player.y = this.clampBorderScene(
+            this.player.y,
+            playerRadius,
+            window.innerHeight - playerRadius,
+        );
+    }
+
+    private clampBorderScene(currentPosition: number, minPosition: number, maxPosition: number) {
+        return clamp(currentPosition, minPosition, maxPosition);
     }
 
     private handleShooting() {
