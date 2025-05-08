@@ -10,14 +10,14 @@ export class InputSystem {
         });
 
         document.addEventListener('keydown', (e) => {
-            this.keys.add(e.key);
+            this.keys.add(e.code);
         });
         document.addEventListener('keyup', (e) => {
-            this.keys.delete(e.key);
+            this.keys.delete(e.code);
         });
     }
 
-    isPressed(key: string) {
-        return this.keys.has(key);
+    isPressed(code: string) {
+        return this.keys.has(code);
     }
 }

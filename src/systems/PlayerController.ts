@@ -1,3 +1,4 @@
+import { InputKey } from '@/constants/InputKey.ts';
 import { InputSystem } from '@/systems/InputSystem.ts';
 import clamp from '@/utils/clamp.ts';
 import { Bullet } from '@entities/bullet/Bullet.ts';
@@ -48,10 +49,10 @@ export class PlayerController implements IUpdatable, IDrawable {
 
     // Передвижение игрока
     private handleMovement() {
-        if (this.input.isPressed('w')) this.player.y -= this.player.speed;
-        if (this.input.isPressed('s')) this.player.y += this.player.speed;
-        if (this.input.isPressed('a')) this.player.x -= this.player.speed;
-        if (this.input.isPressed('d')) this.player.x += this.player.speed;
+        if (this.input.isPressed(InputKey.W)) this.player.y -= this.player.speed;
+        if (this.input.isPressed(InputKey.S)) this.player.y += this.player.speed;
+        if (this.input.isPressed(InputKey.A)) this.player.x -= this.player.speed;
+        if (this.input.isPressed(InputKey.D)) this.player.x += this.player.speed;
 
         // Запрет выхода на сцену
         const playerRadius = this.player.radius;
