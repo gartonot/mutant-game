@@ -16,12 +16,7 @@ export class Player implements IUpdatable, IDrawable {
     }
 
     update = (): void => {
-        // TODO: Вынести в отдельный метод
-        // Перемещение
-        if (this.keys.has('w')) this.y -= this.speed;
-        if (this.keys.has('s')) this.y += this.speed;
-        if (this.keys.has('a')) this.x -= this.speed;
-        if (this.keys.has('d')) this.x += this.speed;
+        this.handleMovement();
     };
 
     // Отрисовка персонажа
@@ -30,5 +25,14 @@ export class Player implements IUpdatable, IDrawable {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fill();
+    };
+
+
+    // Логика игрока
+    handleMovement = (): void => {
+        if (this.keys.has('w')) this.y -= this.speed;
+        if (this.keys.has('s')) this.y += this.speed;
+        if (this.keys.has('a')) this.x -= this.speed;
+        if (this.keys.has('d')) this.x += this.speed;
     };
 }
