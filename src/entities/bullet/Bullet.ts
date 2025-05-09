@@ -4,13 +4,13 @@ export class Bullet implements IGameEntity {
     x: number;
     y: number;
     radius = 4;
-    speed = 10;
+    speed: number;
     dx: number;
     dy: number;
     isDead = false;
     damage: number;
 
-    constructor(startX: number, startY: number, angle: number, damage: number = 1) {
+    constructor(startX: number, startY: number, angle: number, damage: number = 1, speed = 10) {
         // Координаты пули
         this.x = startX;
         this.y = startY;
@@ -19,6 +19,7 @@ export class Bullet implements IGameEntity {
         this.dy = Math.sin(angle);
 
         this.damage = damage;
+        this.speed = speed;
     }
 
     update() {

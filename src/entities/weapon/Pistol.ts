@@ -5,6 +5,7 @@ export class Pistol extends Gun {
         super({
             damage: 1,
             fireRate: 500,
+            speed: 10,
         });
     }
 }
