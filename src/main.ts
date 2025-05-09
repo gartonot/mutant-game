@@ -21,6 +21,15 @@ const gameWorld = new GameWorld(controller);
 // Счётчик FPS
 const fpsCounter = new FpsCounter();
 
+// Преключение оружия, заменить в будущем на UI
+window.addEventListener('keydown', (event) => {
+    if (event.key === '1') {
+        controller.switchToPistol();
+    } else if (event.key === '2') {
+        controller.switchToShotgun();
+    }
+});
+
 // Запускаем цикл игры, передаём в него игрока
 startGameLoop(ctx, [
     gameWorld,

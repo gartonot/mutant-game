@@ -4,15 +4,18 @@ import { clamp } from '@/utils/math.ts';
 import { Bullet } from '@entities/bullet/Bullet.ts';
 import type { IGameEntity } from '@entities/interfaces';
 import { Player } from '@entities/player/Player.ts';
+import type { IWeapon } from '@entities/weapon/IWeapon.ts';
+import { Pistol } from '@entities/weapon/Pistol.ts';
+import { Shotgun } from '@entities/weapon/Shotgun.ts';
 
 export class PlayerController implements IGameEntity {
     private player: Player;
     private input: InputSystem;
     private bullets: Bullet[] = [];
+    private playerWeapon: IWeapon = new Pistol();
 
     private isShooting = false;
     private lastShotTime = 0;
-    private shootCoolDown = 500;
 
     private mouseX = 0;
     private mouseY = 0;
@@ -88,7 +91,7 @@ export class PlayerController implements IGameEntity {
         if (!this.isShooting) return;
 
         const now = Date.now();
-        if (now - this.lastShotTime >= this.shootCoolDown) {
+        if (now - this.lastShotTime >= this.playerWeapon.fireRate) {
             this.lastShotTime = now;
             this.shoot();
         }
@@ -99,7 +102,19 @@ export class PlayerController implements IGameEntity {
             this.mouseY - this.player.y,
             this.mouseX - this.player.x,
         );
-        const bullet = new Bullet(this.player.x, this.player.y, angle);
-        this.bullets.push(bullet);
+        const fired = this.playerWeapon.fire(this.player.x, this.player.y, angle);
+        if (Array.isArray(fired)) {
+            this.bullets.push(...fired);
+        } else {
+            this.bullets.push(fired);
+        }
+    }
+
+    switchToPistol() {
+        this.playerWeapon = new Pistol();
+    }
+
+    switchToShotgun() {
+        this.playerWeapon = new Shotgun();
     }
 }
