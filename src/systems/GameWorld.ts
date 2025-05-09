@@ -1,9 +1,9 @@
 import { Enemy } from '@/entities/enemy/Enemy';
-import type { IUpdatable, IDrawable } from '@/entities/interfaces/interfaces';
 import { CollisionSystem } from '@/systems/CollisionSystem';
 import { PlayerController } from '@/systems/PlayerController';
+import type { IGameEntity } from '@entities/interfaces';
 
-export class GameWorld implements IUpdatable, IDrawable {
+export class GameWorld implements IGameEntity {
     private enemies: Enemy[] = [];
     private controller: PlayerController;
     private collisionSystem: CollisionSystem = new CollisionSystem();

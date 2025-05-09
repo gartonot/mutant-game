@@ -1,6 +1,6 @@
-import type { IDrawable, IUpdatable } from '@entities/interfaces/interfaces.ts';
+import type { IGameEntity } from '@entities/interfaces';
 
-export class Bullet implements IUpdatable, IDrawable {
+export class Bullet implements IGameEntity {
     x: number;
     y: number;
     radius = 4;

@@ -2,10 +2,10 @@ import { InputKey } from '@/constants/InputKey.ts';
 import { InputSystem } from '@/systems/InputSystem.ts';
 import { clamp } from '@/utils/math.ts';
 import { Bullet } from '@entities/bullet/Bullet.ts';
-import type { IDrawable, IUpdatable } from '@entities/interfaces/interfaces.ts';
+import type { IGameEntity } from '@entities/interfaces';
 import { Player } from '@entities/player/Player.ts';
 
-export class PlayerController implements IUpdatable, IDrawable {
+export class PlayerController implements IGameEntity {
     private player: Player;
     private input: InputSystem;
     private bullets: Bullet[] = [];

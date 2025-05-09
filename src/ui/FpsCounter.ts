@@ -1,6 +1,6 @@
-import type { IUpdatable, IDrawable } from '@entities/interfaces/interfaces';
+import type { IGameEntity } from '@entities/interfaces';
 
-export class FpsCounter implements IUpdatable, IDrawable {
+export class FpsCounter implements IGameEntity {
     private frameCount = 0;
     private lastTime = performance.now();
     private fps = 0;

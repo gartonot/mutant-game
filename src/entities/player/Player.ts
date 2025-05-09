@@ -1,6 +1,6 @@
-import type { IUpdatable, IDrawable } from '@entities/interfaces/interfaces';
+import type { IGameEntity } from '@entities/interfaces';
 
-export class Player implements IUpdatable, IDrawable {
+export class Player implements IGameEntity {
     x;
     y;
     speed = 5;

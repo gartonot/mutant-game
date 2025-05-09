@@ -1,7 +1,7 @@
 import { distance } from '@/utils/math';
-import type { IDrawable, IUpdatable } from '@entities/interfaces/interfaces';
+import type { IGameEntity } from '@entities/interfaces';
 
-export class Enemy implements IUpdatable, IDrawable {
+export class Enemy implements IGameEntity {
     x: number;
     y: number;
     radius = 15;

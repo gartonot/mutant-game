@@ -1,7 +1,6 @@
-import type { IUpdatable, IDrawable } from '@entities/interfaces/interfaces';
+import type { IUpdatable, IDrawable } from '@/entities/interfaces';
 
 export type GameObject = IUpdatable & IDrawable;
-
 
 // Запускаем цикл игры
 export const startGameLoop = (
