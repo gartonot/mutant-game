@@ -1,5 +1,6 @@
 import { distance } from '@/utils/math';
 import { ENEMY_CONFIGS } from '@entities/enemy/enemyConfigs.ts';
+import { EnemyType } from '@entities/enemy/EnemyType.ts';
 import type { IEnemyConfig, IGameEntity } from '@entities/interfaces';
 
 export class Enemy implements IGameEntity {
@@ -13,7 +14,7 @@ export class Enemy implements IGameEntity {
     private health: number;
     private isDeadFlag: boolean = false;
 
-    constructor(x: number, y: number, type: string = 'grunt') {
+    constructor(x: number, y: number, type: EnemyType = EnemyType.GRUNT) {
         this.x = x;
         this.y = y;
 
