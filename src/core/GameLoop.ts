@@ -6,7 +6,7 @@ export type GameObject = IUpdatable & IDrawable;
 export const startGameLoop = (
     ctx: CanvasRenderingContext2D,
     gameObjects: GameObject[], 
-): void => {
+) => {
     const loop = () => {
         updateAll(gameObjects);
         renderAll(ctx, gameObjects);
@@ -17,7 +17,7 @@ export const startGameLoop = (
 };
 
 // Обновляем все объекты
-const updateAll = (objects: GameObject[]): void => {
+const updateAll = (objects: GameObject[]) => {
     for (const obj of objects) {
         obj.update();
     }
@@ -27,7 +27,7 @@ const updateAll = (objects: GameObject[]): void => {
 const renderAll = (
     ctx: CanvasRenderingContext2D,
     objects: GameObject[],
-): void => {
+) => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     for (const obj of objects) {
