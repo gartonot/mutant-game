@@ -1,18 +1,28 @@
 import { distance } from '@/utils/math';
-import type { IGameEntity } from '@entities/interfaces';
+import { ENEMY_CONFIGS } from '@entities/enemy/enemyConfigs.ts';
+import type { IEnemyConfig, IGameEntity } from '@entities/interfaces';
 
 export class Enemy implements IGameEntity {
     x: number;
     y: number;
     radius = 15;
     speed = 2;
-    isDead = false;
     private targetX = 0;
     private targetY = 0;
+    private config: IEnemyConfig;
+    private health: number;
+    private isDeadFlag: boolean = false;
 
-    constructor(x: number, y: number) {
+    constructor(x: number, y: number, type: string = 'grunt') {
         this.x = x;
         this.y = y;
+
+        this.config = ENEMY_CONFIGS[type];
+        this.health = this.config.maxHealth;
+    }
+
+    get isDead(): boolean {
+        return this.isDeadFlag;
     }
 
     update() {
@@ -33,8 +43,22 @@ export class Enemy implements IGameEntity {
         this.targetY = y;
     }
 
+    // Проверяем столкновение
     checkCollision(bulletX: number, bulletY: number, bulletRadius: number) {
         return distance(this.x, this.y, bulletX, bulletY) < this.radius + bulletRadius;
+    }
+
+
+    // Получение урона
+    public receiveDamage(amount: number): void {
+        this.health -= amount;
+        if (this.health <= 0) {
+            this.die();
+        }
+    }
+
+    private die(): void {
+        this.isDeadFlag = true;
     }
 }
 

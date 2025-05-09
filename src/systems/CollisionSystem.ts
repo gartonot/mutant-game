@@ -6,7 +6,8 @@ export class CollisionSystem {
         for (const enemy of enemies) {
             for (const bullet of bullets) {
                 if (enemy.checkCollision(bullet.x, bullet.y, bullet.radius)) {
-                    enemy.isDead = true;
+                    // Добавляем урон по врагу
+                    enemy.receiveDamage(bullet.damage);
                     bullet.isDead = true;
                 }
             }
