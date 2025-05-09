@@ -15,8 +15,8 @@ canvas.height = window.innerHeight;
 // Создаём игрока и его поведение
 const player = new Player();
 const input = new InputSystem();
-const playerController = new PlayerController(player, input);
-const gameWorld = new GameWorld(playerController);
+const controller = new PlayerController(player, input);
+const gameWorld = new GameWorld(controller);
 
 // Счётчик FPS
 const fpsCounter = new FpsCounter();
@@ -24,6 +24,6 @@ const fpsCounter = new FpsCounter();
 // Запускаем цикл игры, передаём в него игрока
 startGameLoop(ctx, [
     gameWorld,
-    playerController,
+    controller,
     fpsCounter,
 ]);
