@@ -47,6 +47,18 @@ export class PlayerController implements IUpdatable, IDrawable {
         this.bullets.forEach(bullet => bullet.draw(ctx));
     }
 
+    public getBullets() {
+        return this.bullets;
+    }
+
+    public setBullets(bullets: Bullet[]) {
+        this.bullets = bullets;
+    }
+
+    public getPlayer() {
+        return this.player;
+    }
+
     // Передвижение игрока
     private handleMovement() {
         if (this.input.isPressed(InputKey.W)) this.player.y -= this.player.speed;
