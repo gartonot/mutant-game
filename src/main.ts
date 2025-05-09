@@ -1,5 +1,5 @@
-
 import { startGameLoop } from '@/core/GameLoop';
+import { GameWorld } from '@/systems/GameWorld.ts';
 import { InputSystem } from '@/systems/InputSystem.ts';
 import { PlayerController } from '@/systems/PlayerController.ts';
 import { FpsCounter } from '@/ui/FpsCounter.ts';
@@ -16,9 +16,14 @@ canvas.height = window.innerHeight;
 const player = new Player();
 const input = new InputSystem();
 const playerController = new PlayerController(player, input);
+const gameWorld = new GameWorld(playerController);
 
 // Счётчик FPS
 const fpsCounter = new FpsCounter();
 
 // Запускаем цикл игры, передаём в него игрока
-startGameLoop(ctx, [playerController, fpsCounter]);
+startGameLoop(ctx, [
+    gameWorld,
+    playerController,
+    fpsCounter,
+]);
