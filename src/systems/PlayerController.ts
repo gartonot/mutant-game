@@ -1,6 +1,6 @@
 import { InputKey } from '@/constants/InputKey.ts';
 import { InputSystem } from '@/systems/InputSystem.ts';
-import clamp from '@/utils/clamp.ts';
+import { clamp } from '@/utils/math.ts';
 import { Bullet } from '@entities/bullet/Bullet.ts';
 import type { IDrawable, IUpdatable } from '@entities/interfaces/interfaces.ts';
 import { Player } from '@entities/player/Player.ts';
