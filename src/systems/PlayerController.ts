@@ -23,8 +23,8 @@ export class PlayerController implements IGameEntity {
     // Выбор оружия
     private availableWeapons: IWeapon[] = [
         new Pistol(),
-        new Rifle(),
         new Shotgun(),
+        new Rifle(),
     ];
     private selectedWeaponIndex: number = 0;
 
