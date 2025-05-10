@@ -25,6 +25,7 @@ const fpsCounter = new FpsCounter();
 window.addEventListener('keydown', (event) => {
     if (event.key === '1') controller.switchToWeapon(0);
     if (event.key === '2') controller.switchToWeapon(1);
+    if (event.key === '3') controller.switchToWeapon(2);
 });
 
 // Запускаем цикл игры, передаём в него игрока

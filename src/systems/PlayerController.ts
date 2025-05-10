@@ -6,6 +6,7 @@ import type { IGameEntity } from '@entities/interfaces';
 import { Player } from '@entities/player/Player.ts';
 import type { IWeapon } from '@entities/weapon/IWeapon.ts';
 import { Pistol } from '@entities/weapon/Pistol.ts';
+import { Rifle } from '@entities/weapon/Rifle.ts';
 import { Shotgun } from '@entities/weapon/Shotgun.ts';
 
 export class PlayerController implements IGameEntity {
@@ -20,7 +21,11 @@ export class PlayerController implements IGameEntity {
     private mouseY = 0;
 
     // Выбор оружия
-    private availableWeapons: IWeapon[] = [new Pistol(), new Shotgun()];
+    private availableWeapons: IWeapon[] = [
+        new Pistol(),
+        new Rifle(),
+        new Shotgun(),
+    ];
     private selectedWeaponIndex: number = 0;
 
     constructor(player: Player, input: InputSystem) {
