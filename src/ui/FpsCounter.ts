@@ -22,6 +22,6 @@ export class FpsCounter implements IGameEntity {
 
         ctx.fillStyle = '#ffffff';
         ctx.font = '14px monospace';
-        ctx.fillText(`FPS: ${this.fps}`, 10, 20);
+        ctx.fillText(`FPS: ${this.fps}`, 30, 20);
     };
 }
