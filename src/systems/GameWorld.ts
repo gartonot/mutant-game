@@ -1,9 +1,11 @@
 import { Enemy } from '@/entities/enemy/Enemy';
+import { EnemySpawner } from '@/entities/enemy/EnemySpawner';
 import { CollisionSystem } from '@/systems/CollisionSystem';
 import { PlayerController } from '@/systems/PlayerController';
 import type { IGameEntity } from '@entities/interfaces';
 
 export class GameWorld implements IGameEntity {
+    private enemySpawner: EnemySpawner = new EnemySpawner();
     private enemies: Enemy[] = [];
     private controller: PlayerController;
     private collisionSystem: CollisionSystem = new CollisionSystem();
@@ -11,8 +13,11 @@ export class GameWorld implements IGameEntity {
     constructor(controller: PlayerController) {
         this.controller = controller;
 
-        // Первый враг для старта
-        this.enemies.push(new Enemy(0, 0));
+        setInterval(() => {
+            const newEnemies = this.enemySpawner.spawnWave();
+            this.enemies.push(...newEnemies);
+            console.log(`Новая волна: ${newEnemies.length} врагов`);
+        }, 5000);
     }
 
     update() {
