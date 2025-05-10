@@ -12,13 +12,16 @@ export class PlayerController implements IGameEntity {
     private player: Player;
     private input: InputSystem;
     private bullets: Bullet[] = [];
-    private playerWeapon: IWeapon = new Pistol();
 
     private isShooting = false;
     private lastShotTime = 0;
 
     private mouseX = 0;
     private mouseY = 0;
+
+    // Выбор оружия
+    private availableWeapons: IWeapon[] = [new Pistol(), new Shotgun()];
+    private selectedWeaponIndex: number = 0;
 
     constructor(player: Player, input: InputSystem) {
         this.player = player;
@@ -46,8 +49,37 @@ export class PlayerController implements IGameEntity {
     draw(ctx: CanvasRenderingContext2D) {
         // Рисуем персонажа
         this.player.draw(ctx);
+
         // Рисуем пули
         this.bullets.forEach(bullet => bullet.draw(ctx));
+
+        // Рисуем название текущего оружия
+        const squareSize = 40;
+        const padding = 10;
+        const offsetX = window.innerWidth - (this.availableWeapons.length * (squareSize + padding));
+        const offsetY = window.innerHeight - squareSize - padding;
+
+        this.availableWeapons.forEach((weapon, index) => {
+            const x = offsetX + index * (squareSize + padding);
+            const y = offsetY;
+
+            // Рамка
+            ctx.strokeStyle = index === this.selectedWeaponIndex ? '#f1c40f' : '#fff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x, y, squareSize, squareSize);
+
+            // Буква внутри квадрата
+            ctx.fillStyle = '#fff';
+            ctx.font = '20px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            const label = weapon.name[0]; // Первая буква имени
+            ctx.fillText(label, x + squareSize / 2, y + squareSize / 2);
+        });
+    }
+
+    private get selectedWeapon(): IWeapon {
+        return this.availableWeapons[this.selectedWeaponIndex];
     }
 
     public getBullets() {
@@ -91,7 +123,7 @@ export class PlayerController implements IGameEntity {
         if (!this.isShooting) return;
 
         const now = Date.now();
-        if (now - this.lastShotTime >= this.playerWeapon.fireRate) {
+        if (now - this.lastShotTime >= this.selectedWeapon.fireRate) {
             this.lastShotTime = now;
             this.shoot();
         }
@@ -102,7 +134,7 @@ export class PlayerController implements IGameEntity {
             this.mouseY - this.player.y,
             this.mouseX - this.player.x,
         );
-        const fired = this.playerWeapon.fire(this.player.x, this.player.y, angle);
+        const fired = this.selectedWeapon.fire(this.player.x, this.player.y, angle);
         if (Array.isArray(fired)) {
             this.bullets.push(...fired);
         } else {
@@ -110,11 +142,9 @@ export class PlayerController implements IGameEntity {
         }
     }
 
-    switchToPistol() {
-        this.playerWeapon = new Pistol();
-    }
-
-    switchToShotgun() {
-        this.playerWeapon = new Shotgun();
+    public switchToWeapon(index: number): void {
+        if (index >= 0 && index < this.availableWeapons.length) {
+            this.selectedWeaponIndex = index;
+        }
     }
 }

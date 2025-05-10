@@ -23,11 +23,8 @@ const fpsCounter = new FpsCounter();
 
 // Преключение оружия, заменить в будущем на UI
 window.addEventListener('keydown', (event) => {
-    if (event.key === '1') {
-        controller.switchToPistol();
-    } else if (event.key === '2') {
-        controller.switchToShotgun();
-    }
+    if (event.key === '1') controller.switchToWeapon(0);
+    if (event.key === '2') controller.switchToWeapon(1);
 });
 
 // Запускаем цикл игры, передаём в него игрока
