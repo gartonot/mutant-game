@@ -10,11 +10,13 @@ interface IProps {
 const DEFAULT_SPEED = 10;
 
 export class Gun implements IWeapon {
+    public name: string;
     public damage: number;
     public fireRate: number;
     public speed: number;
 
-    constructor(props: IProps) {
+    constructor(name: string, props: IProps) {
+        this.name = name;
         this.damage = props.damage;
         this.fireRate = props.fireRate;
         this.speed = props.speed ?? DEFAULT_SPEED;

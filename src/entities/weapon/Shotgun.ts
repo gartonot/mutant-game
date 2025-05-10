@@ -3,7 +3,7 @@ import { Gun } from '@entities/weapon/Gun.ts';
 
 export class Shotgun extends Gun {
     constructor() {
-        super({
+        super('Дробовик', {
             damage: 5,
             fireRate: 1000,
         });
