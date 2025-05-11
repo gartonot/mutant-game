@@ -7,9 +7,14 @@ export class CollisionSystem {
         for (const enemy of enemies) {
             for (const bullet of bullets) {
                 if (enemy.checkCollision(bullet.x, bullet.y, bullet.radius)) {
+                    // Угол попадания относительно врага и пули
+                    const angle = Math.atan2(enemy.y - bullet.y, enemy.x - bullet.x);
+
                     // Добавляем урон по врагу
-                    enemy.receiveDamage(bullet.damage);
+                    enemy.receiveDamage(bullet.damage, angle);
+                    // Регистрируем попадание
                     controller.registerHit();
+                    // Пуля умирает
                     bullet.isDead = true;
                 }
             }

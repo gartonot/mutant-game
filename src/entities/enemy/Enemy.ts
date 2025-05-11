@@ -57,8 +57,16 @@ export class Enemy implements IGameEntity {
 
 
     // Получение урона
-    public receiveDamage(amount: number): void {
+    public receiveDamage(amount: number, hitAngle?: number): void {
         this.health -= amount;
+
+        // Отталкивание при попадании, если передан угол
+        if (hitAngle !== undefined) {
+            const pushBackDistance = 10;
+            this.x += Math.cos(hitAngle) * pushBackDistance;
+            this.y += Math.sin(hitAngle) * pushBackDistance;
+        }
+
         if (this.health <= 0) {
             this.die();
         }
