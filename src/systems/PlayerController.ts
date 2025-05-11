@@ -1,4 +1,5 @@
 import { InputSystem } from '@/systems/InputSystem.ts';
+import { PlayerInputController } from '@/systems/Player/PlayerInputController';
 import { PlayerMovementController } from '@/systems/Player/PlayerMovementController.ts';
 import { PlayerWeaponController } from '@/systems/Player/PlayerWeaponController.ts';
 import { Bullet } from '@entities/bullet/Bullet.ts';
@@ -9,21 +10,11 @@ export class PlayerController implements IGameEntity {
     private player: Player;
     private movementController: PlayerMovementController;
     private weaponController = new PlayerWeaponController();
-
-    private isShooting = false;
-    private mouseX = 0;
-    private mouseY = 0;
+    private inputController = new PlayerInputController();
 
     constructor(player: Player, input: InputSystem) {
         this.player = player;
         this.movementController = new PlayerMovementController(player, input);
-
-        window.addEventListener('mousedown', () => this.isShooting = true);
-        window.addEventListener('mouseup', () => this.isShooting = false);
-        window.addEventListener('mousemove', (e) => {
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
-        });
     }
 
     update() {
@@ -75,9 +66,10 @@ export class PlayerController implements IGameEntity {
     }
 
     private handleShooting() {
-        if (!this.isShooting) return;
+        if (!this.inputController.getIsShooting()) return;
 
-        const angle = Math.atan2(this.mouseY - this.player.y, this.mouseX - this.player.x);
+        const mousePos = this.inputController.getMousePosition();
+        const angle = Math.atan2(mousePos.y - this.player.y, mousePos.x - this.player.x);
         this.weaponController.tryShoot(this.player.x, this.player.y, angle);
     }
 }
