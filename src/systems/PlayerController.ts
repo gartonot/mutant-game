@@ -20,6 +20,11 @@ export class PlayerController implements IGameEntity {
     private mouseX = 0;
     private mouseY = 0;
 
+    // Для счётчика меткости
+    private totalShotsFired = 0;
+    private totalResolvedShots = 0; // Завершившиеся пули
+    private totalHits = 0; // Попадания
+
     // Выбор оружия
     private availableWeapons: IWeapon[] = [
         new Pistol(),
@@ -48,7 +53,13 @@ export class PlayerController implements IGameEntity {
 
         this.bullets.forEach(bullet => bullet.update());
         // Удаляем пули, ушедшие за экран
-        this.bullets = this.bullets.filter(bullet => !bullet.isDead);
+        this.bullets = this.bullets.filter(bullet => {
+            if (bullet.isDead) {
+                this.registerMiss();
+            }
+
+            return !bullet.isDead;
+        });
     }
 
     draw(ctx: CanvasRenderingContext2D) {
@@ -81,6 +92,13 @@ export class PlayerController implements IGameEntity {
             const label = weapon.name[0]; // Первая буква имени
             ctx.fillText(label, x + squareSize / 2, y + squareSize / 2);
         });
+
+        // Меткость
+        ctx.fillStyle = '#fff';
+        ctx.font = '16px Arial';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(`Меткость: ${this.getAccuracy()}%`, window.innerWidth - 20, window.innerHeight - 80);
     }
 
     private get selectedWeapon(): IWeapon {
@@ -140,6 +158,10 @@ export class PlayerController implements IGameEntity {
             this.mouseX - this.player.x,
         );
         const fired = this.selectedWeapon.fire(this.player.x, this.player.y, angle);
+
+        // Фиксируем попадаение и увеличиваем счётчик
+        this.totalShotsFired += Array.isArray(fired) ? fired.length : 1;
+
         if (Array.isArray(fired)) {
             this.bullets.push(...fired);
         } else {
@@ -151,5 +173,22 @@ export class PlayerController implements IGameEntity {
         if (index >= 0 && index < this.availableWeapons.length) {
             this.selectedWeaponIndex = index;
         }
+    }
+
+    public registerHit(): void {
+        this.totalHits++;
+        this.totalResolvedShots++;
+    }
+
+    public registerMiss(): void {
+        this.totalResolvedShots++;
+    }
+
+    public getAccuracy(): number {
+        if (this.totalResolvedShots === 0) {
+            return 100;
+        }
+
+        return Math.min(100, Math.round((this.totalHits / this.totalResolvedShots) * 100));
     }
 }

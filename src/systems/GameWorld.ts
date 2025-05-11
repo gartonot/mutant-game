@@ -32,6 +32,7 @@ export class GameWorld implements IGameEntity {
         this.collisionSystem.checkBulletEnemyCollisions(
             this.controller.getBullets(),
             this.enemies,
+            this.controller,
         );
 
         // Очищаем умерших врагов из массива
