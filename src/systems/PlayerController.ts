@@ -1,24 +1,22 @@
-import { InputKey } from '@/constants/InputKey.ts';
 import { InputSystem } from '@/systems/InputSystem.ts';
+import { PlayerMovementController } from '@/systems/Player/PlayerMovementController.ts';
 import { PlayerWeaponController } from '@/systems/Player/PlayerWeaponController.ts';
-import { clamp } from '@/utils/math.ts';
 import { Bullet } from '@entities/bullet/Bullet.ts';
 import type { IGameEntity } from '@entities/interfaces';
 import { Player } from '@entities/player/Player.ts';
 
 export class PlayerController implements IGameEntity {
     private player: Player;
-    private input: InputSystem;
+    private movementController: PlayerMovementController;
     private weaponController = new PlayerWeaponController();
 
     private isShooting = false;
-
     private mouseX = 0;
     private mouseY = 0;
 
     constructor(player: Player, input: InputSystem) {
         this.player = player;
-        this.input = input;
+        this.movementController = new PlayerMovementController(player, input);
 
         window.addEventListener('mousedown', () => this.isShooting = true);
         window.addEventListener('mouseup', () => this.isShooting = false);
@@ -30,7 +28,7 @@ export class PlayerController implements IGameEntity {
 
     update() {
         // Обрабаотчик передвижения
-        this.handleMovement();
+        this.movementController.update();
         // Обработчик выстрела
         this.handleShooting();
 
@@ -50,10 +48,8 @@ export class PlayerController implements IGameEntity {
     draw(ctx: CanvasRenderingContext2D) {
         // Рисуем персонажа
         this.player.draw(ctx);
-
         // Рисуем пули
         this.weaponController.getBullets().forEach(bullet => bullet.draw(ctx));
-
         // Рисуем название текущего оружия
         this.weaponController.drawWeaponUI(ctx);
     }
@@ -76,19 +72,6 @@ export class PlayerController implements IGameEntity {
 
     public registerHit(): void {
         this.weaponController.registerHit();
-    }
-
-    // Передвижение игрока
-    private handleMovement() {
-        if (this.input.isPressed(InputKey.W)) this.player.y -= this.player.speed;
-        if (this.input.isPressed(InputKey.S)) this.player.y += this.player.speed;
-        if (this.input.isPressed(InputKey.A)) this.player.x -= this.player.speed;
-        if (this.input.isPressed(InputKey.D)) this.player.x += this.player.speed;
-
-        // Запрет выхода на сцену
-        const playerRadius = this.player.radius;
-        this.player.x = clamp(this.player.x, playerRadius, window.innerWidth - playerRadius);
-        this.player.y = clamp(this.player.y, playerRadius, window.innerHeight - playerRadius);
     }
 
     private handleShooting() {
