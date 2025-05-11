@@ -1,6 +1,7 @@
 import { InputSystem } from '@/systems/InputSystem.ts';
 import { PlayerInputController } from '@/systems/Player/PlayerInputController.ts';
 import { PlayerMovementController } from '@/systems/Player/PlayerMovementController.ts';
+import { PlayerStatsController } from '@/systems/Player/PlayerStatsController';
 import { PlayerWeaponController } from '@/systems/Player/PlayerWeaponController.ts';
 import { Bullet } from '@entities/bullet/Bullet.ts';
 import type { IGameEntity } from '@entities/interfaces';
@@ -11,6 +12,8 @@ export class PlayerController implements IGameEntity {
     private movementController: PlayerMovementController;
     private weaponController = new PlayerWeaponController();
     private inputController = new PlayerInputController();
+    private statsController = new PlayerStatsController();
+
 
     constructor(player: Player, input: InputSystem) {
         this.player = player;
@@ -28,7 +31,7 @@ export class PlayerController implements IGameEntity {
 
         const newBullets = bullets.filter(bullet => {
             if (bullet.isDead) {
-                this.weaponController.registerMiss();
+                this.statsController.registerMiss();
             }
             return !bullet.isDead;
         });
@@ -43,6 +46,8 @@ export class PlayerController implements IGameEntity {
         this.weaponController.getBullets().forEach(bullet => bullet.draw(ctx));
         // Рисуем название текущего оружия
         this.weaponController.drawWeaponUI(ctx);
+        // Отрисовка статистики
+        this.statsController.drawStats(ctx);
     }
 
     public getBullets() {
@@ -62,7 +67,7 @@ export class PlayerController implements IGameEntity {
     }
 
     public registerHit(): void {
-        this.weaponController.registerHit();
+        this.statsController.registerHit();
     }
 
     private handleShooting() {
@@ -70,6 +75,18 @@ export class PlayerController implements IGameEntity {
 
         const mousePos = this.inputController.getMousePosition();
         const angle = Math.atan2(mousePos.y - this.player.y, mousePos.x - this.player.x);
-        this.weaponController.tryShoot(this.player.x, this.player.y, angle);
+
+        const fired = this.weaponController.tryShoot(this.player.x, this.player.y, angle);
+
+        // Регистрируем выстрел
+        this.statsController.registerShot(Array.isArray(fired) ? fired.length : 1);
+    }
+
+    public registerKill(): void {
+        this.statsController.registerKill();
+    }
+
+    public getKillCount() {
+        return this.statsController.getKillCount();
     }
 }

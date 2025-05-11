@@ -14,10 +14,6 @@ export class PlayerWeaponController {
     private selectedWeaponIndex = 0;
     private lastShotTime = 0;
 
-    private totalShotsFired = 0;
-    private totalResolvedShots = 0;
-    private totalHits = 0;
-
     // Получение пуль
     public getBullets(): Bullet[] {
         return this.bullets;
@@ -45,32 +41,12 @@ export class PlayerWeaponController {
         if (now - this.lastShotTime >= this.selectedWeapon.fireRate) {
             this.lastShotTime = now;
             const fired = this.selectedWeapon.fire(x, y, angle);
-            this.totalShotsFired += Array.isArray(fired) ? fired.length : 1;
             if (Array.isArray(fired)) {
                 this.bullets.push(...fired);
             } else {
                 this.bullets.push(fired);
             }
         }
-    }
-
-    // Регистрируем попадание
-    public registerHit(): void {
-        this.totalHits++;
-        this.totalResolvedShots++;
-    }
-
-    // Регистрируем промах
-    public registerMiss(): void {
-        this.totalResolvedShots++;
-    }
-
-    // Получить меткость
-    public getAccuracy(): number {
-        if (this.totalResolvedShots === 0) {
-            return 100;
-        }
-        return Math.min(100, Math.round((this.totalHits / this.totalResolvedShots) * 100));
     }
 
     public drawWeaponUI(ctx: CanvasRenderingContext2D): void {
@@ -94,12 +70,5 @@ export class PlayerWeaponController {
             ctx.textBaseline = 'middle';
             ctx.fillText(weapon.name[0], x + squareSize / 2, y + squareSize / 2);
         });
-
-        // Параметр меткости
-        ctx.fillStyle = '#fff';
-        ctx.font = '16px Arial';
-        ctx.textAlign = 'right';
-        ctx.textBaseline = 'bottom';
-        ctx.fillText(`Меткость: ${this.getAccuracy()}%`, window.innerWidth - 20, window.innerHeight - 80);
     }
 }

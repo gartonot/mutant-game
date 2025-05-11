@@ -32,7 +32,14 @@ export class GameWorld implements IGameEntity {
         this.collisionSystem.checkBulletEnemyCollisions(this.controller, this.enemies);
 
         // Очищаем умерших врагов из массива
-        this.enemies = this.enemies.filter(enemy => !enemy.isDead);
+        this.enemies = this.enemies.filter(enemy => {
+            if (enemy.isDead) {
+                this.controller.registerKill();
+                return false;
+            }
+            return true;
+        });
+
         // Получаем список живых пуль, для обновления
         const liveBullets = this.controller.getBullets().filter(bullet => !bullet.isDead);
         this.controller.setBullets(liveBullets);
