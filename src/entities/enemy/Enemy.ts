@@ -78,13 +78,13 @@ export class Enemy implements IGameEntity {
     private getVisualStyle() {
         switch (this.config.type) {
             case 'grunt':
-                return { color: '#e74c3c', radius: 15 };
+                return { color: '#3d361a', radius: 15 };
             case 'tank':
-                return { color: '#2ecc71', radius: 25 };
+                return { color: '#093908', radius: 25 };
             case 'boss':
-                return { color: '#8e44ad', radius: 40 };
+                return { color: '#d22e2e', radius: 40 };
             default:
-                return { color: '#e74c3c', radius: 15 };
+                return { color: '#3d361a', radius: 15 };
         }
     }
 }
