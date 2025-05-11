@@ -29,11 +29,7 @@ export class GameWorld implements IGameEntity {
         });
 
         // Проверяем есть ли столкновении врага и пули, если да - для обоих флаг isDead = true
-        this.collisionSystem.checkBulletEnemyCollisions(
-            this.controller.getBullets(),
-            this.enemies,
-            this.controller,
-        );
+        this.collisionSystem.checkBulletEnemyCollisions(this.controller, this.enemies);
 
         // Очищаем умерших врагов из массива
         this.enemies = this.enemies.filter(enemy => !enemy.isDead);
