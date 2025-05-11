@@ -6,7 +6,7 @@ export class Pistol extends Gun {
             damage: 1,
             fireRate: 600,
             speed: 10,
-            pushBackForce: 10,
+            pushBackForce: 20,
         });
     }
 }
