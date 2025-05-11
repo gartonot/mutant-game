@@ -6,25 +6,34 @@ export class PlayerStatsController {
 
     // Отрисовка статистики
     public drawStats(ctx: CanvasRenderingContext2D): void {
-        const killText = `Убито врагов: ${this.killCount}`;
-        const accuracyText = `Меткость: ${this.getAccuracy()}%`;
+        const killText = `Убито ${this.killCount}`;
+        const accuracyText = `Меткость ${this.getAccuracy()}%`;
 
-        ctx.font = '16px Arial';
+        ctx.font = 'bold 16px Arial';
+        const paddingY = 8;
+        const lineHeight = 20;
 
-        const killTextWidth = ctx.measureText(killText).width;
-        const accuracyTextWidth = ctx.measureText(accuracyText).width;
-        const maxWidth = Math.max(killTextWidth, accuracyTextWidth);
+        // Фиксированная ширина подложки для удлинения
+        const boxWidth = 200;
+        const boxHeight = lineHeight * 2 + paddingY * 2;
 
+        const x = window.innerWidth - boxWidth; // Прижать к правому краю без отступов
+        const y = 20;
+
+        // Градиентная подложка от правого края влево
+        const gradient = ctx.createLinearGradient(window.innerWidth, 0, x, 0);
+        gradient.addColorStop(0, 'rgba(204, 200, 44, 0.4)');
+        gradient.addColorStop(1, 'rgba(204, 200, 44, 0)');
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x, y, boxWidth, boxHeight);
+
+        // Текст
         ctx.fillStyle = '#fff';
-        ctx.textAlign = 'left';
+        ctx.textAlign = 'right';
         ctx.textBaseline = 'top';
-
-        const x = window.innerWidth - maxWidth - 20;
-        const y1 = 20;
-        const y2 = y1 + 20;
-
-        ctx.fillText(killText, x, y1);
-        ctx.fillText(accuracyText, x, y2);
+        ctx.fillText(killText, window.innerWidth - 10, y + paddingY);
+        ctx.fillText(accuracyText, window.innerWidth - 10, y + paddingY + lineHeight);
     }
 
     // Регистрируем кол-во убитых
