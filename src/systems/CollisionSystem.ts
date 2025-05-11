@@ -11,7 +11,7 @@ export class CollisionSystem {
                     const angle = Math.atan2(enemy.y - bullet.y, enemy.x - bullet.x);
 
                     // Добавляем урон по врагу
-                    enemy.receiveDamage(bullet.damage, angle);
+                    enemy.receiveDamage(bullet.damage, angle, bullet.pushBackForce);
                     // Регистрируем попадание
                     controller.registerHit();
                     // Пуля умирает

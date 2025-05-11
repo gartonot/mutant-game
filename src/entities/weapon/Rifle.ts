@@ -6,6 +6,7 @@ export class Rifle extends Gun {
             damage: 2.5,
             fireRate: 300,
             speed: 10,
+            pushBackForce: 17,
         });
     }
 }

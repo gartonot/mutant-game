@@ -6,6 +6,7 @@ export class Shotgun extends Gun {
         super('Дробовик', {
             damage: 5,
             fireRate: 1000,
+            pushBackForce: 25,
         });
 
     }
