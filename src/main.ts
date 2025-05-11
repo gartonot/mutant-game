@@ -34,3 +34,14 @@ startGameLoop(ctx, [
     controller,
     fpsCounter,
 ]);
+
+const resizeCanvas = () => {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = `${window.innerWidth}px`;
+    canvas.style.height = `${window.innerHeight}px`;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+};
+window.addEventListener('resize', resizeCanvas);
