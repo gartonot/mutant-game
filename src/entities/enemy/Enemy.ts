@@ -8,6 +8,7 @@ export class Enemy implements IGameEntity {
     y: number;
     radius = 15;
     speed = 2;
+    color = '';
     private targetX = 0;
     private targetY = 0;
     private config: IEnemyConfig;
@@ -20,6 +21,11 @@ export class Enemy implements IGameEntity {
 
         this.config = ENEMY_CONFIGS[type];
         this.health = this.config.maxHealth;
+
+        // Визуальные отличия врагов
+        const style = this.getVisualStyle();
+        this.radius = style.radius;
+        this.color = style.color;
     }
 
     get isDead(): boolean {
@@ -33,7 +39,7 @@ export class Enemy implements IGameEntity {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = '#e74c3c';
+        ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -60,6 +66,19 @@ export class Enemy implements IGameEntity {
 
     private die(): void {
         this.isDeadFlag = true;
+    }
+
+    private getVisualStyle() {
+        switch (this.config.type) {
+            case 'grunt':
+                return { color: '#e74c3c', radius: 15 };
+            case 'tank':
+                return { color: '#2ecc71', radius: 25 };
+            case 'boss':
+                return { color: '#8e44ad', radius: 40 };
+            default:
+                return { color: '#e74c3c', radius: 15 };
+        }
     }
 }
 
