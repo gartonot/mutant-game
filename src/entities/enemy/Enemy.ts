@@ -7,7 +7,7 @@ export class Enemy implements IGameEntity {
     x: number;
     y: number;
     radius = 15;
-    speed = 2;
+    speed = 1;
     color = '';
     private targetX = 0;
     private targetY = 0;
