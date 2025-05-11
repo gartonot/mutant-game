@@ -1,5 +1,5 @@
 import { InputSystem } from '@/systems/InputSystem.ts';
-import { PlayerInputController } from '@/systems/Player/PlayerInputController';
+import { PlayerInputController } from '@/systems/Player/PlayerInputController.ts';
 import { PlayerMovementController } from '@/systems/Player/PlayerMovementController.ts';
 import { PlayerWeaponController } from '@/systems/Player/PlayerWeaponController.ts';
 import { Bullet } from '@entities/bullet/Bullet.ts';

@@ -1,6 +1,6 @@
 import { Bullet } from '@/entities/bullet/Bullet';
 import { Enemy } from '@/entities/enemy/Enemy';
-import type { PlayerController } from '@/systems/PlayerController.ts';
+import type { PlayerController } from '@/systems/Player/PlayerController';
 
 export class CollisionSystem {
     checkBulletEnemyCollisions(bullets: Bullet[], enemies: Enemy[], controller: PlayerController): void {

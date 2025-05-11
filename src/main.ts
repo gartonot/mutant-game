@@ -1,7 +1,7 @@
 import { startGameLoop } from '@/core/GameLoop';
 import { GameWorld } from '@/systems/GameWorld.ts';
 import { InputSystem } from '@/systems/InputSystem.ts';
-import { PlayerController } from '@/systems/PlayerController.ts';
+import { PlayerController } from '@/systems/Player/PlayerController';
 import { FpsCounter } from '@/ui/FpsCounter.ts';
 import { Player } from '@entities/player/Player';
 

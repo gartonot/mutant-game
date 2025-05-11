@@ -1,7 +1,7 @@
 import { Enemy } from '@/entities/enemy/Enemy';
 import { EnemySpawner } from '@/entities/enemy/EnemySpawner';
 import { CollisionSystem } from '@/systems/CollisionSystem';
-import { PlayerController } from '@/systems/PlayerController';
+import { PlayerController } from '@/systems/Player/PlayerController';
 import type { IGameEntity } from '@entities/interfaces';
 
 export class GameWorld implements IGameEntity {
