@@ -40,9 +40,39 @@ export class GameWorld implements IGameEntity {
         // Получаем список живых пуль, для обновления
         const liveBullets = this.controller.getBullets().filter(bullet => !bullet.isDead);
         this.controller.setBullets(liveBullets);
+
+        // Враги не входят друг в друга
+        this.resolveEnemyCollisions();
     }
 
     draw(ctx: CanvasRenderingContext2D) {
         this.enemies.forEach(enemy => enemy.draw(ctx));
+    }
+
+    private resolveEnemyCollisions(): void {
+        for (let i = 0; i < this.enemies.length; i++) {
+            for (let j = i + 1; j < this.enemies.length; j++) {
+                const a = this.enemies[i];
+                const b = this.enemies[j];
+
+                const dx = b.x - a.x;
+                const dy = b.y - a.y;
+                const distanceSq = dx * dx + dy * dy;
+                const minDist = a.radius + b.radius;
+
+                if (distanceSq < minDist * minDist) {
+                    const distance = Math.sqrt(distanceSq) || 1;
+                    const overlap = (minDist - distance) / 2;
+
+                    const offsetX = (dx / distance) * overlap;
+                    const offsetY = (dy / distance) * overlap;
+
+                    a.x -= offsetX;
+                    a.y -= offsetY;
+                    b.x += offsetX;
+                    b.y += offsetY;
+                }
+            }
+        }
     }
 }
