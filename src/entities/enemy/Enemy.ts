@@ -15,6 +15,11 @@ export class Enemy implements IGameEntity {
     private health: number;
     private isDeadFlag: boolean = false;
 
+    // Урон врагов
+    public damage: number = 2; // базовый урон
+    private lastHitTime: number = 0; // время последнего удара
+    private hitCooldown: number = 500; // задержка между ударами вргов
+
     constructor(x: number, y: number, type: EnemyType = EnemyType.GRUNT) {
         this.x = x;
         this.y = y;
@@ -86,6 +91,15 @@ export class Enemy implements IGameEntity {
             default:
                 return { color: '#3d361a', radius: 15 };
         }
+    }
+
+    canDamage(): boolean {
+        const now = performance.now();
+        if (now - this.lastHitTime > this.hitCooldown) {
+            this.lastHitTime = now;
+            return true;
+        }
+        return false;
     }
 }
 

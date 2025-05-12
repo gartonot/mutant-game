@@ -30,6 +30,9 @@ export class GameWorld implements IGameEntity {
             enemy.setTarget(this.controller.getPlayer().x, this.controller.getPlayer().y);
             // Обновляем поведение врага, чтоб он двигался к игроку
             enemy.update();
+
+            // Проверка столкновения врага с игроком
+            this.playerCollisionsEnemy(enemy);
         });
 
         // Проверяем есть ли столкновении врага и пули, если да - для обоих флаг isDead = true
@@ -63,7 +66,7 @@ export class GameWorld implements IGameEntity {
         this.uiRenderer.draw(ctx);
     }
 
-    private resolveEnemyCollisions(): void {
+    private resolveEnemyCollisions() {
         for (let i = 0; i < this.enemies.length; i++) {
             for (let j = i + 1; j < this.enemies.length; j++) {
                 const a = this.enemies[i];
@@ -86,6 +89,31 @@ export class GameWorld implements IGameEntity {
                     b.x += offsetX;
                     b.y += offsetY;
                 }
+            }
+        }
+    }
+
+    private playerCollisionsEnemy(enemy: Enemy) {
+        const dx = enemy.x - this.controller.getPlayer().x;
+        const dy = enemy.y - this.controller.getPlayer().y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < enemy.radius + this.controller.getPlayer().radius && enemy.canDamage()) {
+            // Наносим игроку урон от врага
+            this.controller.getPlayer().takeDamage(enemy.damage);
+
+            // Проверяем сталкновение врага и игрока
+            if (distance < enemy.radius + this.controller.getPlayer().radius) {
+                this.controller.getPlayer().takeDamage(enemy.damage);
+
+                // Вычисляем силу отталкивания
+                const overlap = (enemy.radius + this.controller.getPlayer().radius) - distance;
+                const pushX = (dx / distance) * overlap;
+                const pushY = (dy / distance) * overlap;
+
+                // Отталкиваем врага от игрока
+                enemy.x += pushX;
+                enemy.y += pushY;
             }
         }
     }
