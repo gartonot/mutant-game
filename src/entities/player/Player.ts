@@ -34,6 +34,9 @@ export class Player implements IGameEntity {
     }
 
     heal(amount: number) {
-        this.currentHp = Math.min(this.maxHp, this.currentHp + amount);
+        this.currentHp += amount;
+        if (this.currentHp > this.maxHp) {
+            this.currentHp = this.maxHp;
+        }
     }
 }

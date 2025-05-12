@@ -28,16 +28,18 @@ export class HealthBar {
 
         // Медленный хвост
         const tailSpeed = 2;
-        if (this.animatedHp > this.animatedHpTarget) {
-            this.animatedHp -= tailSpeed * (this.animatedHp - this.animatedHpTarget) * delta;
-            if (this.animatedHp < this.animatedHpTarget) this.animatedHp = this.animatedHpTarget;
+        if (this.animatedHp !== this.animatedHpTarget) {
+            const deltaHp = this.animatedHpTarget - this.animatedHp;
+            this.animatedHp += deltaHp * tailSpeed * delta;
+            if (Math.abs(this.animatedHp - this.animatedHpTarget) < 0.1) this.animatedHp = this.animatedHpTarget;
         }
 
         // Быстрый основной бар
         const barSpeed = 25; // Быстрее, ~0.2 сек
-        if (this.displayedHp > this.currentHp) {
-            this.displayedHp -= barSpeed * (this.displayedHp - this.currentHp) * delta;
-            if (this.displayedHp < this.currentHp) this.displayedHp = this.currentHp;
+        if (this.displayedHp !== this.currentHp) {
+            const deltaHp = this.currentHp - this.displayedHp;
+            this.displayedHp += deltaHp * barSpeed * delta;
+            if (Math.abs(this.displayedHp - this.currentHp) < 0.1) this.displayedHp = this.currentHp;
         }
 
         const centerX = window.innerWidth / 2;
