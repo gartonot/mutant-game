@@ -35,7 +35,7 @@ export class PlayerWeaponController {
         }
     }
 
-    public tryShoot(x: number, y: number, angle: number): void {
+    public tryShoot(x: number, y: number, angle: number) {
         const now = performance.now();
         const weapon = this.selectedWeapon;
 
@@ -48,10 +48,14 @@ export class PlayerWeaponController {
             const fired = weapon.fire(x, y, angle);
             if (Array.isArray(fired)) {
                 this.bullets.push(...fired);
+                return fired;
             } else {
                 this.bullets.push(fired);
+                return [fired];
             }
         }
+
+        return null;
     }
 
     public drawWeaponUI(ctx: CanvasRenderingContext2D): void {
