@@ -6,8 +6,12 @@ export class Player implements IGameEntity {
     speed = 5;
     radius = 20;
 
+    // Здоровье игрока
+    maxHp = 100;
+    currentHp = 100;
+
+
     constructor(x = window.innerWidth / 2, y = window.innerHeight / 2) {
-        // Устанавливаем координаты игрока
         this.x = x;
         this.y = y;
     }
@@ -20,5 +24,13 @@ export class Player implements IGameEntity {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fill();
+    }
+
+    takeDamage(amount: number) {
+        this.currentHp = Math.max(0, this.currentHp - amount);
+    }
+
+    heal(amount: number) {
+        this.currentHp = Math.min(this.maxHp, this.currentHp + amount);
     }
 }

@@ -1,6 +1,7 @@
 import { Enemy } from '@/entities/enemy/Enemy';
 import { CollisionSystem } from '@/systems/CollisionSystem';
 import { PlayerController } from '@/systems/Player/PlayerController';
+import { UIRenderer } from '@/systems/UIRenderer';
 import { WaveSystem } from '@/systems/WaveSystem/WaveSystem';
 import type { IGameEntity } from '@entities/interfaces';
 
@@ -8,7 +9,8 @@ export class GameWorld implements IGameEntity {
     private waveSystem = new WaveSystem();
     private enemies: Enemy[] = [];
     private controller: PlayerController;
-    private collisionSystem: CollisionSystem = new CollisionSystem();
+    private uiRenderer: UIRenderer;
+    private collisionSystem = new CollisionSystem();
 
     constructor(controller: PlayerController) {
         this.controller = controller;
@@ -18,6 +20,8 @@ export class GameWorld implements IGameEntity {
             this.enemies.push(...newEnemies);
             console.log(`Волна ${this.waveSystem['currentWaveIndex']} из ${newEnemies.length} врагов`);
         }, 5000);
+
+        this.uiRenderer = new UIRenderer(this.controller.getPlayer());
     }
 
     update() {
@@ -46,10 +50,17 @@ export class GameWorld implements IGameEntity {
 
         // Враги не входят друг в друга
         this.resolveEnemyCollisions();
+
+        // Обновляем UI
+        this.uiRenderer.update();
     }
 
     draw(ctx: CanvasRenderingContext2D) {
+        // Отрисовываем врагов
         this.enemies.forEach(enemy => enemy.draw(ctx));
+
+        // Отрисовываем UI
+        this.uiRenderer.draw(ctx);
     }
 
     private resolveEnemyCollisions(): void {
