@@ -4,6 +4,7 @@ import { PlayerMovementController } from '@/systems/Player/PlayerMovementControl
 import { PlayerStatsController } from '@/systems/Player/PlayerStatsController';
 import { PlayerWeaponController } from '@/systems/Player/PlayerWeaponController.ts';
 import { Bullet } from '@entities/bullet/Bullet.ts';
+import type { Enemy } from '@entities/enemy/Enemy.ts';
 import type { IGameEntity } from '@entities/interfaces';
 import { Player } from '@entities/player/Player.ts';
 
@@ -124,5 +125,9 @@ export class PlayerController implements IGameEntity {
             ctx.lineWidth = 6;
             ctx.stroke();
         }
+    }
+
+    public syncEnemies(enemies: Enemy[]): void {
+        this.movementController.syncEnemies(enemies);
     }
 }

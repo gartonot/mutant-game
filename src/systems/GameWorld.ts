@@ -56,6 +56,9 @@ export class GameWorld implements IGameEntity {
 
         // Обновляем UI
         this.uiRenderer.update();
+
+        // Проброс врагов в игрока
+        this.controller.syncEnemies(this.enemies);
     }
 
     draw(ctx: CanvasRenderingContext2D) {
