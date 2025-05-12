@@ -26,7 +26,11 @@ export class Player implements IGameEntity {
     }
 
     takeDamage(amount: number) {
-        this.currentHp = Math.max(0, this.currentHp - amount);
+        this.currentHp -= amount;
+        if (this.currentHp <= 0) {
+            this.currentHp = 0;
+            console.log('💀 Game Over');
+        }
     }
 
     heal(amount: number) {
