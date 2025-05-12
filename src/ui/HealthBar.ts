@@ -40,7 +40,6 @@ export class HealthBar {
             if (this.displayedHp < this.currentHp) this.displayedHp = this.currentHp;
         }
 
-
         const centerX = window.innerWidth / 2;
         const centerY = window.innerHeight;
 

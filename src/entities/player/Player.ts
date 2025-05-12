@@ -10,7 +10,6 @@ export class Player implements IGameEntity {
     maxHp = 100;
     currentHp = 100;
 
-
     constructor(x = window.innerWidth / 2, y = window.innerHeight / 2) {
         this.x = x;
         this.y = y;
