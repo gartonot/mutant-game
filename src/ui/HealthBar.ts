@@ -39,10 +39,12 @@ export class HealthBar {
         ctx.stroke();
 
         // Текущий HP в центре
+        // Смещение в центр красной дуги
+        const textY = centerY - radius - 6;
+
         ctx.fillStyle = 'white';
         ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
         ctx.font = '16px Arial';
-        ctx.fillText(`${this.currentHp}`, centerX, centerY - 77);
+        ctx.fillText(`${this.currentHp}`, centerX, textY);
     }
 }
