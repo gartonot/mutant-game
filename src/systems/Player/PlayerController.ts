@@ -14,7 +14,6 @@ export class PlayerController implements IGameEntity {
     private inputController = new PlayerInputController();
     private statsController = new PlayerStatsController();
 
-
     constructor(player: Player, input: InputSystem) {
         this.player = player;
         this.movementController = new PlayerMovementController(player, input);
@@ -48,6 +47,8 @@ export class PlayerController implements IGameEntity {
         this.weaponController.drawWeaponUI(ctx);
         // Отрисовка статистики
         this.statsController.drawStats(ctx);
+        // Отрисовка курсора
+        this.drawCursor(ctx);
     }
 
     public getBullets() {
@@ -88,5 +89,19 @@ export class PlayerController implements IGameEntity {
 
     public getKillCount() {
         return this.statsController.getKillCount();
+    }
+
+    private drawCursor(ctx: CanvasRenderingContext2D) {
+        const radius = 10;
+        const mousePos = this.inputController.getMousePosition();
+        const centerX = mousePos.x;
+        const centerY = mousePos.y;
+
+        // Тонкий кольцевой курсор
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+        ctx.strokeStyle = '#edd937';
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
 }
