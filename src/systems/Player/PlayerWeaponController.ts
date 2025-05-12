@@ -12,7 +12,6 @@ export class PlayerWeaponController {
         new Rifle(),
     ];
     private selectedWeaponIndex = 0;
-    private lastShotTime = 0;
 
     // Получение пуль
     public getBullets(): Bullet[] {
@@ -37,10 +36,16 @@ export class PlayerWeaponController {
     }
 
     public tryShoot(x: number, y: number, angle: number): void {
-        const now = Date.now();
-        if (now - this.lastShotTime >= this.selectedWeapon.fireRate) {
-            this.lastShotTime = now;
-            const fired = this.selectedWeapon.fire(x, y, angle);
+        const now = performance.now();
+        const weapon = this.selectedWeapon;
+
+        if (!weapon.lastShotTime) {
+            weapon.lastShotTime = 0;
+        }
+
+        if (now - weapon.lastShotTime >= weapon.fireRate) {
+            weapon.lastShotTime = now;
+            const fired = weapon.fire(x, y, angle);
             if (Array.isArray(fired)) {
                 this.bullets.push(...fired);
             } else {
@@ -70,5 +75,20 @@ export class PlayerWeaponController {
             ctx.textBaseline = 'middle';
             ctx.fillText(weapon.name[0], x + squareSize / 2, y + squareSize / 2);
         });
+    }
+
+    public canShoot(): boolean {
+        const now = performance.now();
+        const weapon = this.selectedWeapon;
+        weapon.lastShotTime ??= 0;
+        return now - weapon.lastShotTime >= weapon.fireRate;
+    }
+
+    public getCooldownProgress(): number {
+        const now = performance.now();
+        const weapon = this.selectedWeapon;
+        weapon.lastShotTime ??= 0;
+        const progress = (now - weapon.lastShotTime) / weapon.fireRate;
+        return Math.min(progress, 1);
     }
 }

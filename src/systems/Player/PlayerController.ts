@@ -97,11 +97,32 @@ export class PlayerController implements IGameEntity {
         const centerX = mousePos.x;
         const centerY = mousePos.y;
 
-        // Тонкий кольцевой курсор
+        this.drawCursorUI(ctx, radius, centerX, centerY);
+        this.drawCooldownUI(ctx, radius, centerX, centerY);
+    }
+
+    private drawCursorUI(ctx: CanvasRenderingContext2D, radius: number, centerX: number, centerY: number) {
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
         ctx.strokeStyle = '#edd937';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2.5;
         ctx.stroke();
+    }
+
+    private drawCooldownUI(ctx: CanvasRenderingContext2D, radius: number, centerX: number, centerY: number) {
+        // Получаем прогресс перезарядки
+        const progress = this.weaponController.getCooldownProgress();
+
+        if (progress < 1) {
+            const outerRadius = radius + 10; // чуть дальше основного курсора
+            const startAngle = -Math.PI / 2; // начинается с "12 часов"
+            const endAngle = startAngle + (Math.PI * 2 * progress);
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, outerRadius, startAngle, endAngle);
+            ctx.strokeStyle = 'yellow';
+            ctx.lineWidth = 6;
+            ctx.stroke();
+        }
     }
 }

@@ -5,5 +5,6 @@ export interface IWeapon {
     damage: number; // урон
     fireRate: number; // частота выстрелов
     pushBackForce: number; // сила отталкивания
+    lastShotTime?: number; // время последнего выстрела
     fire(startX: number, startY: number, angle: number): Bullet | Bullet[];
 }
