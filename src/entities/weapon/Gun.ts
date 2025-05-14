@@ -25,7 +25,19 @@ export class Gun implements IWeapon {
         this.pushBackForce = props.pushBackForce ?? 10;
     }
 
-    public fire(startX: number, startY: number, angle: number):Bullet | Bullet[] {
+    public fire(
+        startX: number,
+        startY: number,
+        angle: number,
+        onFireVisualEffect?: (x: number, y: number, angle: number) => void,
+    ): Bullet | Bullet[] {
+        if (onFireVisualEffect) {
+            const muzzleOffset = 32;
+            const fx = startX + Math.cos(angle) * muzzleOffset;
+            const fy = startY + Math.sin(angle) * muzzleOffset;
+            onFireVisualEffect(fx, fy, angle);
+        }
+
         return new Bullet(
             startX,
             startY,

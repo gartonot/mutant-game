@@ -35,7 +35,12 @@ export class PlayerWeaponController {
         }
     }
 
-    public tryShoot(x: number, y: number, angle: number) {
+    public tryShoot(
+        x: number,
+        y: number,
+        angle: number,
+        onVisualEffect?: (x: number, y: number, angle: number) => void,
+    ) {
         const now = performance.now();
         const weapon = this.selectedWeapon;
 
@@ -45,7 +50,7 @@ export class PlayerWeaponController {
 
         if (now - weapon.lastShotTime >= weapon.fireRate) {
             weapon.lastShotTime = now;
-            const fired = weapon.fire(x, y, angle);
+            const fired = weapon.fire(x, y, angle, onVisualEffect);
             if (Array.isArray(fired)) {
                 this.bullets.push(...fired);
                 return fired;

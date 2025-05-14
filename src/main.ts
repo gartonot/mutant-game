@@ -1,9 +1,7 @@
 import { startGameLoop } from '@/core/GameLoop';
-import { GameWorld } from '@/systems/GameWorld.ts';
-import { InputSystem } from '@/systems/InputSystem.ts';
-import { PlayerController } from '@/systems/Player/PlayerController';
 import { FpsCounter } from '@/ui/FpsCounter.ts';
-import { Player } from '@entities/player/Player';
+
+import { createGameWorld } from './GameRuntime';
 
 // Создаём канвас
 const canvas = document.getElementById('game') as HTMLCanvasElement;
@@ -11,12 +9,9 @@ const ctx = canvas.getContext('2d')!;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-
-// Создаём игрока и его поведение
-const player = new Player();
-const input = new InputSystem();
-const controller = new PlayerController(player, input);
-const gameWorld = new GameWorld(controller);
+// Создание игрового мира
+const gameWorld = createGameWorld();
+const controller = gameWorld.getPlayerController();
 
 // Счётчик FPS
 const fpsCounter = new FpsCounter();

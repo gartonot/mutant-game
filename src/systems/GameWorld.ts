@@ -1,3 +1,4 @@
+import { MuzzleFlashEffect } from '@/effects/MuzzleFlashEffect.ts';
 import { Enemy } from '@/entities/enemy/Enemy';
 import { CollisionSystem } from '@/systems/CollisionSystem';
 import { PlayerController } from '@/systems/Player/PlayerController';
@@ -11,6 +12,7 @@ export class GameWorld implements IGameEntity {
     private controller: PlayerController;
     private uiRenderer: UIRenderer;
     private collisionSystem = new CollisionSystem();
+    private muzzleFlashes: MuzzleFlashEffect[] = [];
 
     constructor(controller: PlayerController) {
         this.controller = controller;
@@ -59,11 +61,18 @@ export class GameWorld implements IGameEntity {
 
         // Проброс врагов в игрока
         this.controller.syncEnemies(this.enemies);
+
+        // Обновляем все вспышки от выстрелов и удаляем те, которые не нужны
+        this.muzzleFlashes.forEach(flash => flash.update());
+        this.muzzleFlashes = this.muzzleFlashes.filter(flash => !flash.isExpired);
     }
 
     draw(ctx: CanvasRenderingContext2D) {
         // Отрисовываем врагов
         this.enemies.forEach(enemy => enemy.draw(ctx));
+
+        // Отрисовываем вспышки от пуль
+        this.muzzleFlashes.forEach(flash => flash.draw(ctx));
 
         // Отрисовываем UI
         this.uiRenderer.draw(ctx);
@@ -119,5 +128,13 @@ export class GameWorld implements IGameEntity {
                 enemy.y += pushY;
             }
         }
+    }
+
+    public addMuzzleFlash(x: number, y: number, angle: number) {
+        this.muzzleFlashes.push(new MuzzleFlashEffect(x, y, angle));
+    }
+
+    public getPlayerController(): PlayerController {
+        return this.controller;
     }
 }

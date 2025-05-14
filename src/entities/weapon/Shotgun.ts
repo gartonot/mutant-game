@@ -11,7 +11,19 @@ export class Shotgun extends Gun {
 
     }
 
-    public fire(startX: number, startY: number, angle: number): Bullet[] {
+    public fire(
+        startX: number,
+        startY: number,
+        angle: number,
+        onFireVisualEffect?: (x: number, y: number, angle: number) => void,
+    ): Bullet[] {
+        if (onFireVisualEffect) {
+            const muzzleOffset = 32;
+            const fx = startX + Math.cos(angle) * muzzleOffset;
+            const fy = startY + Math.sin(angle) * muzzleOffset;
+            onFireVisualEffect(fx, fy, angle);
+        }
+
         const spreadAngle = 0.04; // Разброс пуль (радианы)
         const speed = 40;
         const pushBackForce = 35;

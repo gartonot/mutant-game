@@ -14,6 +14,7 @@ export class PlayerController implements IGameEntity {
     private weaponController = new PlayerWeaponController();
     private inputController = new PlayerInputController();
     private statsController = new PlayerStatsController();
+    private onFireVisualEffect: ((x: number, y: number, angle: number) => void) | null = null;
 
     constructor(player: Player, input: InputSystem) {
         this.player = player;
@@ -52,6 +53,10 @@ export class PlayerController implements IGameEntity {
         this.drawCursor(ctx);
     }
 
+    public init(onFireVisualEffect: (x: number, y: number, angle: number) => void) {
+        this.onFireVisualEffect = onFireVisualEffect;
+    }
+
     public getBullets() {
         return this.weaponController.getBullets();
     }
@@ -78,7 +83,12 @@ export class PlayerController implements IGameEntity {
         const mousePos = this.inputController.getMousePosition();
         const angle = Math.atan2(mousePos.y - this.player.y, mousePos.x - this.player.x);
 
-        const fired = this.weaponController.tryShoot(this.player.x, this.player.y, angle);
+        const fired = this.weaponController.tryShoot(
+            this.player.x,
+            this.player.y,
+            angle,
+            this.onFireVisualEffect ?? undefined,
+        );
 
         // Регистрируем выстрел
         this.statsController.registerShot(Array.isArray(fired) ? fired.length : 1);
