@@ -41,10 +41,10 @@ export class PlayerController implements IGameEntity {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        // Рисуем персонажа
-        this.player.draw(ctx);
         // Рисуем пули
         this.weaponController.getBullets().forEach(bullet => bullet.draw(ctx));
+        // Рисуем персонажа
+        this.player.draw(ctx);
         // Рисуем название текущего оружия
         this.weaponController.drawWeaponUI(ctx);
         // Отрисовка статистики
