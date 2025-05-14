@@ -11,28 +11,18 @@ export class Shotgun extends Gun {
 
     }
 
-    public fire(
-        startX: number,
-        startY: number,
-        angle: number,
-        onFireVisualEffect?: (x: number, y: number, angle: number) => void,
-    ): Bullet[] {
-        if (onFireVisualEffect) {
-            const muzzleOffset = 32;
-            const fx = startX + Math.cos(angle) * muzzleOffset;
-            const fy = startY + Math.sin(angle) * muzzleOffset;
-            onFireVisualEffect(fx, fy, angle);
-        }
+    protected override getProjectiles(startX: number, startY: number, angle: number): Bullet[] {
+        const defaultConfig = {
+            speed: 40,
+            pushBackForce: 35,
+        };
+        const spreadAngle = 0.04;
 
-        const spreadAngle = 0.04; // Разброс пуль (радианы)
-        const speed = 40;
-        const pushBackForce = 35;
-
-        return [
-            new Bullet(startX, startY, angle - spreadAngle * 1.5, this.damage * 0.5, speed, pushBackForce),
-            new Bullet(startX, startY, angle - spreadAngle * 0.5, this.damage, speed, pushBackForce),
-            new Bullet(startX, startY, angle + spreadAngle * 0.5, this.damage, speed, pushBackForce),
-            new Bullet(startX, startY, angle + spreadAngle * 1.5, this.damage * 0.5, speed, pushBackForce),
-        ];
+        return this.createBulletsFromConfig(startX, startY, angle, [
+            { angleOffset: -spreadAngle * 1.5, damageMultiplier: 0.5, ...defaultConfig },
+            { angleOffset: -spreadAngle * 0.5, damageMultiplier: 1.0, ...defaultConfig },
+            { angleOffset:  spreadAngle * 0.5, damageMultiplier: 1.0, ...defaultConfig },
+            { angleOffset:  spreadAngle * 1.5, damageMultiplier: 0.5, ...defaultConfig },
+        ]);
     }
 }
