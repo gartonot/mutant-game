@@ -1,3 +1,4 @@
+import { BulletTrail } from '@/effects/BulletTrail';
 import type { IGameEntity } from '@entities/interfaces';
 
 export class Bullet implements IGameEntity {
@@ -10,6 +11,7 @@ export class Bullet implements IGameEntity {
     isDead = false;
     damage: number;
     pushBackForce: number;
+    private trail: BulletTrail;
 
     constructor(
         startX: number,
@@ -29,6 +31,8 @@ export class Bullet implements IGameEntity {
         this.damage = damage;
         this.speed = speed;
         this.pushBackForce = pushBackForce;
+
+        this.trail = new BulletTrail(this.x, this.y);
     }
 
     update() {
@@ -42,9 +46,19 @@ export class Bullet implements IGameEntity {
         ) {
             this.isDead = true;
         }
+
+        this.trail.update(this.x, this.y);
     }
 
     draw(ctx: CanvasRenderingContext2D) {
+        // Отрисовка хвоста пули
+        this.trail.draw(ctx);
+
+        // Отрисовка пули
+        this.drawBullet(ctx);
+    }
+
+    private drawBullet(ctx: CanvasRenderingContext2D) {
         const length = 13; // длина пули
         const width = 3; // ширина пули
 
