@@ -12,17 +12,23 @@ export class Shotgun extends Gun {
     }
 
     protected override getProjectiles(startX: number, startY: number, angle: number): Bullet[] {
+        const spreadAngle = 0.04;
         const defaultConfig = {
             speed: 40,
             pushBackForce: 35,
         };
-        const spreadAngle = 0.04;
+        const configs = [
+            { angleOffset: -spreadAngle * 1.5, damageMultiplier: 0.5 },
+            { angleOffset: -spreadAngle * 0.5, damageMultiplier: 1.0 },
+            { angleOffset:  spreadAngle * 0.5, damageMultiplier: 1.0 },
+            { angleOffset:  spreadAngle * 1.5, damageMultiplier: 0.5 },
+        ] as const;
 
-        return this.createBulletsFromConfig(startX, startY, angle, [
-            { angleOffset: -spreadAngle * 1.5, damageMultiplier: 0.5, ...defaultConfig },
-            { angleOffset: -spreadAngle * 0.5, damageMultiplier: 1.0, ...defaultConfig },
-            { angleOffset:  spreadAngle * 0.5, damageMultiplier: 1.0, ...defaultConfig },
-            { angleOffset:  spreadAngle * 1.5, damageMultiplier: 0.5, ...defaultConfig },
-        ]);
+        const shotgunConfigBullets = configs.map(config => ({
+            ...defaultConfig,
+            ...config,
+        }));
+
+        return this.createBulletsFromConfig(startX, startY, angle, shotgunConfigBullets);
     }
 }
