@@ -45,9 +45,33 @@ export class Bullet implements IGameEntity {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = '#f1c40f';
+        const length = 13; // длина пули
+        const width = 3; // ширина пули
+
+        ctx.save();
+        ctx.translate(this.x, this.y);
+
+        // Вычисляем угол вращения на основе направления движения
+        const angle = Math.atan2(this.dy, this.dx);
+        ctx.rotate(angle);
+
+        // Настройки свечения
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = 'rgba(209, 216, 42, 80%)';
+
+        // Цвет пули
+        ctx.fillStyle = '#d1d82a';
+
+        // Рисуем пулю
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.moveTo(-length / 2 + width / 2, -width / 2);
+        ctx.arcTo(length / 2, -width / 2, length / 2, width / 2, width / 2);
+        ctx.arcTo(length / 2, width / 2, -length / 2, width / 2, width / 2);
+        ctx.arcTo(-length / 2, width / 2, -length / 2, -width / 2, width / 2);
+        ctx.arcTo(-length / 2, -width / 2, length / 2, -width / 2, width / 2);
+        ctx.closePath();
         ctx.fill();
+
+        ctx.restore();
     }
 }
