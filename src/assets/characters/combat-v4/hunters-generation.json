@@ -1,0 +1,100 @@
+{
+  "tool": "built-in image_gen",
+  "review": "Strict overhead camera improved. Alpha preserved. Original v3 assets untouched. A second focused edit aligns gripping hands for firearm overlays.",
+  "assets": {
+    "fanatic": {
+      "prompts": [
+        "Use case: stylized-concept. Asset type: transparent combat sprite for a 2D overhead shooter.\nRedraw the referenced fanatic as a TRUE 90-DEGREE VERTICAL OVERHEAD orthographic view. Reference is for identity/palette/material only, its oblique camera is WRONG. Camera directly above head looking straight down, so only crown of hood and upper surfaces of shoulders, arms and hands are visible; NO face, NO chest, NO front of torso, NO standing side elevation. Character faces exactly screen RIGHT (+X). Compact upper-body silhouette, no legs. Black battered leather hood and jacket, dark red quilted shoulder patches and sleeve cuffs, brass straps/buckles, bare pale forearms and hands. Stylized hand painted game art with crisp dark outlines, readable at small size.\nComposition: crown of hood centered near (420,500) on a 1024 square transparent canvas, shoulders across vertical image axis, both arms naturally reaching toward the RIGHT. Both wrists converge onto the SAME horizontal weapon axis at y=530; rear gripping palm at (690,530), front supporting palm at (875,530). Elbows anatomically bent, five normal fingers per hand, small relaxed weapon-grip openings. NO weapon or prop painted into hands. Show top of hands, not open palms. Entire character with generous transparent margins, no cast shadow, no halo, no background, no lettering, no text, no watermark. Strict plan view is the highest priority, NOT isometric, NOT three-quarter.",
+        "Edit this overhead game sprite. Keep the hooded character's materials, palette, identity, TRUE directly-overhead camera, body, and transparent background. Change ONLY the position of hands/forearms: move the lower/rear gripping hand UP until its knuckle center is at precisely the same image Y coordinate as the upper/front supporting hand. The two hand centers must form an exactly HORIZONTAL line toward screen RIGHT. Rear palm x=850 y=655, front palm x=1100 y=655 in this 1254 square canvas. Anatomically bend the lower elbow to reach. Show top of fingers in relaxed closed grips around an invisible weapon, no weapon. Keep other details and transparency."
+      ],
+      "file": "fanatic.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alphaThreshold": 12,
+      "sourceCrop": {
+        "x": 49,
+        "y": 226,
+        "width": 1173,
+        "height": 827
+      },
+      "headCenter": {
+        "x": 380,
+        "y": 650
+      },
+      "layout": {
+        "x": 49,
+        "y": 226,
+        "width": 1173,
+        "height": 827,
+        "drawX": -22.010230179028135,
+        "drawY": -28.194373401534527,
+        "drawWidth": 78,
+        "rotation": 0.04051835247834694,
+        "hands": [
+          {
+            "x": 814,
+            "y": 677,
+            "rx": 30,
+            "ry": 16
+          },
+          {
+            "x": 1110,
+            "y": 665,
+            "rx": 30,
+            "ry": 16
+          }
+        ]
+      },
+      "transparentPixels": 1044066
+    },
+    "silver-hunter": {
+      "prompts": [
+        "Use case: stylized-concept. Asset type: transparent combat sprite for a 2D overhead shooter.\nRedraw the referenced silver hunter as a TRUE 90-DEGREE VERTICAL OVERHEAD orthographic view. Reference is for identity/palette/material only, its oblique camera is WRONG. Camera directly above head looking straight down, so only crown of broad-brimmed hat and upper surfaces of shoulders, arms and hands are visible; NO face, NO chest, NO front of torso, NO standing side elevation. Character faces exactly screen RIGHT (+X). Compact upper-body silhouette, no legs. Preserve worn charcoal broad-brimmed hunter hat with metal band and silver clasp, dark long leather coat with ragged rear tails, auburn hair around hat rear, silver steel shoulder armor, dark leather sleeves and cuff straps, bare pale hands. Stylized hand painted game art with crisp dark outlines, readable at small size.\nComposition: circular crown and brim of hat centered near (440,490) on a 1024 square transparent canvas, shoulders across vertical image axis, both arms naturally reaching toward RIGHT. Both wrists converge onto the SAME horizontal weapon axis y=540; rear gripping palm at (700,540), front supporting palm at (880,540). Elbows anatomically bent, five normal fingers per hand, small relaxed weapon-grip openings. NO weapon or prop painted into hands. Show top of hands, not open palms. Coat tails project only a short distance rearward left, do not make a long laid-out body. Entire character with generous transparent margins, no cast shadow, no halo, no background, no lettering, no text, no watermark. Strict plan view is the highest priority, NOT isometric, NOT three-quarter.",
+        "Edit this overhead game sprite. Keep the silver hunter's hat, armor, coat, materials, palette, identity, TRUE directly-overhead camera, body, and transparent background. Change ONLY the position of hands/forearms. The two gripping hand centers must form an exactly HORIZONTAL line toward screen RIGHT, y=630 on this 1254 square canvas. Rear gripping palm must be at (930,630), front supporting palm at (1150,630). Move the LOWER hand UP about 120 pixels and a little LEFT. Anatomically bend the lower elbow to reach. Show top of fingers in relaxed closed grips around an invisible horizontal weapon, no weapon. Keep other details and transparency. Hands must NOT be diagonally staggered."
+      ],
+      "file": "silver-hunter.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alphaThreshold": 12,
+      "sourceCrop": {
+        "x": 17,
+        "y": 277,
+        "width": 1219,
+        "height": 730
+      },
+      "headCenter": {
+        "x": 600,
+        "y": 580
+      },
+      "layout": {
+        "x": 17,
+        "y": 277,
+        "width": 1219,
+        "height": 730,
+        "drawX": -42.08695652173913,
+        "drawY": -21.87366694011485,
+        "drawWidth": 88,
+        "rotation": 0,
+        "hands": [
+          {
+            "x": 1000,
+            "y": 610,
+            "rx": 30,
+            "ry": 16
+          },
+          {
+            "x": 1170,
+            "y": 610,
+            "rx": 30,
+            "ry": 16
+          }
+        ]
+      },
+      "transparentPixels": 1063579
+    }
+  }
+}

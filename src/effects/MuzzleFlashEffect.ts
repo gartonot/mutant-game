@@ -3,20 +3,18 @@ export class MuzzleFlashEffect {
     private y: number;
     private angle: number;
     private lifeTime: number = 100; // мс
-    private createdAt: number;
+    private elapsed = 0;
 
     constructor(x: number, y: number, angle: number) {
         this.x = x;
         this.y = y;
         this.angle = angle;
-        this.createdAt = performance.now();
     }
 
-    public update(): void {}
+    public update(deltaMs = 1000 / 60): void { this.elapsed += deltaMs; }
 
     public draw(ctx: CanvasRenderingContext2D): void {
-        const elapsed = performance.now() - this.createdAt;
-        const progress = elapsed / this.lifeTime;
+        const progress = this.elapsed / this.lifeTime;
         const alpha = 1 - progress;
 
         if (alpha <= 0) return;
@@ -42,6 +40,6 @@ export class MuzzleFlashEffect {
     }
 
     public get isExpired(): boolean {
-        return performance.now() - this.createdAt > this.lifeTime;
+        return this.elapsed > this.lifeTime;
     }
 }

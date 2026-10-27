@@ -1,0 +1,11 @@
+# Ядерщик — портрет
+
+Создан встроенным imagegen по `references/characters/nuclear-alt.png`. Исходный PNG сохранён без изменений в `src/assets/characters/nuclear.png`.
+
+Тёмные волосы, голубой визор, оранжевый костюм с металлической бронёй и голубыми линиями, цилиндрическая электропушка. Название оружия и +25 патронов подтверждены непосредственным просмотром референса. Это отдельный герой от Плазменного ядерщика.
+
+Карточка доступна для просмотра и закрыта для игры по существующему формату дополнительных персонажей. Показаны бонусы и читаемая часть описания «Плазменного шара». Неизвестные урон взрыва, частота урона и длительность заморозки не придуманы. История отсутствует на референсе и не добавлена. Боевой спрайт, игровые эффекты, покупка и открытие не реализуются.
+
+## Итоговый промпт
+
+Use case: stylized-concept. Create a final 2:3 portrait illustration for a post-apocalyptic shooter. Input reference is a screenshot: use only the character portrait on the left as identity, costume, pose and weapon reference, discard all interface. Young adult clean-shaven man with short tousled dark brown hair, opaque luminous ice blue wraparound visor over eyes, confident serious expression. Orange technical jumpsuit with dark gunmetal and silver armor on chest, shoulders, forearms and thighs, restrained cyan illuminated seams, high orange collar. Holds a very large cylindrical electric cannon across his waist, muzzle toward lower left, rear toward right: round silver muzzle ring with radial electrodes, dark barrel housing, luminous transparent blue central chamber containing electrical energy, top handle gripped naturally by one hand and rear grip in the other, a few short white-blue electrical arcs at muzzle. Preserve the distinctive compact drum-shaped electric cannon, not an elongated plasma rifle. Head to upper thighs, complete head with margin, full weapon inside frame. Richly textured realistic painted 2010 PC survival game portrait, dimensional anatomy and armor, soft shadows, worn fabric and brushed metal detail, orange warm atmospheric ruined-city backdrop with subtle rays. No flat cartoon fills or thick outlines. No text, UI, prices, logos, watermarks, borders, extra people. Do not use red hair, ordinary vest or grey T-shirt.

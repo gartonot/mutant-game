@@ -1,0 +1,89 @@
+{
+  "mode": "built-in image_gen",
+  "date": "2026-10-27",
+  "items": [
+    {
+      "id": "nuclear",
+      "path": "src/assets/characters/combat-v4/nuclear.png",
+      "source": "C:/Users/garto/.codex/generated_images/01a17cdb-9fa8-7d52-94f3-0254526eb316/exec-f28bd31e-1299-4542-a26f-beae1b1d8ab6.png",
+      "prompt": "Use case: style-transfer. Asset type: transparent game combat sprite. Reference image is identity/palette reference only; REDRAW this nuclear soldier in STRICT 90-DEGREE ORTHOGRAPHIC OVERHEAD PLAN VIEW, camera vertically above the crown, absolutely no oblique/isometric angle. Character faces exactly RIGHT (+X), body center near (500,512) on 1536x1024 canvas. We see only crown of short brown hair, tops of shoulders and arms; no face, no chest front, no abdomen, no upright portrait. Preserve orange armored sleeves, worn dark gunmetal segmented shoulder plates, thin cyan luminous seams. Arms in anatomically clean two-handed rifle aiming stance: rear right hand near (1000,512), forward left hand near (1300,512), both palms lie on same horizontal firing axis through body. Relaxed natural elbows from shoulders at top/bottom of body to hands. Empty hands prepared to hold separate weapon overlay, no weapon drawn. Crown and shoulders form compact top-down silhouette, hips/feet mostly occluded. High quality illustrated sci-fi sprite, crisp dark outline, controlled details readable at small size. NO cast shadow, NO glow outside silhouette, no backdrop, no text. True transparent alpha outside character, no halo. Whole character comfortably inside frame.",
+      "crop": {
+        "x": 108,
+        "y": 88,
+        "width": 1373,
+        "height": 855
+      },
+      "headCenter": {
+        "x": 515,
+        "y": 470
+      },
+      "drawWidth": 80,
+      "rotation": 0.25732371497108864,
+      "hands": [
+        {
+          "x": 1000,
+          "y": 570,
+          "rx": 30,
+          "ry": 16
+        },
+        {
+          "x": 1380,
+          "y": 470,
+          "rx": 30,
+          "ry": 16
+        }
+      ],
+      "verification": "Crown-only overhead view, no visible face/chest front. Empty hands. Alpha samples exterior and between arms equal zero. Rotation aligns palm centers horizontally."
+    },
+    {
+      "id": "witcher",
+      "path": "src/assets/characters/combat-v4/witcher.png",
+      "source": "C:/Users/garto/.codex/generated_images/01a17cdb-9fa8-7d52-94f3-0254526eb316/exec-1f8410ae-4f5f-441b-9f98-a1f0b1d7dfcf.png",
+      "prompt": "Use case: style-transfer. Asset type: transparent game combat sprite. Use image as COSTUME reference only, fully redraw POSE. One black-armored mutant with pale hands and thin neon green armor seams. STRICT 90 degree top down orthographic overhead camera. Facing RIGHT. See circular top of black skullcap, tops of shoulder pads and forearms, no face, chest front, abdomen, no foreshortened portrait. Main body crown centered at x=480 y=510 on a 1536x1024 transparent canvas. Shoulder pads aligned vertically at x=430 y=280 and x=430 y=740. CORRECT ARMS anatomically: upper arm extends from upper shoulder toward upper elbow near (850,350), then forearm slopes gently down to forward support hand at (1290,512). Lower arm bends from lower shoulder to elbow near (650,760), then forearm slopes up to rear trigger hand at (1000,512). Both hands on EXACT SAME horizontal firing axis y=512, facing right, empty relaxed rifle grip, separated by 290 pixels. No weapon. Head and shoulder geometry exactly vertically overhead. Keep black gunmetal rounded segmented armor, worn metallic edge detail, thin vivid green seams, pale gray mutant hands. Crisp illustrated sci-fi shooter asset at small game scale. ALL SPACE OUTSIDE BODY MUST HAVE ZERO ALPHA: NO external glow, fog, cast shadows, backdrop, vignette or light haze. Transparent gaps between arms. Single connected character, comfortable margins, no text.",
+      "crop": {
+        "x": 106,
+        "y": 118,
+        "width": 1380,
+        "height": 792
+      },
+      "headCenter": {
+        "x": 540,
+        "y": 490
+      },
+      "drawWidth": 82,
+      "rotation": 0.33029735482925365,
+      "hands": [
+        {
+          "x": 1020,
+          "y": 630,
+          "rx": 30,
+          "ry": 16
+        },
+        {
+          "x": 1370,
+          "y": 510,
+          "rx": 30,
+          "ry": 16
+        }
+      ],
+      "verification": "Top skullcap visible, no frontal face/chest. Redesigned arm geometry continuous with natural elbows. Empty hands. Rotation aligns palms horizontally."
+    }
+  ],
+  "discardedIterations": [
+    {
+      "id": "nuclear",
+      "prompt": "Edit this single game sprite ONLY to remove all background and edge halo and correct hand alignment. Keep the orange-and-gunmetal nuclear character, exact overhead camera, brown crown and cyan seams. Move rear lower forearm and hand upward until its empty grip center is at the SAME image y coordinate as forward hand, both at y=480. Preserve natural connected elbow anatomy. Absolutely clean transparent cutout: delete the soft brown, gray, blue and black glow around the character and between arms, every non-character pixel has alpha zero. No shadow, no haze, no glow. Crisp hard clean silhouette with only 1px antialias. No weapon. Keep body otherwise identical.",
+      "reason": "Hand separation reduced; first candidate better."
+    },
+    {
+      "id": "nuclear",
+      "prompt": "Create one isolated transparent 2D top-down shooter character asset from scratch. STRICT ORTHOGRAPHIC PLAN VIEW looking vertically down 90 degrees, face pointing RIGHT. Only top crown of brown hair, tops of shoulders and arms visible, absolutely no face or chest front. Nuclear soldier wearing orange armor sleeves with dark gunmetal shoulder plates and thin cyan seams. Strong crisp outlined illustrated post-apocalyptic game style. NO GLOW, no shadow, no smoke, every pixel outside the actual body transparent alpha=0. Canvas 1536x1024. Compact rounded body crown at (480,512), shoulder pads at (400,280) and (400,740). Empty two-handed rifle holding pose: rear gripping hand at (1000,512), forward support hand at (1300,512). BOTH HANDS EXACTLY ALIGNED on horizontal y=512; lower elbow at (700,700), upper elbow at (850,330), natural connected arms. Palms empty, no firearm, weapon, or accessory. Hands normal sized, five fingers each in relaxed grip. Head, shoulders, wrists all shown vertically from above. No perspective tilt whatsoever. Ensure clear transparent space surrounds silhouette and fills gap between arms.",
+      "reason": "Symmetric arms failed two handed rifle pose."
+    },
+    {
+      "id": "witcher",
+      "prompt": "Precise pose correction of this top-down armored mutant game sprite: Keep the top-down camera, dark segmented green-seamed armor, round skullcap viewed exactly from above. Keep forward hand and upper arm completely unchanged. Move ONLY the lower rear gripping hand UPWARD by 120 pixels, from y630 to y510, with its palm staying at x1020. Flex the lower elbow and forearm naturally to reach this new hand position. Final rear and forward hands must share horizontal y510 axis, spaced 350px. No weapon. All background transparent, no shadow. Preserve character identity, top-down view and rendering style.",
+      "reason": "Rear arm overly flexed; first candidate more natural."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+# Полумутант — портрет
+
+Создан встроенным imagegen по `references/characters/half-mutant.png`. Исходный PNG сохранён без изменений в `src/assets/characters/half-mutant.png`.
+
+Массивный тёмно-зелёный гуманоид с обнажённым торсом, круглые зелёные линзы, металлическая маска с горизонтальными прорезями, огнемёт и длинные загнутые когти свободной руки. Фон оранжево-фиолетовый с пламенем.
+
+Добавлена закрытая карточка для просмотра с +20 очков жизни, восстановлением 0,3 очка в секунду, огнемётом (+100 патронов) и известной частью описания «Превращения». Размер лечения, прибавка рейтинга, скорость и урон не придуманы. История на референсе отсутствует и не добавлена. Боевой спрайт, форма превращения, игровые эффекты, цена и открытие не реализуются.
+
+## Итоговый промпт
+
+Use case: stylized-concept. Create one final 2:3 portrait for a post-apocalyptic survival shooter. Input screenshot is identity, pose and equipment reference: use ONLY the left character portrait, exclude all interface. Half-mutant: huge muscular adult male humanoid with dark forest green skin, bald hairless head, bare powerful torso with defined pectorals and abdomen, broad shoulders, slightly hunched threatening stance. Two round luminous green goggle lenses on eyes, grey steel lower-face mask with several horizontal vent slots, matching reference. Dark worn trousers and plain broad belt. At image left one hand grips a large industrial olive green and gunmetal flamethrower with thick cylindrical barrel pointed diagonally down, its body beside forearm. At image right the free mutated hand has long curved dark claws, clearly visible against background. No chest armor, no shoulder tubes. Three-quarter pose, head to upper thighs, full head with safe margin, both hands and weapon readable inside frame. Orange-purple smoky ruined-city background, small atmospheric flames along lower edge which do not obscure character. Rich realistic painted 2010 PC survival game portrait, dimensional muscular anatomy, soft shadows, subtle textured green skin, weathered steel and fabric, warm fire rim light and cool purple fill. No flat cartoon fills, thick outlines, gore, text, logos, watermarks, prices, UI, borders or extra people. Preserve reference character identity.

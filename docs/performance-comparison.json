@@ -1,0 +1,50 @@
+{
+  "runtime": "v24.19.0",
+  "results": [
+    {
+      "enemies": 1000,
+      "bullets": 300,
+      "clustered": false,
+      "before": {
+        "medianMs": 8.119,
+        "p95Ms": 11.228
+      },
+      "after": {
+        "medianMs": 1.388,
+        "p95Ms": 2.367
+      },
+      "potentialBruteChecks": 799500,
+      "optimizedChecks": 4833
+    },
+    {
+      "enemies": 3000,
+      "bullets": 1000,
+      "clustered": false,
+      "before": {
+        "medianMs": 64.405,
+        "p95Ms": 69.272
+      },
+      "after": {
+        "medianMs": 3.37,
+        "p95Ms": 4.207
+      },
+      "potentialBruteChecks": 7498500,
+      "optimizedChecks": 44274
+    },
+    {
+      "enemies": 3000,
+      "bullets": 1000,
+      "clustered": true,
+      "before": {
+        "medianMs": 39.602,
+        "p95Ms": 43.92
+      },
+      "after": {
+        "medianMs": 5.135,
+        "p95Ms": 7.971
+      },
+      "potentialBruteChecks": 7498500,
+      "optimizedChecks": 340786
+    }
+  ]
+}

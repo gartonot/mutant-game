@@ -1,0 +1,55 @@
+{
+  "tests": 60,
+  "build": "passed",
+  "geometryPairs": 210,
+  "newVisualPairs": 84,
+  "played": [
+    "half-mutant",
+    "goliath",
+    "fanatic",
+    "nuclear",
+    "silver-hunter",
+    "witcher"
+  ],
+  "angles": [
+    0,
+    90,
+    180
+  ],
+  "recoil": [
+    0,
+    6
+  ],
+  "fallback": "passed",
+  "viewport": [
+    1024,
+    768
+  ],
+  "productionNewImages": [
+    {
+      "url": "http://127.0.0.1:5176/assets/half-mutant-1pU2GMMr.png",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5176/assets/goliath-DJLbty2y.png",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5176/assets/fanatic-CZ2gvn-7.png",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5176/assets/nuclear-BHExA6sT.png",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5176/assets/silver-hunter-Cfb3Kc1_.png",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:5176/assets/witcher-0LfA_4Vk.png",
+      "status": 200
+    }
+  ],
+  "errors": []
+}

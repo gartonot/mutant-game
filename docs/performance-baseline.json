@@ -1,0 +1,26 @@
+{
+  "runtime": "v24.19.0",
+  "baseline": [
+    {
+      "enemies": 1000,
+      "bullets": 300,
+      "clustered": false,
+      "medianMs": 9.926,
+      "p95Ms": 14.346
+    },
+    {
+      "enemies": 3000,
+      "bullets": 1000,
+      "clustered": false,
+      "medianMs": 85.169,
+      "p95Ms": 156.847
+    },
+    {
+      "enemies": 3000,
+      "bullets": 1000,
+      "clustered": true,
+      "medianMs": 42.536,
+      "p95Ms": 49.383
+    }
+  ]
+}

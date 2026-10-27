@@ -1,0 +1,37 @@
+[
+  {
+    "id": "double-barrel",
+    "mode": "built-in image_gen",
+    "prompt": "Use case: stylized-concept. Asset type: production 2D top-down shooter weapon sprite. One double-barrel shotgun, two parallel worn gunmetal barrels and dark brown wooden stock, mechanical breech. Strict orthographic TOP DOWN viewed vertically from directly above the gun, clearly showing both parallel barrels, NOT side elevation or three-quarter angle. Entire weapon horizontal, stock LEFT, muzzles RIGHT, bore axis at y=50%. Centered, about 8% margin around gun. Handpainted detailed postapocalyptic game art, muted steel gray, dark silhouette edges, restrained warm wood, small scratches and highlights readable at small scale. True transparent alpha background. No hands, characters, text, bullets, floor, scenery, shadow outside weapon, glow or frame.",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-476f-77d1-9cff-1b100be80079/exec-8c9767f5-365d-4a6d-9d19-559aea0c2bf2.png",
+    "output": "src/assets/weapons/v2/double-barrel.png"
+  },
+  {
+    "id": "machine-gun",
+    "mode": "built-in image_gen",
+    "prompt": "Use case: stylized-concept. Asset type: production 2D top-down shooter weapon sprite. One heavy rotary machine gun minigun with six clustered steel barrels, heavy dark receiver, small olive drab motor housing, compact rear stock and attached ammunition box. Strict orthographic TOP DOWN viewed vertically from directly above weapon, not side elevation, not three-quarter perspective. Entire weapon horizontal with rear LEFT and clustered muzzle tips RIGHT; main barrel axis at image y=50%. Centered isolated whole weapon with 8% margins. Handpainted detailed postapocalyptic game art, muted worn gunmetal gray, dark defined silhouette edges, restrained olive accents, small edge scratches and controlled highlights readable at small scale. True transparent alpha background. No hands, characters, text, loose bullets, floor, scenery, cast shadow outside weapon, glow or frame.",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-476f-77d1-9cff-1b100be80079/exec-5a6bb6c7-a6df-4daa-b029-f1105a4ad3ac.png",
+    "output": "src/assets/weapons/v2/machine-gun.png"
+  },
+  {
+    "id": "grenade-launcher",
+    "mode": "built-in image_gen",
+    "prompt": "Use case: stylized-concept. Asset type: production 2D top-down shooter weapon sprite. One chunky bazooka grenade launcher, long thick olive green cylindrical tube, dark steel reinforcing rings and breech, modest tan shoulder pad near rear. Strict orthographic TOP DOWN viewed vertically from directly above weapon. See top of tube and top of sights, grips are under tube and not visible hanging downward. NOT side profile or three-quarter angle. Entire weapon horizontal with rear LEFT and wide muzzle RIGHT; tube centerline at image y=50%. Centered isolated whole weapon with 8% margins. Handpainted detailed postapocalyptic game art, muted worn olive paint and gunmetal gray, dark defined silhouette edges, scratches, small bolts, controlled highlights readable at small scale. True transparent alpha background. No rocket sticking out, hands, characters, text, bullets, floor, scenery, cast shadow outside weapon, glow or frame.",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-476f-77d1-9cff-1b100be80079/exec-73a53901-14ea-4f4d-b9b5-af5b43b43437.png",
+    "output": "src/assets/weapons/v2/grenade-launcher.png"
+  },
+  {
+    "id": "flamethrower",
+    "mode": "built-in image_gen",
+    "prompt": "Use case: stylized-concept. Asset type: production 2D top-down shooter weapon sprite. One compact handheld flamethrower with worn dark steel nozzle barrel, short stock, olive green fuel cylinder attached beside the rear receiver, curved rubber hose joining cylinder to barrel. Strict orthographic TOP DOWN viewed vertically from directly above weapon. Show top surfaces, no visible trigger/grip underside. NOT side profile or three-quarter perspective. Entire weapon horizontal with stock LEFT and nozzle RIGHT; straight barrel axis at image y=50%. Centered isolated whole weapon with 8% margins. Handpainted detailed postapocalyptic game art, muted worn olive paint, gunmetal gray and dark rubber, dark defined silhouette edges, scratches, small bolts, restrained brass valves, controlled highlights readable at small scale. True transparent alpha background. No fire, smoke, hands, characters, text, bullets, floor, scenery, cast shadow outside weapon, glow or frame.",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-476f-77d1-9cff-1b100be80079/exec-44aed9e3-01b7-4e60-b250-4a4be6072b65.png",
+    "output": "src/assets/weapons/v2/flamethrower.png"
+  },
+  {
+    "id": "skull-launcher",
+    "mode": "built-in image_gen",
+    "prompt": "Use case: stylized-concept. Asset type: production 2D top-down shooter weapon sprite. One fantasy skull launcher weapon: thick dark steel cannon tube, battered brown rear stock, ivory bone rib reinforcement around barrel, a small ivory skull ornament mounted flat on TOP of receiver and visible from above, muted green small energy inset. Strict orthographic TOP DOWN viewed vertically from directly above weapon. Show top surfaces, no visible trigger/grip underside, no side silhouette, no three-quarter angle. Entire weapon horizontal with rear LEFT and wide cannon muzzle RIGHT; straight barrel centerline at image y=50%. Centered isolated whole weapon with 8% margins. Handpainted detailed postapocalyptic game art, muted worn gunmetal gray, aged ivory bone and dark brown leather, strong dark silhouette, scratches, bolts, controlled highlights readable at small scale. True transparent alpha background. No hands, characters, text, loose skull projectiles, floor, scenery, cast shadow outside weapon, glow outside weapon or frame.",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-476f-77d1-9cff-1b100be80079/exec-505154a5-1df2-4014-a153-083b910c0bb3.png",
+    "output": "src/assets/weapons/v2/skull-launcher.png"
+  }
+]

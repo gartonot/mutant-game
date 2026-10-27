@@ -1,0 +1,36 @@
+[
+  {
+    "id": "fanatic",
+    "mode": "built-in image_gen",
+    "reference": "src/assets/characters/fanatic.png",
+    "prompt": "Use case stylized-concept. Create ONE production overhead 2D shooter combat sprite based on the reference portrait ONLY for character identity/clothes. Fanatic: charcoal stitched hood, black worn leather jacket with burgundy red shoulder panels, red bandana at front of hood, exposed forearms and hands. Strict 90-degree vertical overhead camera: see crown of hood, shoulders, upper torso, bent arms and hands, NO face looking at viewer, no standing portrait. Character facing and aiming RIGHT (+X). Compact upper-body silhouette in center 75% of canvas. Both arms extended toward right in EMPTY two-handed firearm hold: rear trigger hand close to right chest, forward support hand farther right on same horizontal barrel line separated by 15% body width. NO weapon, NO pistol, NO lightning, NO props, NO detached pieces, NO extra panels. Only one connected unarmed character sprite. Gritty handpainted game art, dark outlines, clear material highlights, muted colors matching portrait. True transparent background, no cast shadow, text or environment.",
+    "editPrompt": "Edit this overhead character sprite. Keep hooded head, black leather red shoulder costume, overhead camera and right facing direction. Correct ONLY two things: (1) pull the lower/right arm elbow and hand BACK toward body; lower hand centered around x65% image width, y54%; upper hand remains forward around x85%, y49%. Hands must be separate along horizontal firing axis with large clear gap, empty rifle-holding pose NOT clasped pistol grip. (2) remove ALL soft shadows, glow and background outside silhouette, truly transparent empty alpha everywhere outside character. No gun or prop. Preserve single connected sprite.",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-476f-77d1-9cff-1b100be80079/exec-d488ef24-9453-4550-a137-dc195c20cfe8.png",
+    "output": "src/assets/characters/combat-v3/fanatic.png"
+  },
+  {
+    "id": "nuclear",
+    "mode": "built-in image_gen",
+    "reference": "src/assets/characters/nuclear.png",
+    "prompt": "Production game sprite, ONE character ONLY, transparent PNG. Reference portrait is for IDENTITY/COSTUME only; completely replace pose and camera. Nuclear soldier has orange suit under dark steel segmented shoulder armor with thin cyan edges, dark brown short hair crown, blue visor seen edge-on at right side of head. Camera exactly vertically down 90 degrees, view only top of crown shoulders upper body arms, NOT front face or standing portrait. Face/aim RIGHT. EMPTY HANDS in rifle-holding pose, arms asymmetric: lower right arm bent near chest with rear gripping hand at x65%, y55%; upper left arm extends farther right with cupped forward support hand at x82%, y55%. Two hands separated along same horizontal line; NO weapon/prop whatsoever. Torso/head occupies x25-60%, y25-75%; hands to right; whole silhouette central75% canvas. Gritty handpainted dark-outlined postapocalyptic 2D art, readable at game scale. True alpha, ALL pixels outside connected body silhouette transparent. No fog, glow, gradient, shadow, backdrop, text, extra panels, detached parts or magical effects.",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-476f-77d1-9cff-1b100be80079/exec-f2c8438a-af94-4e0f-9bff-3ed4ac99c2a2.png",
+    "output": "src/assets/characters/combat-v3/nuclear.png"
+  },
+  {
+    "id": "silver-hunter",
+    "mode": "built-in image_gen",
+    "reference": "src/assets/characters/silver-hunter.png",
+    "prompt": "Production game sprite, ONE character ONLY, transparent PNG. Reference portrait is for IDENTITY/COSTUME only; completely replace pose and camera. Silver hunter: wide-brim black worn leather hat with silver buckle band, dark shoulder cape and leather longcoat, armored shoulders, pale hands. Camera exactly vertically down 90 degrees, view top of hat crown shoulders upper body arms, no front face or standing portrait. Face/aim RIGHT. EMPTY HANDS in rifle-holding pose, arms asymmetric: lower right arm bent near chest with rear gripping hand at x65%, y55%; upper left arm extends farther right with cupped forward support hand at x82%, y55%. Two hands separated along same horizontal line; NO weapon/prop/back-mounted gun whatsoever. Torso/head occupies x25-60%, y25-75%; hands to right; compact silhouette central75% canvas, coat drapes behind torso LEFT. Gritty handpainted dark-outlined postapocalyptic 2D art, readable at game scale. True alpha, ALL pixels outside connected body silhouette transparent. No fog, glow, gradient, shadow, backdrop, text, extra panels, detached parts or magical effects.",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-476f-77d1-9cff-1b100be80079/exec-3534451c-0c62-4141-a4ff-54500b6f702b.png",
+    "output": "src/assets/characters/combat-v3/silver-hunter.png"
+  },
+  {
+    "id": "witcher",
+    "mode": "built-in image_gen",
+    "reference": "src/assets/characters/witcher.png",
+    "prompt": "Production game sprite, ONE character ONLY, transparent PNG. Reference portrait is for IDENTITY/COSTUME only; completely replace pose and camera. Witcher mutant: tight black stitched skullcap, pale gray skin hands, black segmented armor with thin green seams, no hair. Camera exactly vertically down 90 degrees, view top of crown shoulders upper body arms, no front face or standing portrait. Face/aim RIGHT. EMPTY HANDS in rifle-holding pose, arms asymmetric: lower right arm bent near chest with rear gripping hand at x65%, y55%; upper left arm extends farther right with cupped forward support hand at x82%, y55%. Two hands separated along same horizontal line; NO weapon/prop whatsoever. Torso/head occupies x25-60%, y25-75%; hands to right; compact silhouette central75% canvas. Gritty handpainted dark-outlined postapocalyptic 2D art, readable at game scale. True alpha, ALL pixels outside connected body silhouette transparent. No insects, fog, glow, gradient, shadow, backdrop, text, extra panels, detached parts or magical effects.",
+    "editPrompt": "Correct this single overhead combat sprite. Change camera to TRUE 90 DEGREE OVERHEAD: only top black skullcap crown visible, face must be entirely occluded by head, no nose, cheek, ear or eye visible. Keep black armor green seams, pale hands, body pose and right facing direction. Align rear hand and forward hand on horizontal y=58% axis, keeping them separated. REMOVE every soft halo/shadow outside silhouette and inside gap between arms; all outside character silhouette is absolutely transparent alpha. Keep only crisp isolated single character, no background and no props.",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-476f-77d1-9cff-1b100be80079/exec-7dcbc10d-8651-4e1d-b358-9126996371b6.png",
+    "output": "src/assets/characters/combat-v3/witcher.png"
+  }
+]

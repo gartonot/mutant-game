@@ -1,51 +1,44 @@
+/** Fixed-capacity ring: no point objects, splice, or one stroke per tiny segment. */
 export class BulletTrail {
-    private history: { x: number; y: number }[] = [];
-    private readonly maxLength = 102;
-
-    constructor(initialX: number, initialY: number) {
-        this.history.push({ x: initialX, y: initialY });
+    private readonly capacity = 102;
+    private points = new Float64Array(this.capacity * 2);
+    private head = 0;
+    private count = 0;
+    private lastX: number;
+    private lastY: number;
+    constructor(x: number, y: number) {
+        this.lastX = x; this.lastY = y;
+        this.append(x, y);
     }
-
-    public update(x: number, y: number): void {
-        const last = this.history[this.history.length - 1];
-        const dx = x - last.x;
-        const dy = y - last.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        const segmentCount = Math.floor(distance / 2); // интерполяция с шагом ~2px
-        for (let i = 1; i <= segmentCount; i++) {
-            const t = i / (segmentCount + 1);
-            const ix = last.x + dx * t;
-            const iy = last.y + dy * t;
-            this.history.push({ x: ix, y: iy });
-        }
-
-        this.history.push({ x, y });
-
-        if (this.history.length > this.maxLength) {
-            this.history.splice(0, this.history.length - this.maxLength);
-        }
+    private append(x: number, y: number): void {
+        const index = this.head * 2;
+        this.points[index] = x; this.points[index + 1] = y;
+        this.head = (this.head + 1) % this.capacity;
+        this.count = Math.min(this.count + 1, this.capacity);
     }
-
-    public draw(ctx: CanvasRenderingContext2D): void {
-        if (this.history.length < 2) return;
-
+    update(x: number, y: number): void {
+        const dx = x - this.lastX, dy = y - this.lastY;
+        const segments = Math.min(this.capacity, Math.floor(Math.hypot(dx, dy) / 2));
+        for (let i = 1; i <= segments; i++) {
+            const t = i / (segments + 1);
+            this.append(this.lastX + dx * t, this.lastY + dy * t);
+        }
+        this.append(x, y); this.lastX = x; this.lastY = y;
+    }
+    draw(ctx: CanvasRenderingContext2D): void {
+        if (this.count < 2) return;
+        const start = (this.head - this.count + this.capacity) % this.capacity;
+        const x = this.points[start * 2], y = this.points[start * 2 + 1];
+        if (x === this.lastX && y === this.lastY) return;
         ctx.save();
-        ctx.lineWidth = 3;
-        ctx.lineCap = 'round';
-
-        for (let i = 1; i < this.history.length; i++) {
-            const prev = this.history[i - 1];
-            const curr = this.history[i];
-            const alpha = i / this.history.length;
-
-            ctx.strokeStyle = `rgba(255, 255, 150, ${alpha * 0.4})`;
-            ctx.beginPath();
-            ctx.moveTo(prev.x, prev.y);
-            ctx.lineTo(curr.x, curr.y);
-            ctx.stroke();
+        const fade = ctx.createLinearGradient(x, y, this.lastX, this.lastY);
+        fade.addColorStop(0, 'rgba(255,255,150,0)'); fade.addColorStop(1, 'rgba(255,255,150,0.4)');
+        ctx.strokeStyle = fade; ctx.lineWidth = 3; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(x, y);
+        for (let i = 1; i < this.count; i++) {
+            const index = ((start + i) % this.capacity) * 2;
+            ctx.lineTo(this.points[index], this.points[index + 1]);
         }
-
-        ctx.restore();
+        ctx.stroke(); ctx.restore();
     }
 }

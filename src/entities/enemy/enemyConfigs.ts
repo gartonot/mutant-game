@@ -9,8 +9,8 @@ export const ENEMY_CONFIGS: Record<string, IEnemyConfig> = {
     },
     [EnemyType.TANK]: {
         type: EnemyType.TANK,
-        maxHealth: 5,
-        damageToPlayer: 2,
+        maxHealth: 3,
+        damageToPlayer: 1,
     },
     [EnemyType.BOSS]: {
         type: EnemyType.BOSS,

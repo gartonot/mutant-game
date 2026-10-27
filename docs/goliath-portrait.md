@@ -1,0 +1,11 @@
+# Голиаф — портрет
+
+Создан встроенным imagegen по `references/characters/goliath.png`. Исходный PNG сохранён без изменений в `src/assets/characters/goliath.png`.
+
+Массивный лысый гуманоид с серо-синей кожей, широкими плечами и огромными руками. Тёмные накладки с красными акцентами, гофрированные шланги вокруг шеи, светящиеся зелёные трубки и круглые элементы на руках. На портрете нет оружия в руках, как на референсе.
+
+Добавлена закрытая карточка для просмотра с +100 очков жизни, пулемётом (+100 патронов) и описанием «Удара голиафа». Радиус не придуман; сведения об арене не перенесены. История отсутствует на референсе и не добавлена. Боевой спрайт, механики, цена и открытие не реализуются.
+
+## Итоговый промпт
+
+Use case: stylized-concept. Create one final 2:3 portrait for a post-apocalyptic survival shooter. Input screenshot is reference for Goliath's identity, anatomy, equipment and pose: use ONLY the left portrait, discard interface. Goliath is an enormous massively muscular bald humanoid with slate blue-grey skin, small pale eyes under heavy brow, broad stern square face, thick neck, immense shoulders and arms, powerful pectorals and segmented abdominal muscles. Preserve the original intimidating proportions, head small relative to massive body. Dark charcoal fitted armored plates and straps with muted burgundy red accents following chest and abdomen, heavy shoulder hardware, thick corrugated dark hoses framing neck and two bright green translucent tubes looping up above shoulders and back into harness, circular green nodes on upper arms and forearms. Dark worn trousers, broad utility belt with pouches and rectangular silver buckle, forearm straps. Standing facing viewer in slight three-quarter pose, clenched lowered hands, no handheld gun as in the reference. Head to upper thighs, full head and upper tube loops with safe margin; broad silhouette fills frame without cropping shoulders. Rich realistic painted 2010 PC survival game portrait: dimensional anatomy, soft shadows, finely textured blue-grey skin, worn metal and fabric, controlled green glow on nearby surfaces. Muted burgundy and burnt orange atmospheric industrial ruins background, uncluttered. No flat cartoon fills, thick outlines, extra limbs, hair, helmet, text, logos, watermarks, price, UI, border or extra people.

@@ -1,103 +1,33 @@
-import { Bullet } from '@/entities/bullet/Bullet';
+import type { Bullet } from '@/entities/bullet/Bullet';
 import type { IWeapon } from '@/entities/weapon/IWeapon';
-import { Pistol } from '@/entities/weapon/Pistol';
-import { Rifle } from '@/entities/weapon/Rifle';
-import { Shotgun } from '@/entities/weapon/Shotgun';
 
 export class PlayerWeaponController {
     private bullets: Bullet[] = [];
-    private availableWeapons: IWeapon[] = [
-        new Pistol(),
-        new Shotgun(),
-        new Rifle(),
-    ];
-    private selectedWeaponIndex = 0;
-
-    // Получение пуль
-    public getBullets(): Bullet[] {
-        return this.bullets;
+    private selectedWeaponIndex: number;
+    constructor(private readonly weapons: readonly (IWeapon | null)[], private readonly now = () => performance.now()) {
+        this.selectedWeaponIndex = weapons.findIndex(weapon => weapon !== null);
+        if (this.selectedWeaponIndex < 0) throw new Error('No weapons equipped');
     }
-
-    // Установка пуль
-    public setBullets(bullets: Bullet[]): void {
-        this.bullets = bullets;
+    get slots(): readonly (IWeapon | null)[] { return this.weapons; }
+    get selectedIndex(): number { return this.selectedWeaponIndex; }
+    get selectedWeapon(): IWeapon { return this.weapons[this.selectedWeaponIndex]!; }
+    getBullets(): Bullet[] { return this.bullets; }
+    setBullets(bullets: Bullet[]): void { this.bullets = bullets; }
+    switchToWeapon(index: number): void {
+        if (Number.isInteger(index) && this.weapons[index] && index !== this.selectedWeaponIndex) { this.resetTrigger(); this.selectedWeaponIndex = index; }
     }
-
-    // Выбранное оружие
-    public get selectedWeapon(): IWeapon {
-        return this.availableWeapons[this.selectedWeaponIndex];
-    }
-
-    // Переключение оружия
-    public switchToWeapon(index: number): void {
-        if (index >= 0 && index < this.availableWeapons.length) {
-            this.selectedWeaponIndex = index;
+    cycleWeapon(direction: -1 | 1): void {
+        for (let step = 1; step < this.weapons.length; step++) {
+            const index = (this.selectedWeaponIndex + direction * step + this.weapons.length) % this.weapons.length;
+            if (this.weapons[index]) { this.switchToWeapon(index); return; }
         }
     }
-
-    public tryShoot(
-        x: number,
-        y: number,
-        angle: number,
-        onVisualEffect?: (x: number, y: number, angle: number) => void,
-    ) {
-        const now = performance.now();
-        const weapon = this.selectedWeapon;
-
-        if (!weapon.lastShotTime) {
-            weapon.lastShotTime = 0;
-        }
-
-        if (now - weapon.lastShotTime >= weapon.fireRate) {
-            weapon.lastShotTime = now;
-            const fired = weapon.fire(x, y, angle, onVisualEffect);
-            if (Array.isArray(fired)) {
-                this.bullets.push(...fired);
-                return fired;
-            } else {
-                this.bullets.push(fired);
-                return [fired];
-            }
-        }
-
-        return null;
+    resetTrigger(): void { this.selectedWeapon.resetTrigger(this.now()); }
+    tryShoot(x: number, y: number, angle: number, onVisualEffect?: (x: number, y: number, angle: number) => void, triggerHeld = true): Bullet[] | null {
+        const fired = this.selectedWeapon.tryFire(this.now(), x, y, angle, onVisualEffect, triggerHeld);
+        if (fired) this.bullets.push(...fired);
+        return fired;
     }
-
-    public drawWeaponUI(ctx: CanvasRenderingContext2D): void {
-        const squareSize = 40;
-        const padding = 10;
-        const offsetX = window.innerWidth - (this.availableWeapons.length * (squareSize + padding));
-        const offsetY = window.innerHeight - squareSize - padding;
-
-        // Доступные оружия
-        this.availableWeapons.forEach((weapon, index) => {
-            const x = offsetX + index * (squareSize + padding);
-            const y = offsetY;
-
-            ctx.strokeStyle = index === this.selectedWeaponIndex ? '#f1c40f' : '#fff';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(x, y, squareSize, squareSize);
-
-            ctx.fillStyle = '#fff';
-            ctx.font = '20px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(weapon.name[0], x + squareSize / 2, y + squareSize / 2);
-        });
-    }
-
-    public canShoot(): boolean {
-        const now = performance.now();
-        const weapon = this.selectedWeapon;
-        weapon.lastShotTime ??= 0;
-        return now - weapon.lastShotTime >= weapon.fireRate;
-    }
-
-    public getCooldownProgress(): number {
-        const now = performance.now();
-        const weapon = this.selectedWeapon;
-        weapon.lastShotTime ??= 0;
-        const progress = (now - weapon.lastShotTime) / weapon.fireRate;
-        return Math.min(progress, 1);
-    }
+    canShoot(): boolean { return this.selectedWeapon.state.canShoot(this.now()); }
+    getCursorProgress(): number | null { return this.selectedWeapon.cursorProgress(this.now()); }
 }

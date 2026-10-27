@@ -1,31 +1,28 @@
-import type { IGameEntity } from '@entities/interfaces';
+import type { CharacterId } from '@/gameplay/ids';
+import type { WeaponId } from '@/gameplay/ids';
 
-export class Player implements IGameEntity {
+export class Player {
     x;
     y;
     speed = 5;
     radius = 20;
+    character: CharacterId = 'mercenary';
+    weapon: WeaponId = 'pistol';
+    angle = 0;
+    recoil = 0;
 
     // Здоровье игрока
     maxHp = 100;
     currentHp = 100;
+    damageTaken = 0;
 
-    constructor(x = window.innerWidth / 2, y = window.innerHeight / 2) {
+    constructor(x = 0, y = 0) {
         this.x = x;
         this.y = y;
     }
 
-    update() {}
-
-    // Отрисовка персонажа
-    draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = '#2ecc71';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
     takeDamage(amount: number) {
+        this.damageTaken += Math.min(this.currentHp, Math.max(0, amount));
         this.currentHp -= amount;
         if (this.currentHp <= 0) {
             this.currentHp = 0;

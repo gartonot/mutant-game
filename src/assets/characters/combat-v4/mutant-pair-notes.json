@@ -1,0 +1,76 @@
+{
+  "tool": "built-in image_gen",
+  "entries": [
+    {
+      "id": "half-mutant",
+      "file": "src/assets/characters/combat-v4/half-mutant.png",
+      "source": [
+        100,
+        306,
+        1082,
+        654
+      ],
+      "headCenter": [
+        556,
+        622
+      ],
+      "hands": [
+        {
+          "x": 809,
+          "y": 656,
+          "rx": 30,
+          "ry": 16
+        },
+        {
+          "x": 1091,
+          "y": 726,
+          "rx": 30,
+          "ry": 16
+        }
+      ],
+      "drawWidth": 88,
+      "rotation": -0.24330921559601026,
+      "prompt": "Use case: stylized-concept. Create ONE finished transparent PNG combat sprite of HALF-MUTANT for a 2D top-down shooter. Reference 1 supplies character identity only: muscular olive green bald mutant, dark goggles with green lenses and metal mouth mask, bare scarred green shoulders and arms, brown utility harness. Completely redraw its perspective. Reference 2 left body supplies camera and compact pose only; do not include separate head or panels. STRICT orthographic 90-degree overhead camera, looking straight down: crown and tops of shoulders, back to LEFT, front/aim straight RIGHT. NO frontal chest, no visible full face, no legs, no isometric camera. One connected head-and-upper-body sprite. Shoulders aligned vertically. Bent empty arms in realistic rifle grip, rear trigger palm centered x68%, y52%, front support palm x84%, y52%, BOTH centers on same horizontal axis. Compact proportional muscular hands with curled gripping fingers, not giant claws. Torso center x42%, y50%. All silhouette inside x15-90%, y18-82% of square canvas. Gritty realistic hand-painted game art matching reference, clear matte shapes, restrained detail readable at 80px. Real transparent alpha around body and between arms. No weapon, props, floating parts, shadow, fog, glow halo, background, text, border or extra figure.",
+      "refinementPrompt": "Use case: precise-object-edit. Edit this ONE mutant game sprite. Keep its identity, olive green bald scarred skin, metal mouthmask and green goggles, brown back pouches, same textured realistic overhead style and transparent background. Correct CAMERA to EXACTLY VERTICAL 90 DEGREE bird's-eye overhead: only crown of head and tops of shoulders are visible, goggles and mask only as a tiny right edge; HIDE entire face and chest. Correct POSE: character faces straight RIGHT. Upper-side arm bends sharply down-right to form the REAR gripping fist at pixel (850,660). Lower-side arm reaches right and slightly up to form the FORWARD cupped gripping hand at pixel (1090,660). These two hand centers must be on SAME y=660 horizontal axis, separated by 240 px. Entire torso center remains (540,640). Both wrists connected naturally. NO weapon. NO legs. Square 1280 canvas. Remove current incorrectly separated hands and redraw both arms into described asymmetric firearm pose. Keep all background genuinely transparent, no halo or ground shadow.",
+      "notes": "Strict overhead corrected on second generation, face hidden with goggles at right edge. No legs. Alpha corner 0. Existing v3 unchanged.",
+      "drawX": -37.08687615526802,
+      "drawY": -25.70055452865065,
+      "palmDistance": 23.63134137253482
+    },
+    {
+      "id": "goliath",
+      "file": "src/assets/characters/combat-v4/goliath.png",
+      "source": [
+        72,
+        255,
+        1143,
+        754
+      ],
+      "headCenter": [
+        584,
+        612
+      ],
+      "hands": [
+        {
+          "x": 822,
+          "y": 622,
+          "rx": 30,
+          "ry": 16
+        },
+        {
+          "x": 1113,
+          "y": 725,
+          "rx": 30,
+          "ry": 16
+        }
+      ],
+      "drawWidth": 90,
+      "rotation": -0.34019108680886573,
+      "prompt": "Use case: stylized-concept. Create ONE finished transparent PNG combat sprite of GOLIATH for a 2D top-down shooter. Reference 1 supplies identity only: enormous bald gray-blue muscular mutant, dark red-black harness, compact metal tank apparatus on back, green tubes over shoulders, circular green nodes on arms. Reference 2 supplies STRICT VERTICAL TOPDOWN CAMERA AND ARM POSE to copy EXACTLY; replace green mutant identity with Goliath. One connected head and upper body, no separate panels. Orthographic 90-degree overhead camera, only crown of bald head and top of shoulders/back, hide face and chest. Character faces RIGHT, shoulders vertical. Upper-side arm bent in sharply to rear fist near (820,650), lower-side arm reaches right to forward cupped hand near (1090,650); align both palm centers precisely on same horizontal y650 axis. Empty rifle-holding grip, no weapon. Torso center (500,640), square 1280 canvas with clear transparent margins. Compact natural hands. Gritty realistically handpainted game art, restrained highlights, dark material detail, distinct gray blue skin and green tubes. Real transparent alpha outside silhouette and between arms. No shadow, glow halo, fog, ground, legs, frontal face, frontal chest, text or floating parts.",
+      "notes": "Top-down crown and shoulder apparatus. Compact no legs; alpha corner 0. Hand diagonal needs stated modest rotation.",
+      "drawX": -40.31496062992126,
+      "drawY": -28.11023622047244,
+      "palmDistance": 24.306360928743803
+    }
+  ]
+}

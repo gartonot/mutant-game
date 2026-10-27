@@ -1,9 +1,18 @@
+import type { HitEffect } from '@/gameplay/HitEffect';
+import { drawBulletSprite } from '@/rendering/BulletSprite';
 import { BulletTrail } from '@/effects/BulletTrail';
 import type { IGameEntity } from '@entities/interfaces';
 
 export class Bullet implements IGameEntity {
     x: number;
     y: number;
+    previousX: number;
+    previousY: number;
+    effect?: HitEffect;
+    piercing = false;
+    collisionResolved = false;
+    expired = false;
+    hitRegistered = false;
     radius = 4;
     speed: number;
     dx: number;
@@ -22,6 +31,8 @@ export class Bullet implements IGameEntity {
         pushBackForce = 5,
     ) {
         // Координаты пули
+        this.previousX = startX;
+        this.previousY = startY;
         this.x = startX;
         this.y = startY;
         // Координаты куда летит пуля
@@ -35,7 +46,9 @@ export class Bullet implements IGameEntity {
         this.trail = new BulletTrail(this.x, this.y);
     }
 
-    update() {
+    update(_deltaMs = 1000 / 60) {
+        this.previousX = this.x;
+        this.previousY = this.y;
         this.x += this.dx * this.speed;
         this.y += this.dy * this.speed;
 
@@ -44,7 +57,7 @@ export class Bullet implements IGameEntity {
             this.x < 0 || this.x > window.innerWidth ||
             this.y < 0 || this.y > window.innerHeight
         ) {
-            this.isDead = true;
+            this.expired = true;
         }
 
         this.trail.update(this.x, this.y);
@@ -55,37 +68,13 @@ export class Bullet implements IGameEntity {
         this.trail.draw(ctx);
 
         // Отрисовка пули
-        this.drawBullet(ctx);
+        if (this.effect?.slowMs) {
+            ctx.save(); ctx.fillStyle = '#d5fbff'; ctx.shadowColor = '#69c9ff'; ctx.shadowBlur = 10;
+            ctx.beginPath(); ctx.arc(this.x, this.y, 5, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        } else this.drawBullet(ctx);
     }
 
     private drawBullet(ctx: CanvasRenderingContext2D) {
-        const length = 13; // длина пули
-        const width = 3; // ширина пули
-
-        ctx.save();
-        ctx.translate(this.x, this.y);
-
-        // Вычисляем угол вращения на основе направления движения
-        const angle = Math.atan2(this.dy, this.dx);
-        ctx.rotate(angle);
-
-        // Настройки свечения
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = 'rgba(209, 216, 42, 80%)';
-
-        // Цвет пули
-        ctx.fillStyle = '#d1d82a';
-
-        // Рисуем пулю
-        ctx.beginPath();
-        ctx.moveTo(-length / 2 + width / 2, -width / 2);
-        ctx.arcTo(length / 2, -width / 2, length / 2, width / 2, width / 2);
-        ctx.arcTo(length / 2, width / 2, -length / 2, width / 2, width / 2);
-        ctx.arcTo(-length / 2, width / 2, -length / 2, -width / 2, width / 2);
-        ctx.arcTo(-length / 2, -width / 2, length / 2, -width / 2, width / 2);
-        ctx.closePath();
-        ctx.fill();
-
-        ctx.restore();
+        drawBulletSprite(ctx, this.x, this.y, Math.atan2(this.dy, this.dx));
     }
 }

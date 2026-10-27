@@ -1,0 +1,38 @@
+[
+  {
+    "id": "pistol",
+    "prompt": "Use case: stylized-concept. Asset type: transparent 2D weapon sprite for a TOP-DOWN postapocalyptic shooter. Create exactly ONE rugged semi-automatic PISTOL, strict orthographic overhead view looking vertically down at its TOP surface. Weapon lies horizontally, muzzle pointing RIGHT, back of slide LEFT. Camera sees top of rectangular steel slide, rear and front iron sights, worn dark gunmetal, small warm brass mechanical accents; grip is below slide and mostly hidden by overhead projection. Do NOT show a lateral handgun silhouette, no downward sticking pistol handle, no perspective angle. Hand-painted detailed game illustration with firm dark outline, restrained highlights and worn steel textures, readable small silhouette. Long horizontal sprite, barrel centerline at y=50%, centered complete weapon, at least 8% clear margin on all sides. Genuine transparent alpha background. No hands, person, ammunition, muzzle flash, text, logos, cast shadow or background. Landscape canvas.",
+    "tool": "built-in image_gen",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-2952-7e30-9e0b-c6c864f151e4/exec-8bf32ca2-cf89-4c12-a895-1075d66294ad.png",
+    "destination": "src/assets/weapons/v2/pistol.png"
+  },
+  {
+    "id": "rifle",
+    "prompt": "Use case: stylized-concept. Asset type: transparent 2D weapon sprite for a TOP-DOWN postapocalyptic shooter. Exactly ONE rugged compact ASSAULT RIFLE, strict ORTHOGRAPHIC OVERHEAD view looking vertically down at its TOP surface. Gun horizontal muzzle pointing RIGHT, stock LEFT, barrel centerline exactly y=50%. Symmetrical overhead silhouette: broad scratched olive polymer buttstock, dark steel rectangular receiver with modest small rear sight, ribbed olive fore-end, narrow long dark barrel and vented muzzle brake. Gun magazine and pistol grip underneath are mostly hidden by overhead view; NO lateral side-profile silhouette or downward sticking grip. Hand-painted detailed game illustration, firm dark outline, muted worn steel and olive polymer, subtle rust fasteners, restrained edge highlights. Complete gun centered on landscape canvas with at least 8% empty margin all sides. Genuine alpha transparent background. No hands, people, ammo, text, logos, shadow or background. Single isolated weapon.",
+    "tool": "built-in image_gen",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-2952-7e30-9e0b-c6c864f151e4/exec-d20fce57-ba62-4b3d-a90b-fa7ed9f0e88d.png",
+    "destination": "src/assets/weapons/v2/rifle.png"
+  },
+  {
+    "id": "m16",
+    "prompt": "Use case: stylized-concept. Asset: single transparent weapon sprite for a 2D TOP-DOWN postapocalyptic shooter. Subject: M16 assault rifle with black fixed buttstock, black long ribbed triangular handguard, narrow barrel, characteristic carry handle viewed FROM ABOVE, small rear iron sight. Strict orthographic top view camera pointing vertically down onto TOP surfaces; not a side elevation and not 3/4 perspective. Gun horizontal buttstock LEFT, muzzle RIGHT, straight barrel centerline at y=50%. Carry handle top appears as a narrow elongated dark raised rail with inner channel. Magazine and trigger grip underneath mostly occluded; do not draw downward side-profile handle or magazine. Hand-painted game art with clear dark outline, scratched muted dark gunmetal and worn black polymer, restrained warm edge highlights, recognizable silhouette at small sizes. Single entire gun centered on wide landscape transparent canvas, 8% empty margins. Genuine alpha transparent background, no cast shadow, no hands, characters, ammo, text, logos or extra objects.",
+    "tool": "built-in image_gen",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-2952-7e30-9e0b-c6c864f151e4/exec-05d9d8dd-4dcb-4b76-8373-a4382ddf6716.png",
+    "destination": "src/assets/weapons/v2/m16.png"
+  },
+  {
+    "id": "ak47",
+    "prompt": "Use case: stylized-concept. Asset: single transparent weapon sprite for a 2D TOP-DOWN postapocalyptic shooter. Subject: rugged AK47 assault rifle with worn reddish walnut wooden buttstock and wooden fore-end, dark steel stamped receiver, iron sights and exposed narrow barrel. STRICT ORTHOGRAPHIC TOP VIEW: camera looking vertically down onto TOP surface, not a side elevation, no perspective. Gun horizontal buttstock LEFT, muzzle RIGHT, barrel centerline exactly y=50%. Top view shows narrow lengthwise receiver cover, gas tube and symmetrical wood stock; magazine and trigger grip below mostly hidden. Never draw the familiar lateral AK silhouette with hanging curved magazine. Hand-painted detailed game art, firm dark outline, muted scratched steel and warm weathered wood grain, restrained highlights and subtle rivets, readable small silhouette. Entire single gun centered on wide landscape transparent canvas, 8% empty margins. Genuine alpha transparency. No hands, person, ammunition, text, logos, shadows or background.",
+    "tool": "built-in image_gen",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-2952-7e30-9e0b-c6c864f151e4/exec-d5fb7a83-4ffb-4eed-b351-9e4279abdd6d.png",
+    "destination": "src/assets/weapons/v2/ak47.png"
+  },
+  {
+    "id": "shotgun",
+    "prompt": "Use case: stylized-concept. Create a harmless isolated inventory item illustration: one fictional vintage pump shotgun for a video game, with wood furniture and weathered steel. No scene or action. Strict orthographic TOP-DOWN view, camera looking vertically at its top surface. Long horizontal object, wood stock at LEFT and barrel end at RIGHT, longitudinal centerline at y=50%. Show symmetrical upper surfaces of broad walnut stock, steel receiver, ribbed wooden fore-end and barrel. Lower grip concealed by overhead projection. Painterly 2D game sprite with crisp dark outline, muted brown and steel gray, subtle worn texture. Entire object centered, landscape format, 8% clear margin all around. Genuine transparent alpha background. No people, hands, ammunition, violence, firing, text, logos, shadows or environment.",
+    "editPrompt": "Correct camera orientation of the shotgun illustration: rotate the OBJECT 90 degrees around its long barrel axis so we see exactly its TOP SURFACE in a strict vertical overhead orthographic view. Keep horizontal stock LEFT, muzzle RIGHT. The barrel must be precisely centered vertically along the weapon. The second tube and wood pump now sit UNDER the barrel and must be mostly occluded, visible symmetrically on both sides. Stock top must be narrow symmetrical shape, no large side face. The ejection port is on the side and must disappear. Preserve vintage wood/steel palette and painterly outlines. Single whole isolated object, genuine transparent background, no shadows, no text. This is a top-down game sprite, NOT a side view.",
+    "tool": "built-in image_gen",
+    "source": "C:/Users/garto/.codex/generated_images/01a17a9d-2952-7e30-9e0b-c6c864f151e4/exec-250c0cc1-a120-4344-b89e-90dfe0f2f585.png",
+    "destination": "src/assets/weapons/v2/shotgun.png"
+  }
+]

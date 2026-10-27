@@ -1,24 +1,45 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mutant</title>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        background: #111;
-        overflow: hidden;
-      }
-      canvas {
-        display: block;
-        cursor: none;
-      }
-    </style>
-  </head>
-  <body>
-    <canvas id="game"></canvas>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#061b0c" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a2410'/%3E%3Cpath d='M6 25V7h5l5 10 5-10h5v18h-5V15l-5 9-5-9v10z' fill='%236cf12a'/%3E%3C/svg%3E" />
+  <title>Мутант</title>
+</head>
+<body>
+  <canvas id="game" hidden></canvas>
+  <main id="menu" class="menu">
+    <div class="atmosphere" aria-hidden="true"></div>
+    <header class="menu-heading"><h1>МУТАНТ</h1></header>
+    <div class="menu-content">
+      <aside class="companion" aria-label="Робот — скоро">
+        <div class="robot" aria-hidden="true"><div class="robot-aerial"></div><div class="robot-body"><i></i></div><div class="robot-ring"></div><div class="robot-beam"></div></div>
+        <strong>Робот</strong>
+      </aside>
+      <section class="menu-panel" aria-label="Главное меню">
+        <div class="mode-list">
+          <button class="mode missions" aria-disabled="true" data-description="Играй в разные миссии, набирай рейтинг и получай очки улучшения. Задания появятся в одном из следующих обновлений."><span>Задания</span><small><svg viewBox="0 0 16 18" aria-hidden="true"><path d="M4 7V5a4 4 0 0 1 8 0v2M2 7h12v10H2z"/></svg>СКОРО</small></button>
+          <button class="mode survival" id="survival" data-description="Выживай в заражённой зоне. Отбивайся от волн мутантов и продержись как можно дольше."><span>Выживание</span></button>
+        </div>
+        <button class="mode achievements" id="achievements" data-description="Посмотри свои достижения, прогресс и бонусы наград."><span>Достижения</span></button>
+      </section>
+      <aside class="mode-description" aria-live="polite" aria-hidden="true"><p id="description"></p></aside>
+    </div>
+  </main>
+  <button id="back-to-menu" class="back-to-menu" hidden>Пауза <kbd>Esc</kbd></button>
+  <dialog id="pause-dialog" class="pause-dialog" aria-labelledby="pause-title" aria-describedby="pause-description">
+    <h2 id="pause-title">Пауза</h2>
+    <p id="pause-description">Бой приостановлен</p>
+    <div class="pause-actions">
+      <button id="resume-game" autofocus>Продолжить</button>
+      <button id="restart-game">Начать заново</button>
+      <button id="pause-main-menu">Главное меню</button>
+    </div>
+    <small>Esc — продолжить бой</small>
+  </dialog>
+  <main id="rewards-screen" class="rewards-screen" hidden></main>
+  <aside id="award-tooltip" class="award-tooltip" role="tooltip" aria-hidden="true"></aside>
+  <script type="module" src="/src/main.ts"></script>
+</body>
 </html>

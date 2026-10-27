@@ -1,0 +1,82 @@
+.equipment-frame > * { position: relative; }
+.equipment-top { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.equipment-box { background: #111717; border: 2px solid #303b3e; border-radius: 14px; padding: 12px; min-width: 0; }
+.equipment-box h2 { color: #e4e9e0; text-align: center; font-size: 15px; margin: 0 0 12px; }
+.equipment-box h2 small { color: #899687; font-size: 10px; margin-left: 8px; text-transform: uppercase; }
+.equipment-slots, .bonus-slots { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.equipment-slot { min-width: 0; position: relative; color: #d5dfd0; border: 2px solid #899294; border-radius: 16px; background: radial-gradient(#394044,#1b2325); min-height: 94px; padding: 12px 2px 5px; }
+.equipment-slot[aria-pressed=true] { border-color: #a1ec53; box-shadow: 0 0 0 2px #3e7524, inset 0 0 18px #5f982e30; }
+.equipment-slot img { width: 100%; height: 43px; object-fit: contain; }
+.slot-number { position: absolute; top: 3px; left: 7px; color: #a3b59a; font-size: 11px; }
+.slot-name { display: block; font-size: 10px; overflow-wrap: anywhere; }
+.empty-slot { display: block; height: 43px; font-size: 30px; color: #66716d; }
+.bonus-slots { grid-template-columns: repeat(6,1fr); align-items: center; height: 94px; }
+.bonus-placeholder { aspect-ratio: 1; border-radius: 50%; border: 3px solid #717d69; background: #252c2a; color: #65735f; display: grid; place-items: center; }
+.bonus-placeholder.locked { border-color: #796e35; font-size: 13px; opacity: .6; }
+.equipment-currency { display: flex; align-items: center; gap: 12px; margin: 14px 0; border: 2px solid #384640; border-radius: 10px; background: #101b13; padding: 8px 12px; color: #cbd6bf; }
+.equipment-gear { font-size: 30px; color: #80b939; }
+.equipment-currency span:nth-child(2) { font-size: 12px; flex: 1; }
+.equipment-currency b { margin-left: 12px; font-size: 20px; }
+.equipment-currency button { color: #9da798; border: 1px solid #596662; border-radius: 7px; background: linear-gradient(#737e80,#3c4446); padding: 6px 22px; font-weight: bold; }
+.equipment-currency small { color: #809079; font-size: 11px; }
+.equipment-selection { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 5px 12px; }
+.equipment-selection h2 { margin: 0 0 4px; color: #e9eddf; font-size: 18px; }
+.equipment-selection p, .equipment-note { margin: 0; color: #a5b29e; font-size: 12px; line-height: 1.5; }
+.equipment-clear { border: 1px solid #657467; border-radius: 6px; color: #d4dfcc; background: #26372b; padding: 8px 12px; }
+.equipment-clear:disabled { opacity: .4; }
+.equipment-catalog { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 12px; padding: 14px; border: 2px solid #424e48; border-radius: 15px; background: #101710; max-height: 350px; overflow-y: auto; scrollbar-color: #94a194 #19231b; }
+.equipment-item { display: flex; flex-direction: column; align-items: center; min-width: 0; padding: 10px; border: 2px solid #829080; border-radius: 13px; background: linear-gradient(140deg,#a7ac92,#737d68); color: #152016; box-shadow: inset 0 1px 2px #fff5,0 3px 5px #0008; }
+.equipment-item img { width: 100%; height: 100px; object-fit: contain; filter: drop-shadow(2px 4px 2px #0006); }
+.equipment-category { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.equipment-item strong { font-size: 15px; }
+.equipment-ammo { font-size: 12px; margin: 7px 0; }
+.equipment-equipped { font-size: 11px; background: #344e2d; color: #e2f2d0; border-radius: 12px; padding: 4px 12px; }
+.equipment-item[aria-pressed=true] { border-color: #c2ff78; box-shadow: 0 0 0 2px #5c9b39,inset 0 0 18px #e2ff8140; }
+.equipment-item:not(:disabled):hover { filter: brightness(1.12); }
+.equipment-status { color: #c7ddaf; font-size: 13px; margin: 12px 5px 6px; }
+.equipment-note { padding: 0 5px 5px; }
+.preparation-play:disabled { filter: grayscale(1); opacity: .5; cursor: not-allowed; }
+@media(max-width:760px) { .equipment-top { grid-template-columns: 1fr; } .equipment-catalog { grid-template-columns: repeat(2,minmax(0,1fr)); max-height: 360px; } .bonus-slots { height: auto; max-width: 360px; margin: auto; } .equipment-currency { flex-wrap: wrap; gap: 8px; } .equipment-currency small { width: 100%; } .equipment-selection h2 { font-size: 16px; } }
+
+.equipment-description { font-size: 11px; line-height: 1.4; margin-bottom: 10px; flex: 1; }
+.equipment-top { grid-template-columns: 1.2fr 1fr; }
+@media(max-width:760px) { .equipment-top { grid-template-columns: 1fr; } }
+
+.equipment-item:disabled:not([aria-pressed=true]) { filter: grayscale(1); opacity: .42; cursor: not-allowed; }
+
+/* Compact vertical weapon cards; details live in the floating tooltip. */
+.equipment-slots { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.equipment-slot { display: grid; place-items: center; height: 94px; padding: 0; }
+.equipment-slot img { width: 96px; max-width: none; height: 40px; transform: rotate(-90deg); }
+.equipment-catalog { grid-template-columns: repeat(auto-fill, minmax(82px, 1fr)); gap: 10px; max-height: 350px; }
+.equipment-item { position: relative; display: grid; place-items: center; height: 150px; padding: 0; overflow: hidden; }
+.equipment-item img { width: 164px; max-width: none; height: 68px; transform: rotate(-90deg); }
+.equipment-item[aria-disabled=true] { filter: grayscale(1); opacity: .42; cursor: not-allowed; }
+.equipment-item[aria-disabled=true]:hover { filter: grayscale(1); }
+.equipment-item:focus-visible, .equipment-slot:focus-visible { outline: 2px solid #dbff99; outline-offset: 2px; }
+.equipment-sr-status { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.equipment-tooltip { position: fixed; z-index: 1000; width: 340px; max-width: calc(100vw - 16px); box-sizing: border-box; padding: 9px; border: 3px solid #64777b; border-radius: 17px; background: linear-gradient(135deg,#a4b5bc,#536771 45%,#788f99); box-shadow: 0 5px 12px #000b, inset 0 1px 2px #dbe6ea; pointer-events: none; color: #e8eee7; font-family: Arial, sans-serif; }
+.equipment-tooltip[hidden] { display: none; }
+.equipment-tooltip-body { background: #101411; padding: 10px; border-radius: 9px; box-shadow: inset 0 2px 5px #000; }
+.equipment-tooltip strong { display: block; padding: 5px 7px; background: linear-gradient(90deg,#258318,#18571280,transparent); font-size: 16px; }
+.equipment-tooltip p { margin: 8px 6px 0; font-size: 12px; line-height: 1.4; }
+.equipment-tooltip p:first-of-type { font-weight: bold; color: #d9e2d4; }
+.equipment-tooltip small { display: block; margin: 9px 6px 0; font-size: 11px; color: #9eaf96; }
+@media(max-width:760px) { .equipment-catalog { grid-template-columns: repeat(auto-fill,minmax(72px,1fr)); padding: 10px; gap: 8px; } }
+
+.equipment-item img, .equipment-slot img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
+.equipment-tooltip-body > * { font-family: Arial, sans-serif; }
+.equipment-tooltip p:empty { display: none; }
+
+/* Inventory reference: eight portrait cards, inset black tray, two material finishes. */
+.equipment-catalog { grid-template-columns: repeat(8,minmax(0,1fr)); gap: 12px; padding: 12px; max-height: 430px; border: 5px solid #171d1f; background: #090d0e; border-radius: 19px; box-shadow: inset 0 2px 7px #000, 0 1px 0 #596165; scrollbar-width: auto; scrollbar-color: #aeb6ba #222a2f; }
+.equipment-item { height: auto; aspect-ratio: .57; border: 1px solid #55594b; border-radius: 17px; background: linear-gradient(150deg,#b9bd90 0%,#a3a779 48%,#737a54 100%); box-shadow: inset 0 1px 2px #f6f6d280,0 3px 4px #000b; }
+.equipment-item[data-finish=steel] { background: linear-gradient(155deg,#b9babb,#919293 48%,#585b5d); border-color: #66696a; }
+.equipment-item img { width: 100%; height: 100%; transform: translate(-50%,-50%); filter: drop-shadow(2px 3px 2px #0008); }
+.equipment-slot img { width: 60px; height: 90px; transform: translate(-50%,-50%); }
+.equipment-item[aria-pressed=true] { border-color: #c3f17c; box-shadow: inset 0 0 15px #c3f17c40,0 0 0 2px #76ab43; }
+.equipment-catalog::-webkit-scrollbar { width: 15px; }
+.equipment-catalog::-webkit-scrollbar-track { background: #20282d; border-radius: 8px; }
+.equipment-catalog::-webkit-scrollbar-thumb { border: 3px solid #2d363d; border-radius: 7px; background: linear-gradient(90deg,#7a858d,#d4dbdf,#87929a); }
+@media(min-width:761px) and (max-height:820px) { .equipment-catalog { max-height: max(140px, calc(100svh - 430px)); } }
+@media(max-width:760px) { .equipment-catalog { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; padding: 8px; max-height: 370px; } .equipment-item { border-radius: 12px; } }

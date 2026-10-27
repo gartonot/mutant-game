@@ -1,0 +1,29 @@
+{
+  "mode": "built-in image_gen",
+  "assets": [
+    {
+      "id": "plasma-auto",
+      "prompt": "Use case: stylized-concept. Asset type: transparent sprite for a 2D top-down postapocalyptic shooter. One plasma automatic rifle, dark slim sci-fi gun with worn charcoal steel armor and restrained luminous blue insets along the receiver, small blue power cells. Painterly hand-painted detailed game sprite, strong clean dark outline, muted metal highlights. STRICT ORTHOGRAPHIC TOP VIEW: camera vertically above weapon looking straight down onto its upper surface, not side view, not three-quarter, no perspective. Gun lies horizontally with muzzle pointing RIGHT, buttstock LEFT, straight barrel axis exactly at image y=50%. Bilaterally near-symmetric narrow top silhouette, pistol grip and magazine hidden underneath. Entire gun centered, with at least 8% clear margin around all edges. True transparent alpha background, no ground, no cast shadow, no hands, no text, no bullets, no effects outside weapon. Readable silhouette at 64 pixels. Render one complete isolated weapon only.",
+      "source": "C:/Users/garto/.codex/generated_images/01a17a9d-66f9-71d3-a48b-54785aa3c78a/exec-94d8dc0c-11ac-4c62-8a0e-27cd1f347c8c.png",
+      "path": "src/assets/weapons/v2/plasma-auto.png"
+    },
+    {
+      "id": "laser",
+      "prompt": "Use case: stylized-concept. Asset type: transparent sprite for a 2D top-down postapocalyptic shooter. One laser rifle, long narrow dark worn gunmetal steel gun, distinctive red-orange emitter coil enclosed in the forward barrel, thin amber-orange power strips, angular back stock. Painterly hand-painted detailed game sprite, strong clean dark outline, muted metal highlights. STRICT ORTHOGRAPHIC TOP VIEW: camera vertically above weapon looking straight down onto its upper surface, not side view, not three-quarter, no perspective. Gun lies horizontally with muzzle pointing RIGHT, buttstock LEFT, straight barrel axis exactly at image y=50%. Bilaterally near-symmetric narrow top silhouette, pistol grip and magazine hidden underneath. Entire gun centered occupying 80% image width, with at least 8% clear margin around all edges. True transparent alpha background, no ground, no cast shadow, no hands, no text, no bullets, no laser beam, no effects outside weapon. Readable silhouette at 64 pixels. Render one complete isolated weapon only.",
+      "source": "C:/Users/garto/.codex/generated_images/01a17a9d-66f9-71d3-a48b-54785aa3c78a/exec-cabc7428-1e47-4f8f-9555-4093b58a455c.png",
+      "path": "src/assets/weapons/v2/laser.png"
+    },
+    {
+      "id": "plasma-cannon",
+      "prompt": "Use case: stylized-concept. Asset type: transparent sprite for a 2D top-down postapocalyptic shooter. One heavy plasma cannon, chunky broad silver worn steel armored body, bulky cylindrical barrel with bright blue enclosed energy core and blue bands, short dark heavy stock. Clearly wider and heavier than a rifle. Painterly hand-painted detailed game sprite, strong clean dark outline, muted metal highlights. STRICT ORTHOGRAPHIC TOP VIEW: camera vertically above weapon looking straight down onto its upper surface, not side view, not three-quarter, no perspective. Gun lies horizontally with muzzle pointing RIGHT, buttstock LEFT, straight barrel axis exactly at image y=50%. Bilaterally near-symmetric top silhouette, pistol grip and magazine hidden underneath. Entire gun centered occupying 80% image width, with at least 8% clear margin around all edges. True transparent alpha background, no ground, no cast shadow, no hands, no text, no bullets, no effects outside weapon. Readable silhouette at 64 pixels. Render one complete isolated weapon only.",
+      "source": "C:/Users/garto/.codex/generated_images/01a17a9d-66f9-71d3-a48b-54785aa3c78a/exec-11a081e8-e5f0-41ce-b843-e3f4a3facfb2.png",
+      "path": "src/assets/weapons/v2/plasma-cannon.png"
+    },
+    {
+      "id": "plasma-grenade",
+      "prompt": "Use case: stylized-concept. Asset type: transparent sprite for a 2D top-down postapocalyptic shooter. One compact spherical plasma grenade. Worn silver metal sphere built from armored segments, vivid narrow blue luminous band across its center, small mechanical arming cap and subtle bolts. Painterly hand-painted detailed game sprite, strong clean dark outline, muted steel highlights. STRICT ORTHOGRAPHIC TOP VIEW: camera vertically above object looking straight down, not tilted, no perspective. Circle-shaped grenade centered with at least 15% clear margin around all edges. True transparent alpha background, no ground, no cast shadow, no hands, no text, no bullets, no barrel, no effects outside sphere. The blue light is confined to the surface band. Readable silhouette at 32 pixels. Render one complete isolated grenade only.",
+      "source": "C:/Users/garto/.codex/generated_images/01a17a9d-66f9-71d3-a48b-54785aa3c78a/exec-2245a861-91cf-4c68-b040-62e420208a8d.png",
+      "path": "src/assets/weapons/v2/plasma-grenade.png"
+    }
+  ]
+}

@@ -69,4 +69,8 @@ export class PlayerStatsController {
         }
         return Math.min(100, Math.round((this.totalHits / this.totalResolvedShots) * 100));
     }
+
+    public snapshot() {
+        return { kills: this.killCount, shots: this.totalShotsFired, accuracy: this.getAccuracy() };
+    }
 }

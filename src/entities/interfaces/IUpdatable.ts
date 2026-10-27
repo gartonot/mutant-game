@@ -1,3 +1,3 @@
 export interface IUpdatable {
-    update: () => void;
+    update: (deltaMs?: number) => void;
 }
