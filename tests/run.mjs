@@ -21,7 +21,9 @@ try {
             }));
         } }],
     });
-    const result = spawnSync(process.execPath, ['--test', outfile], { stdio: 'inherit' });
+    // Suites already share one bundle. Avoid the extra test worker and its binary
+    // stdout protocol, which can fail to deserialize Unicode output in Node.js.
+    const result = spawnSync(process.execPath, ['--test', '--experimental-test-isolation=none', outfile], { stdio: 'inherit' });
     if (result.error) throw result.error;
     process.exitCode = result.status ?? 1;
 } finally {
