@@ -1,4 +1,4 @@
-import { drawCharacter, mercenaryArtReady, assassinArtReady, destroyerArtReady, additionalCharacterArtReady } from '@/rendering/CharacterArt';
+import { drawCharacter, ensureCharacterArt, CHARACTER_IDS } from '@/rendering/CharacterArt';
 import { drawWeapon } from '@/rendering/WeaponArt';
 import { WEAPON_ORDER, WEAPON_ART, weaponAttachment } from '@/rendering/WeaponGeometry';
 import { CHARACTER_RIGS } from '@/rendering/CharacterRig';
@@ -80,7 +80,7 @@ function render() {
         }
         ctx.restore();
     }
-    document.querySelector('#status')!.textContent = `${assetsReady ? `${loadedWeaponSprites().length} оружий · ${loadedAdditionalCharacters().length + baseCharactersLoaded} персонажей` : 'Загрузка…'} · ${cards.length} сочетаний`;
+    document.querySelector('#status')!.textContent = `${assetsReady ? `${WEAPON_ORDER.length} оружий (${loadedWeaponSprites().length} растровых) · ${loadedAdditionalCharacters().length + baseCharactersLoaded} персонажей` : 'Загрузка…'} · ${cards.length} сочетаний`;
     document.querySelector('#validation')!.textContent = failures.length
         ? `Опора второй руки вне зоны: ${failures.length} из ${cards.length}. ${failures.slice(0, 8).join('; ')}${failures.length > 8 ? '…' : ''}`
         : `Проверено ${cards.length} сочетаний: ошибок опоры не найдено. Отдача ${kick}. Для одноручного хвата опора второй руки не требуется.`;
@@ -88,8 +88,9 @@ function render() {
 for (const control of [character, weapon, mode]) control.addEventListener('input', buildCards);
 for (const control of [angle, muzzle, grips, recoil]) control.addEventListener('input', render);
 buildCards();
-void Promise.all([weaponSpritesReady, mercenaryArtReady, assassinArtReady, destroyerArtReady, additionalCharacterArtReady]).then(results => {
-    baseCharactersLoaded = results.slice(1, 4).filter(Boolean).length;
+void Promise.all([weaponSpritesReady(), Promise.all(CHARACTER_IDS.map(ensureCharacterArt))]).then(([, characters]) => {
+    baseCharactersLoaded = CHARACTER_IDS.filter((id, index) =>
+        ['mercenary', 'assassin', 'destroyer'].includes(id) && characters[index]).length;
     assetsReady = true;
     render();
 });

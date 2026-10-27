@@ -1,0 +1,26 @@
+{
+  "tool": "built-in image_gen",
+  "referenceDirectory": "../v1",
+  "assets": [
+    {
+      "name": "shield",
+      "prompt": "Use case: precise-object-edit. Edit target: the provided single circular game bonus medallion. Make its GOLD tier variant. Change ONLY the outer silver/gunmetal beveled metallic rim into rich polished GOLD metal with warm amber recesses and pale gold highlights. Preserve the exact inner icon, interior colors, green inset ring, silhouette, circle size, position, lighting direction, all interior details and transparent alpha background. Gold should be clearly distinguishable at32px. No new symbols, no text, no changes to interior, no glow beyond the rim. The result must remain the same centered circular transparent sprite, same canvas dimensions."
+    },
+    {
+      "name": "rapid-fire",
+      "prompt": "Use case: precise-object-edit. Edit target: the provided single circular game bonus medallion. Make its GOLD tier variant. Change ONLY the outer silver/gunmetal beveled metallic rim into rich polished GOLD metal with warm amber recesses and pale gold highlights. Preserve the exact inner icon, interior colors, green inset ring, silhouette, circle size, position, lighting direction, all interior details and transparent alpha background. Gold should be clearly distinguishable at32px. No new symbols, no text, no changes to interior, no glow beyond the rim. The result must remain the same centered circular transparent sprite, same canvas dimensions."
+    },
+    {
+      "name": "move-speed",
+      "prompt": "Use case: precise-object-edit. Edit target: the provided single circular game bonus medallion. Make its GOLD tier variant. Change ONLY the outer silver/gunmetal beveled metallic rim into rich polished GOLD metal with warm amber recesses and pale gold highlights. Preserve the exact inner icon, interior colors, green inset ring, silhouette, circle size, position, lighting direction, all interior details and transparent alpha background. Gold should be clearly distinguishable at32px. No new symbols, no text, no changes to interior, no glow beyond the rim. The result must remain the same centered circular transparent sprite, same canvas dimensions."
+    },
+    {
+      "name": "double-damage",
+      "prompt": "Use case: precise-object-edit. Edit target: the provided single circular game bonus medallion. Make its GOLD tier variant. Change ONLY the outer silver/gunmetal beveled metallic rim into rich polished GOLD metal with warm amber recesses and pale gold highlights. Preserve the exact inner icon, interior colors, green inset ring, silhouette, circle size, position, lighting direction, all interior details and transparent alpha background. Gold should be clearly distinguishable at32px. No new symbols, no text, no changes to interior, no glow beyond the rim. The result must remain the same centered circular transparent sprite, same canvas dimensions."
+    },
+    {
+      "name": "health",
+      "prompt": "Use case: precise-object-edit. Edit target: the provided single circular game bonus medallion. Make its GOLD tier variant. Change ONLY the outer silver/gunmetal beveled metallic rim into rich polished GOLD metal with warm amber recesses and pale gold highlights. Preserve the exact inner icon, interior colors, green inset ring, silhouette, circle size, position, lighting direction, all interior details and transparent alpha background. Gold should be clearly distinguishable at32px. No new symbols, no text, no changes to interior, no glow beyond the rim. The result must remain the same centered circular transparent sprite, same canvas dimensions."
+    }
+  ]
+}

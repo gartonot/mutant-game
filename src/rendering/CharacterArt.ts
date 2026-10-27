@@ -1,27 +1,42 @@
 import { drawWeapon } from './WeaponArt';
 import type { WeaponId } from './WeaponArt';
-import { drawMercenary } from './MercenaryArt';
-import { drawAssassin } from './AssassinArt';
-import { drawDestroyer } from './DestroyerArt';
-import { drawAdditionalCharacter } from './AdditionalCharacterArt';
-import { weaponMount } from './WeaponGeometry';
+import { drawMercenary, mercenaryArtReady } from './MercenaryArt';
+import { drawAssassin, assassinArtReady } from './AssassinArt';
+import { drawDestroyer, destroyerArtReady } from './DestroyerArt';
+import { drawAdditionalCharacter, ensureAdditionalCharacterArt } from './AdditionalCharacterArt';
+import { DUAL_WEAPON_OFFSET, weaponMount } from './WeaponGeometry';
 import { CHARACTER_RIGS } from './CharacterRig';
-export { additionalCharacterArtReady } from './AdditionalCharacterArt';
-export { mercenaryArtReady } from './MercenaryArt';
-export { assassinArtReady } from './AssassinArt';
-export { destroyerArtReady } from './DestroyerArt';
 
 import type { CharacterId } from '@/gameplay/ids';
 export type { CharacterId } from '@/gameplay/ids';
 export { CHARACTER_IDS } from '@/gameplay/ids';
+/** Prepare only the selected hero. Drawing never starts requests. */
+export function ensureCharacterArt(character: CharacterId): Promise<boolean> {
+    if (typeof Image === 'undefined') return Promise.resolve(false);
+    if (character === 'mercenary') return mercenaryArtReady();
+    if (character === 'assassin') return assassinArtReady();
+    if (character === 'destroyer') return destroyerArtReady();
+    return ensureAdditionalCharacterArt(character);
+}
 const looks = {
     mercenary: { cloth: '#39484a', light: '#657371', skin: '#958d72', head: '#303c3a', size: 1 },
     assassin: { cloth: '#842c33', light: '#bf5050', skin: '#d8b39a', head: '#b75b32', size: .92 },
     destroyer: { cloth: '#53623b', light: '#8b9860', skin: '#c29a75', head: '#d0ab85', size: 1.13 },
 };
 
-/** Fixed top-down pose. Body, arms, weapon and head are independent layers. */
+/** Extra weapon shares the same geometry as its free projectile muzzle. */
 export function drawCharacter(ctx: CanvasRenderingContext2D, character: CharacterId, weapon: WeaponId,
+    x: number, y: number, angle = 0, scale = 1, recoil = 0, dualWeapons = false) {
+    drawSingleCharacter(ctx, character, weapon, x, y, angle, scale, recoil);
+    if (!dualWeapons) return;
+    const mount = weaponMount(character, weapon);
+    ctx.save(); ctx.translate(x, y); ctx.rotate(angle); ctx.scale(scale, scale);
+    ctx.translate(mount.x - recoil, mount.y + DUAL_WEAPON_OFFSET); ctx.rotate(mount.angle);
+    drawWeapon(ctx, weapon); ctx.restore();
+}
+
+/** Fixed top-down pose. Body, arms, weapon and head are independent layers. */
+function drawSingleCharacter(ctx: CanvasRenderingContext2D, character: CharacterId, weapon: WeaponId,
     x: number, y: number, angle = 0, scale = 1, recoil = 0) {
     const look = looks[character as keyof typeof looks] ?? looks.mercenary;
     ctx.save(); ctx.translate(x, y); ctx.rotate(angle); ctx.scale(scale, scale);

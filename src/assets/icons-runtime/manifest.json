@@ -1,0 +1,486 @@
+{
+  "schemaVersion": 1,
+  "generator": "scripts/optimize-icons.mjs",
+  "sharpVersion": "0.35.5",
+  "libvipsVersion": "8.18.7",
+  "settings": {
+    "resize": {
+      "width": 256,
+      "height": 256,
+      "fit": "inside",
+      "withoutEnlargement": true,
+      "kernel": "lanczos3"
+    },
+    "png": {
+      "compressionLevel": 9,
+      "adaptiveFiltering": true,
+      "palette": false
+    }
+  },
+  "files": [
+    {
+      "source": {
+        "path": "src/assets/ammo/v1/automatic.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1222514,
+        "sha256": "cf590551748ae1440e28457382278a44bf8902f08ce31aa6a48499b09bbf90e4"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/ammo/automatic.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 68448,
+        "sha256": "ec100e113b2091243dc6e75cfd9498ba74f8177b39f595e87b291804c18208b2"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/ammo/v1/infinite.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1369847,
+        "sha256": "1b860ccaa6288aafe396177a2cb548b16e3267d0f0021765d0daffbfc399e657"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/ammo/infinite.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 64525,
+        "sha256": "95470509178d161d485325ca433cf2e10f38f5e50b69d41cfc14768b8c96f768"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/ammo/v1/scientific.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1131129,
+        "sha256": "dd8829348213d828b37e2a4b6ec9b086f0da815ade9db97b25d7967812af4b76"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/ammo/scientific.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 63782,
+        "sha256": "e7b2a0adc783652fd2beaece0d010106f210b9c97ed6cfc844cb7439213755fa"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/ammo/v1/shotgun.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1361809,
+        "sha256": "15ae6caf1fb7540e95370d58ecb1144f3ac29e846ea602e94df4226ece68d703"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/ammo/shotgun.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 73245,
+        "sha256": "c1aaaa50d192f2030b03b1996a199764b75c37687c5b351cccea1c2bb1cd2694"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/ammo/v1/special.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 961498,
+        "sha256": "82ea7367b5dc263f811a682c8e096d1fd37dad17fa516d9e53dd77ef2db306d8"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/ammo/special.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 50634,
+        "sha256": "c75713beeb155df92e927d86b97d65674da40004858423abe9937acbe66557d1"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/v1/double-damage.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1834441,
+        "sha256": "d26823ec58830d2db83882c4c5aa5bd924dd47a390693716e54b0a4e3ead609e"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/silver/double-damage.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 102130,
+        "sha256": "ea3002c6d985a4c78666e95722a05dd72f40cb0fddfab70ad275747ed0ab43a7"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/v1/fire-blast.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1831982,
+        "sha256": "9214a6410a5180828733c6f35b5b650c7eb2a0a82089f3e5b0dead7abcf398ba"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/silver/fire-blast.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 94047,
+        "sha256": "008658c5e813c5f01fd10a11a1a147f8b19b867d7a4db1f46f346a390452568e"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/v1/health.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1857127,
+        "sha256": "4482e20fb1661e183f5414216124af7aa4a91cf5de8da6075fb79d42a038309e"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/silver/health.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 97876,
+        "sha256": "0571a6fd996fc286417f286698536d1b0f1c2eaa26471906ca37718ca2004074"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/v1/ice-blast.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 2085580,
+        "sha256": "81f71639de4ccb5beda3ac0084b0a37f12b4d3d459b3c5dbb06ea7fc5b151d44"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/silver/ice-blast.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 111704,
+        "sha256": "3cecb3334d51e1c21254931f17ced4a9fca24d53cba71f8e357c2f1fc075d427"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/v1/move-speed.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1940587,
+        "sha256": "2bcfd8e68d47c82658f3bd19a8f1d6aa12a585c66bc95c7ea4d29c398bf03702"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/silver/move-speed.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 108414,
+        "sha256": "59aa58ddb92fa98823aa8975da61dfe5bff3b7f40b9513d9eb9c350be411e81d"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/v1/rapid-fire.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1975881,
+        "sha256": "fcd5b44356b40bed0008ea158a3f06f5f4dfe6b20ab73e02ec5d06c04878ac6d"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/silver/rapid-fire.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 115197,
+        "sha256": "d180da8bc07452648701719a7682e77845d7f73ac83e021a54e43934c9799d23"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/v1/shield.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 2194161,
+        "sha256": "e6bd6da5f51b80e9bdf6c71f032f66f3679fb28154ab8be32c27612ddcae1d9d"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/silver/shield.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 121609,
+        "sha256": "235199910c5d879cbae6d74ed48517991f0682dc238db37d33f9cc9429c7ebde"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/gold-v1/double-damage.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1756840,
+        "sha256": "6bc595c6de541ab393a9673ab940936a46e472fdacae72110aea4c5a43388fb9"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/gold/double-damage.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 103051,
+        "sha256": "b7a7e76be077162376aed6bda55f692fb9f123289b1b0f740fb52bfa4d9a15ba"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/gold-v1/fire-blast.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1630834,
+        "sha256": "cb32e36d73507ba3a11ba5e876a6bf514481dd25c25d0569c2d688c0fbfbe803"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/gold/fire-blast.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 92389,
+        "sha256": "7edc8a7f894fdac0f0d776f41740e5eff95425d4765a48f95e601e3f77100a54"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/gold-v1/health.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1800612,
+        "sha256": "5491847d053d458c4a2fbda61e1873018b7b02f32aff9265646146f1671c9825"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/gold/health.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 99108,
+        "sha256": "ee1d3c8bd1ff215e3779859dcf8d58e700b9ad2c2fe821621c7ae41eca0982bb"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/gold-v1/ice-blast.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1890728,
+        "sha256": "298792c7101958e52a9b32228cf58e480e6a4b1cdafb98b5171e4e013f933dd1"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/gold/ice-blast.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 110065,
+        "sha256": "1871d072e32faef3d8bd27799fd1c4356fe8c4df68da85c7e202a5f04925962b"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/gold-v1/move-speed.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1862776,
+        "sha256": "6188540e2b768bc71f59c233a43bb76deeeca361ebd291da7284eedd413cfe9e"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/gold/move-speed.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 109590,
+        "sha256": "ff6f07cd12a44718ff9b5ba13e030f756fb9465fbab10a7070f4a6f56fa30095"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/gold-v1/rapid-fire.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1875546,
+        "sha256": "919980e9839296aa441c8df520abb5ccb31b073e448724ae95c5498c291d58ab"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/gold/rapid-fire.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 116678,
+        "sha256": "84835be3a21d71c8345295a9d1b1200cfdf18306b0ea5bb9440a0283130e89e2"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/bonuses/gold-v1/shield.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 2137069,
+        "sha256": "d0b970c2443e1b5caa990dbdb0c34758cbf4567a09d387c35cc565236bc1c368"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/bonuses/gold/shield.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 124122,
+        "sha256": "190f6710077a01a5eae79005941ff03132c8046536d3746f3b7abc086fc2fceb"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/upgrades/armor-v2.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1776383,
+        "sha256": "313c0d7e1cae916f93d3803b0431e8cbd6b0cb4d91cf407185a0e097d39201a9"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/upgrades/armor-v2.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 94737,
+        "sha256": "3753a3f39b868b887b9265b54b9a3209b9abf9c7f4678f1931971510fa22e27b"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/upgrades/arsenal-automatic-v2.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1864518,
+        "sha256": "07a67a7dc3284872f8fdbaf5740cf23a2bbd0e3ad68602fa46a3eba426b106de"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/upgrades/arsenal-automatic-v2.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 92178,
+        "sha256": "315507fe6e5ce7df86ff82b39b55775879e063c075d88e40432b38b9d3e41fc4"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/upgrades/arsenal-energy-v2.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 2366067,
+        "sha256": "c7d9c7857bbcbc3b04e2e4f4c0a8acf9d228bb4bb994f50d3d2b981c3719813e"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/upgrades/arsenal-energy-v2.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 127204,
+        "sha256": "82c3f1122f27f4864c5ca1a6f700b2f3f1c8c756c3700651fb42ea97395eceef"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/upgrades/arsenal-heavy-v2.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 2073675,
+        "sha256": "f76705ef2f5988659b1f6882a7c4cea476fe0638e972402eb1fce13f8e146121"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/upgrades/arsenal-heavy-v2.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 98296,
+        "sha256": "3df05ff24b62ad2ccb692917b2aa111ce0112fba7316bd9a6754139987f0aeb8"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/upgrades/arsenal-pistol-v2.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 2383654,
+        "sha256": "c23f9dadfabb4038c9f610b68694a4be3ddc090ee0756e9b0731dd4b2b1257ee"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/upgrades/arsenal-pistol-v2.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 111136,
+        "sha256": "1bfb182a083f23644ef5918c1d57a4d730e6f80712ba1ff15d716df60372c1ad"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/upgrades/arsenal-shotgun-v2.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1756762,
+        "sha256": "fda25239ff96831786a1281ca759b161dd67129668ad42df0fb6af1fc01effde"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/upgrades/arsenal-shotgun-v2.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 79672,
+        "sha256": "d526fa3a85dabec66879bc73ae4d8f6d7d805785e532d57de58b140accd3a664"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/upgrades/attack-speed-v2.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1701668,
+        "sha256": "8679c62fd8b709a328166bdc78f18fa13e43aff751cd0b480376224cf0dbf495"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/upgrades/attack-speed-v2.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 93569,
+        "sha256": "e7f4aaa55d0819c54a28672eb5d71ab66ec7151d690551a660d8f2e16c7938a6"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/upgrades/damage-v2.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1567906,
+        "sha256": "03a680e99f324b9628df912f3e4c580db593e5ad74e47da0eecd97ed5b8bac27"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/upgrades/damage-v2.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 78324,
+        "sha256": "dc25241e5e1e673c041a2f070e6d76bd6950e50a97f3185d6045bb2c1e50480a"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/upgrades/health-v2.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1747081,
+        "sha256": "e9daa1ec3dfc97b40b922f514dde61a200665c960b0c38d671c4540bfb1ac018"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/upgrades/health-v2.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 98852,
+        "sha256": "2168391836495291837beadc30070ccce6741a03631e72785c6d116eedef3d6b"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/upgrades/move-speed-v2.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1638774,
+        "sha256": "6bfc6a1c5dc205ccae06c00111401069da2d493437010f2f8adc73fd59ce0553"
+      },
+      "output": {
+        "path": "src/assets/icons-runtime/upgrades/move-speed-v2.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 86745,
+        "sha256": "ef642029d6c9e91e88db686ea0f52b061784ce0e1306e25a94edd4191e00667d"
+      }
+    }
+  ]
+}

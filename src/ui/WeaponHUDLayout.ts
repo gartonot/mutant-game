@@ -7,7 +7,7 @@ export function weaponHUDLayout(width: number, height: number) {
     const besideHealth = available >= 300;
     const scale = Math.min(1, (besideHealth ? available : width - 16) / WEAPON_HUD_WIDTH);
     return { x: width - WEAPON_HUD_WIDTH * scale - 8,
-        y: height - WEAPON_HUD_HEIGHT * scale - (besideHealth ? 8 : 140), scale };
+        y: height - WEAPON_HUD_HEIGHT * scale - (besideHealth ? 8 : 190), scale };
 }
 export function weaponHUDTarget(x: number, y: number, width: number, height: number): { inside: boolean; slot: number | null } {
     const layout = weaponHUDLayout(width, height);

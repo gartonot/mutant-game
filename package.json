@@ -8,7 +8,15 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "node tests/run.mjs",
-    "bench": "node scripts/run-bench.mjs"
+    "bench": "node scripts/run-bench.mjs",
+    "assets:icons": "node scripts/optimize-icons.mjs",
+    "assets:icons:check": "node scripts/optimize-icons.mjs --check",
+    "assets:portraits": "node scripts/optimize-portraits.mjs",
+    "assets:portraits:check": "node scripts/optimize-portraits.mjs --check",
+    "assets:weapons": "node scripts/optimize-weapons.mjs",
+    "assets:weapons:check": "node scripts/optimize-weapons.mjs --check",
+    "assets:combat": "node scripts/optimize-combat-sprites.mjs",
+    "assets:combat:check": "node scripts/optimize-combat-sprites.mjs --check"
   },
   "devDependencies": {
     "@types/node": "^22.15.16",
@@ -18,6 +26,7 @@
     "eslint": "^8.57.1",
     "eslint-import-resolver-typescript": "^4.3.4",
     "eslint-plugin-import": "^2.31.0",
+    "sharp": "0.35.5",
     "typescript": "~5.8.3",
     "vite": "^6.3.5"
   }

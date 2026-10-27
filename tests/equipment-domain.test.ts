@@ -46,6 +46,21 @@ test('catalog boundaries reject inherited keys and unknown character identities'
     }
 });
 
+test('new weapons occupy their class slots and preserve mutually exclusive alternatives', () => {
+    const draft = new EquipmentDraft();
+    assert.equal(draft.equip('mercenary', 'crossbow'), '2');
+    assert.equal(draft.canEquip('mercenary', 'shotgun'), false);
+    assert.equal(draft.equip('mercenary', 'tesla'), '5');
+    assert.equal(draft.canEquip('mercenary', 'impulse'), false);
+    assert.equal(draft.equip('mercenary', 'acid-gun'), '4');
+    assert.equal(draft.canEquip('mercenary', 'disc-launcher'), false);
+    draft.assign('mercenary', '4', null);
+    draft.assign('mercenary', '5', null);
+    assert.equal(draft.equip('mercenary', 'disc-launcher'), '4');
+    assert.equal(draft.equip('mercenary', 'impulse'), '5');
+    assert.equal(draft.canPlay('mercenary'), true);
+});
+
 test('spawned effects preserve balance and do not share mutable catalog data', () => {
     const weapon = createWeapon('flamethrower', 2);
     const shots = weapon.tryFire(0, 0, 0, 0)!;

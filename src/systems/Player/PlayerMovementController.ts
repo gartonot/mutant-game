@@ -1,7 +1,7 @@
 import { InputKey } from '@/constants/InputKey';
 import { Player } from '@/entities/player/Player';
 import { InputSystem } from '@/systems/InputSystem';
-import { clamp } from '@/utils/math';
+import { constrainPlayerToArena } from '@/systems/spatial/playerBounds';
 
 export class PlayerMovementController {
     private player: Player;
@@ -19,15 +19,13 @@ export class PlayerMovementController {
 
     private handleMovement(): void {
         this.isMoving = false;
+        const speed = this.player.speed * this.player.pickupMoveSpeed;
+        if (this.input.isPressed(InputKey.W)) { this.player.y -= speed; this.isMoving = true; }
+        if (this.input.isPressed(InputKey.S)) { this.player.y += speed; this.isMoving = true; }
+        if (this.input.isPressed(InputKey.A)) { this.player.x -= speed; this.isMoving = true; }
+        if (this.input.isPressed(InputKey.D)) { this.player.x += speed; this.isMoving = true; }
 
-        if (this.input.isPressed(InputKey.W)) { this.player.y -= this.player.speed; this.isMoving = true; }
-        if (this.input.isPressed(InputKey.S)) { this.player.y += this.player.speed; this.isMoving = true; }
-        if (this.input.isPressed(InputKey.A)) { this.player.x -= this.player.speed; this.isMoving = true; }
-        if (this.input.isPressed(InputKey.D)) { this.player.x += this.player.speed; this.isMoving = true; }
-
-        const playerRadius = this.player.radius;
-        this.player.x = clamp(this.player.x, playerRadius, window.innerWidth - playerRadius);
-        this.player.y = clamp(this.player.y, playerRadius, window.innerHeight - playerRadius);
+        constrainPlayerToArena(this.player, window.innerWidth, window.innerHeight);
     }
 
     public get moving(): boolean { return this.isMoving; }

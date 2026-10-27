@@ -20,6 +20,7 @@ const GRIP_X: Record<WeaponId, number> = {
     pistol: 5, rifle: 5, m16: 7, ak47: 6, shotgun: 4, 'double-barrel': 4,
     'machine-gun': 1, 'plasma-auto': 5, flamethrower: 0, laser: 5,
     'skull-launcher': 3, 'plasma-cannon': 0, 'plasma-grenade': 14, 'grenade-launcher': 3,
+    tesla: 4, impulse: 4, 'acid-gun': 4, crossbow: 4, 'disc-launcher': 4,
 };
 export const WEAPON_RIGS = Object.fromEntries(WEAPON_ORDER.map(id => [id, {
     grip: { x: GRIP_X[id], y: id === 'plasma-grenade' ? 0 : 1 },
@@ -79,3 +80,6 @@ export function muzzlePosition(id: WeaponId, x: number, y: number, angle: number
     return { x: x + cos * forward - sin * lateral,
         y: y + sin * forward + cos * lateral };
 }
+
+/** Lateral separation for the temporary second weapon, in character coordinates. */
+export const DUAL_WEAPON_OFFSET = -26;

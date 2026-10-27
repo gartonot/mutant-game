@@ -11,8 +11,8 @@ export class UIRenderer {
         this.healthBar = new HealthBar(this.player.maxHp);
     }
 
-    update() {
-        this.healthBar.update(this.player.currentHp);
+    update(remainingMs: number) {
+        this.healthBar.update(this.player.currentHp, remainingMs);
     }
 
     draw(ctx: CanvasRenderingContext2D) {

@@ -1,0 +1,22 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "codex-clipboard-2dc9e74a-b962-4559-8114-2b20178ada20.png",
+  "assets": [
+    {
+      "name": "shield",
+      "prompt": "Use case: stylized-concept. Asset type: single raster power-up medallion for a top-down browser shooter. Reference: the attached image shows the intended retro game UI family; recreate its corresponding circular icon as a polished high-resolution original. A protective shield bonus: central luminous lime-yellow circular energy core surrounded by SIX rounded gray steel petal segments, like a futuristic circular protection generator. Lime green inner ring; no heraldic shield shape. One perfectly circular front-facing medallion, centered in square canvas, diameter 90% of canvas. Consistent thick beveled gunmetal outer rim with silver top-left highlights, thin lime-green inset trim, saturated enamel/glass interior, clean bold shapes readable at 32 pixels. Soft painted 3D game-art finish, not photoreal, not flat vector. Exactly one isolated round icon. True transparent alpha background including corners, no external drop shadow, no glow outside rim, no text, no letters, no watermark, no UI panel, no other objects. Match proportions and rim across set."
+    },
+    {
+      "name": "rapid-fire",
+      "prompt": "Use case: stylized-concept. Asset type: single raster power-up medallion for a top-down browser shooter. Reference: the attached image shows the intended retro game UI family; recreate its corresponding circular icon as a polished high-resolution original. Rapid fire bonus: three diagonal stylized cyan-blue bullet streaks inside a bright lemon-lime circular curved arrow/energy swoosh on dark teal field. Bold dynamic simple symbol. One perfectly circular front-facing medallion, centered in square canvas, diameter 90% of canvas. Consistent thick beveled gunmetal outer rim with silver top-left highlights, thin lime-green inset trim, saturated enamel/glass interior, clean bold shapes readable at 32 pixels. Soft painted 3D game-art finish, not photoreal, not flat vector. Exactly one isolated round icon. True transparent alpha background including corners, no external drop shadow, no glow outside rim, no text, no letters, no watermark, no UI panel, no other objects. Match proportions and rim across set."
+    },
+    {
+      "name": "move-speed",
+      "prompt": "Use case: stylized-concept. Asset type: single raster power-up medallion for a top-down browser shooter. Reference: the attached image shows the intended retro game UI family; recreate its corresponding circular icon as a polished high-resolution original. Run speed bonus: two large stacked upward-pointing luminous icy cyan chevrons on a rich blue teal field, a clear double upward arrow. One perfectly circular front-facing medallion, centered in square canvas, diameter 90% of canvas. Consistent thick beveled gunmetal outer rim with silver top-left highlights, thin lime-green inset trim, saturated enamel/glass interior, clean bold shapes readable at 32 pixels. Soft painted 3D game-art finish, not photoreal, not flat vector. Exactly one isolated round icon. True transparent alpha background including corners, no external drop shadow, no glow outside rim, no text, no letters, no watermark, no UI panel, no other objects. Match proportions and rim across set."
+    },
+    {
+      "name": "double-damage",
+      "prompt": "Use case: stylized-concept. Asset type: single raster power-up medallion for a top-down browser shooter. Reference: the attached image shows the intended retro game UI family; recreate its corresponding circular icon as a polished high-resolution original. Double damage bonus: brilliant golden yellow spherical energy core, surrounded by orange curved swirling segmented arcs on warm orange field, like a glowing orange power orb. No numbers. One perfectly circular front-facing medallion, centered in square canvas, diameter 90% of canvas. Consistent thick beveled gunmetal outer rim with silver top-left highlights, thin lime-green inset trim, saturated enamel/glass interior, clean bold shapes readable at 32 pixels. Soft painted 3D game-art finish, not photoreal, not flat vector. Exactly one isolated round icon. True transparent alpha background including corners, no external drop shadow, no glow outside rim, no text, no letters, no watermark, no UI panel, no other objects. Match proportions and rim across set."
+    }
+  ]
+}

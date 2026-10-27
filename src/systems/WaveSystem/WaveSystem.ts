@@ -1,6 +1,8 @@
 import { Enemy } from '@/entities/enemy/Enemy';
+import { EnemyType } from '@/entities/enemy/EnemyType';
+import { getArenaSize } from '@/gameplay/Arena';
 
-import { WaveConfigs } from './WaveConfig';
+import { BOSS_WAVE_INTERVAL, WaveConfigs } from './WaveConfig';
 import type { IWaveRule } from './WaveConfig';
 
 export interface WaveSystemOptions {
@@ -18,7 +20,7 @@ export class WaveSystem {
     constructor(options: WaveSystemOptions = {}) {
         this.rules = options.rules ?? WaveConfigs;
         this.random = options.random ?? Math.random;
-        this.viewport = options.viewport ?? (() => ({ width: window.innerWidth, height: window.innerHeight }));
+        this.viewport = options.viewport ?? (() => getArenaSize());
         if (!this.rules.length || this.rules.some(rule => !rule.types.length || !Number.isInteger(rule.count) || rule.count < 0)) {
             throw new Error('Wave rules require at least one enemy type and a non-negative integer count');
         }
@@ -30,18 +32,27 @@ export class WaveSystem {
 
         for (let i = 0; i < config.count; i++) {
             const type = config.types[Math.floor(this.random() * config.types.length)];
-            const position = this.getRandomPosition();
-            enemies.push(new Enemy(position.x, position.y, type));
+            enemies.push(this.createEnemy(type));
+        }
+
+        // Default survival waves add a boss independently of any living enemies.
+        if (this.rules === WaveConfigs && (this.currentWaveIndex + 1) % BOSS_WAVE_INTERVAL === 0) {
+            enemies.push(this.createEnemy(EnemyType.BOSS));
         }
 
         this.currentWaveIndex++;
         return enemies;
     }
 
-    private getRandomPosition(): { x: number; y: number } {
+    private createEnemy(type: EnemyType): Enemy {
+        const { width, height } = this.viewport();
+        const position = this.getRandomPosition(width, height);
+        return new Enemy(position.x, position.y, type);
+    }
+
+    private getRandomPosition(width: number, height: number): { x: number; y: number } {
         const offset = 50;
         const side = Math.floor(this.random() * 4);
-        const { width, height } = this.viewport();
         switch (side) {
             case 0: return { x: this.random() * width, y: -offset };
             case 1: return { x: this.random() * width, y: height + offset };

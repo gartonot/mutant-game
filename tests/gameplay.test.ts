@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { WeaponState } from '../src/gameplay/WeaponState';
 import { createWeapon } from '../src/entities/weapon/WeaponFactory';
 import { createCharacter } from '../src/gameplay/CharacterFactory';
-import { defaultLoadout } from '../src/gameplay/characters';
+import { defaultLoadout, CHARACTER_DEFINITIONS } from '../src/gameplay/characters';
 import { resolveStats, BASE_STATS } from '../src/gameplay/stats';
 import { resolveBonuses } from '../src/gameplay/bonuses';
 import { validateLoadout } from '../src/gameplay/loadout';
@@ -19,7 +19,7 @@ function assertPoint(actual: { x: number; y: number }, expected: { x: number; y:
     assert.ok(Math.abs(actual.y - expected.y) < 1e-8, `${context}: y ${actual.y} != ${expected.y}`);
 }
 
-test('all fifteen characters start playable with their own identity, base stats and only a pistol', () => {
+test('all fifteen characters start playable with their own identity, character stats and only a pistol', () => {
     assert.equal(CHARACTER_IDS.length, 15);
     assert.equal(new Set(CHARACTER_IDS).size, 15);
     for (const id of CHARACTER_IDS) {
@@ -27,10 +27,10 @@ test('all fifteen characters start playable with their own identity, base stats 
         const { player, stats, weapons } = createCharacter(loadout);
         assert.equal(loadout.character, id);
         assert.equal(player.character, id);
-        assert.deepEqual(stats, BASE_STATS, id);
-        assert.equal(player.currentHp, BASE_STATS.maxHp, id);
-        assert.equal(player.maxHp, BASE_STATS.maxHp, id);
-        assert.equal(player.speed, BASE_STATS.speed, id);
+        assert.deepEqual(stats, resolveStats(BASE_STATS, CHARACTER_DEFINITIONS[id].modifiers), id);
+        assert.equal(player.currentHp, stats.maxHp, id);
+        assert.equal(player.maxHp, stats.maxHp, id);
+        assert.equal(player.speed, stats.speed, id);
         assert.equal(player.weapon, 'pistol', id);
         assert.deepEqual(weapons.map(w => w?.id ?? null), ['pistol', null, null, null, null], id);
     }
@@ -74,7 +74,7 @@ test('character factory passes each character mount to shots, flashes, tracking 
         const draft = new EquipmentDraft();
         draft.equip(character, 'laser');
         draft.equip(character, 'plasma-cannon');
-        const { weapons } = createCharacter(draft.get(character));
+        const { weapons, stats } = createCharacter(draft.get(character));
         const pistol = weapons[0]!;
         let flash: { x: number; y: number } | undefined;
         const bullet = pistol.tryFire(0, 23, -19, Math.PI, (x, y) => { flash = { x, y }; })![0];
@@ -92,7 +92,7 @@ test('character factory passes each character mount to shots, flashes, tracking 
         assert.equal(laser.state.ammoRemaining, ammo);
 
         const plasma = weapons[4]!;
-        const charge = WEAPON_DEFINITIONS['plasma-cannon'].chargeMs!;
+        const charge = WEAPON_DEFINITIONS['plasma-cannon'].chargeMs! / stats.attackSpeed;
         assert.equal(plasma.tryFire(0, 0, 0, 0), null);
         assert.equal(plasma.tryFire(charge - 1, 0, 0, 0), null);
         const shot = plasma.tryFire(charge, -30, 66, Math.PI / 2)![0];
@@ -215,8 +215,8 @@ test('character factory applies progression and bonuses once, with fresh weapon 
     const loadout = draft.get('assassin');
     const a = createCharacter(loadout, [{ stat: 'maxHp', operation: 'add', value: 25 }]);
     const b = createCharacter(loadout);
-    assert.equal(a.player.currentHp, 125);
-    assert.equal(b.player.currentHp, 100);
+    assert.equal(a.player.currentHp, 105);
+    assert.equal(b.player.currentHp, 80);
     assert.equal(a.player.character, 'assassin');
     a.weapons[2]!.tryFire(0, 0, 0, 0);
     assert.equal(b.weapons[2]!.state.ammoRemaining, 120);
@@ -257,18 +257,55 @@ test('default characters carry only pistol; catalog selection fills category and
 });
 
 import { weaponHUDLayout, weaponHUDTarget } from '../src/ui/WeaponHUDLayout';
-test('cycling wraps in both directions, skips empty slots and retains equipped empty-ammo weapons', () => {
+test('cycling wraps in both directions and skips empty slots and empty-ammo weapons', () => {
     const rifle = createWeapon('rifle');
     for (let i=0;i<120;i++) rifle.state.consumeShot(i*300);
     const c = new PlayerWeaponController([createWeapon('pistol'), null, rifle, null, createWeapon('plasma-cannon')], () => 0);
     c.cycleWeapon(-1); assert.equal(c.selectedIndex,4);
     c.cycleWeapon(1); assert.equal(c.selectedIndex,0);
-    c.cycleWeapon(1); assert.equal(c.selectedIndex,2);
+    c.switchToWeapon(2); assert.equal(c.selectedIndex,0);
     c.cycleWeapon(1); assert.equal(c.selectedIndex,4);
-    c.tryShoot(0,0,0); c.cycleWeapon(-1); assert.equal(c.selectedIndex,2);
+    c.tryShoot(0,0,0); c.cycleWeapon(-1); assert.equal(c.selectedIndex,0);
     assert.equal(c.slots[4]!.chargeProgress,0);
+    assert.equal(c.slots[2], rifle);
+    c.replenishAmmo('automatic');
+    c.cycleWeapon(1); assert.equal(c.selectedIndex,2);
     const single = new PlayerWeaponController([createWeapon('pistol'),null,null,null,null]);
     single.cycleWeapon(-1); single.cycleWeapon(1); assert.equal(single.selectedIndex,0);
+});
+
+test('an emptied weapon stays selected with multiple equipped weapons until the player leaves it', () => {
+    const rifle = createWeapon('rifle');
+    for (let i = 0; i < 119; i++) rifle.state.consumeShot(i * 300);
+    const c = new PlayerWeaponController([createWeapon('pistol'), createWeapon('shotgun'), rifle], () => 40000);
+    c.switchToWeapon(2);
+    assert.ok(c.tryShoot(0, 0, 0));
+    assert.equal(rifle.state.ammoRemaining, 0);
+    assert.equal(c.selectedIndex, 2);
+    assert.equal(c.tryShoot(0, 0, 0), null);
+    assert.equal(c.selectedIndex, 2);
+    c.cycleWeapon(-1); assert.equal(c.selectedIndex, 1);
+    c.switchToWeapon(2); assert.equal(c.selectedIndex, 1);
+    c.replenishAmmo('automatic');
+    c.switchToWeapon(2); assert.equal(c.selectedIndex, 2);
+});
+
+test('the only additional weapon automatically falls back to pistol after its last shot', () => {
+    for (const id of ['rifle', 'laser'] as const) {
+        const weapon = createWeapon(id);
+        const ammo = weapon.state.ammoRemaining;
+        for (let i = 0; i < ammo - 1; i++) weapon.state.consumeShot(i * 1000);
+        const c = new PlayerWeaponController([createWeapon('pistol'), null, weapon], () => ammo * 1000);
+        c.switchToWeapon(2);
+        const fired = c.tryShoot(0, 0, 0);
+        assert.ok(fired?.length);
+        assert.ok(fired.every(bullet => !bullet.isDead), 'the final shot must survive automatic switching');
+        assert.equal(weapon.state.ammoRemaining, 0);
+        assert.equal(c.selectedIndex, 0);
+        c.switchToWeapon(2); assert.equal(c.selectedIndex, 0);
+        c.replenishAmmo(id === 'rifle' ? 'automatic' : 'special');
+        c.switchToWeapon(2); assert.equal(c.selectedIndex, 2);
+    }
 });
 test('HUD hit areas follow the rendered panel at desktop and narrow sizes', () => {
     for(const [width,height] of [[1920,1080],[1066,928],[390,844]]) {

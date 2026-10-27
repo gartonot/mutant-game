@@ -7,6 +7,10 @@ import { createGameWorld } from '@/GameRuntime';
 import { ProgressStore, bonusesOf } from '@/progression/Achievements';
 import { RewardsScreen } from '@/ui/RewardsScreen';
 import { CharacterScreen } from '@/ui/CharacterScreen';
+import { ensureCharacterArt } from '@/rendering/CharacterArt';
+import { weaponSpritesReady } from '@/rendering/WeaponSprites';
+import { enemyArtReady } from '@/rendering/EnemyArt';
+import './battle-preparation.css';
 
 
 export function createGameApplication(): () => void {
@@ -26,7 +30,24 @@ export function createGameApplication(): () => void {
     const survivalButton = document.querySelector<HTMLButtonElement>('#survival')!;
     const progressStore = new ProgressStore();
     const rewards = new RewardsScreen(showMenu);
-    const characters = new CharacterScreen(showMenu, startSurvival);
+    let characters: CharacterScreen | undefined;
+    const preparation = document.createElement('dialog');
+    preparation.className = 'battle-preparation';
+    preparation.setAttribute('aria-labelledby', 'battle-preparation-status');
+    preparation.innerHTML = '<p id="battle-preparation-status" role="status" aria-live="polite"></p><button type="button" data-retry hidden>Повторить</button><button type="button" data-cancel>Назад</button>';
+    document.body.append(preparation);
+    const preparationStatus = preparation.querySelector<HTMLElement>('[role="status"]')!;
+    const retryPreparation = preparation.querySelector<HTMLButtonElement>('[data-retry]')!;
+    let preparationVersion = 0;
+    let preparing = false;
+    function cancelPreparation() {
+        preparationVersion++;
+        preparing = false;
+        preparation.close();
+    }
+    preparation.querySelector('[data-cancel]')!.addEventListener('click', cancelPreparation, { signal });
+    preparation.addEventListener('cancel', event => { event.preventDefault(); cancelPreparation(); }, { signal });
+    retryPreparation.addEventListener('click', () => { void startSurvival(); }, { signal });
     const session = new GameSession(loadout => createGameWorld(bonusesOf(progressStore.totals), loadout.character, loadout));
     const hideDescription = setupModeDescriptions(signal);
     const fpsCounter = new FpsCounter();
@@ -41,7 +62,6 @@ export function createGameApplication(): () => void {
         // Resizing clears the canvas, even while the simulation is paused.
         if (session.paused && session.world) {
             session.world.draw(ctx);
-            session.world.getPlayerController().draw(ctx);
         }
     }
     resizeCanvas();
@@ -72,7 +92,8 @@ export function createGameApplication(): () => void {
 
     function showMenu() {
         pauseDialog.close();
-        characters.hide();
+        cancelPreparation();
+        characters?.hide();
         session.showMenu();
         menu.hidden = false;
         canvas.hidden = true;
@@ -81,17 +102,46 @@ export function createGameApplication(): () => void {
         survivalButton.focus();
     }
 
-    function startSurvival() {
-        session.start(characters.selectedLoadout);
+    async function startSurvival() {
+        if (preparing || !characters || signal.aborted) return;
+        const loadout = structuredClone(characters.selectedLoadout);
+        const version = ++preparationVersion;
+        preparing = true;
+        retryPreparation.hidden = true;
+        preparationStatus.textContent = 'Подготовка боя…';
+        preparation.setAttribute('aria-busy', 'true');
+        if (!preparation.open) preparation.showModal();
+        try {
+            const [hero, weapons, enemies] = await Promise.all([
+                ensureCharacterArt(loadout.character), weaponSpritesReady(), enemyArtReady(),
+            ]);
+            if (version !== preparationVersion || signal.aborted) return;
+            if (!hero || !weapons.every(Boolean) || !enemies.every(Boolean)) throw new Error('Battle artwork unavailable');
+            session.start(loadout);
+        } catch {
+            if (version !== preparationVersion || signal.aborted) return;
+            preparing = false;
+            preparation.removeAttribute('aria-busy');
+            preparationStatus.textContent = 'Не удалось загрузить картинки. Проверь соединение и попробуй ещё раз.';
+            retryPreparation.hidden = false;
+            retryPreparation.focus();
+            return;
+        }
+        preparing = false;
+        preparation.removeAttribute('aria-busy');
+        preparation.close();
+        characters.hide();
         menu.hidden = true;
         canvas.hidden = false;
         backButton.hidden = false;
         document.body.classList.add('playing');
         survivalButton.blur();
+        if (document.hidden || !document.hasFocus()) pauseGame();
     }
     survivalButton.addEventListener('click', () => {
         menu.hidden = true;
         hideDescription();
+        characters ??= new CharacterScreen(showMenu, () => { void startSurvival(); });
         characters.show();
     }, { signal });
     backButton.addEventListener('click', pauseGame, { signal });
@@ -103,6 +153,19 @@ export function createGameApplication(): () => void {
             return;
         }
         if (session.paused) return;
+        if (event.code === 'KeyF') {
+            event.preventDefault();
+            if (!event.repeat && !event.ctrlKey && !event.altKey && !event.metaKey) session.world!.activateAbility();
+            return;
+        }
+        const consumableKey = /^(?:Digit|Numpad)([1-6])$/.exec(event.code);
+        if (consumableKey) {
+            event.preventDefault();
+            if (!event.repeat && !event.ctrlKey && !event.altKey && !event.metaKey) {
+                session.world!.activateConsumable(Number(consumableKey[1]) - 1);
+            }
+            return;
+        }
         if (event.code === 'KeyQ' || event.code === 'KeyE') {
             event.preventDefault();
             if (!event.repeat) session.world!.getPlayerController().cycleWeapon(event.code === 'KeyQ' ? -1 : 1);
@@ -142,13 +205,13 @@ export function createGameApplication(): () => void {
             const gameWorld = session.world;
             if (!session.active || !gameWorld) return;
             gameWorld.update(deltaMs);
-            if (gameWorld.getPlayerController().getPlayer().currentHp <= 0) {
+            if (gameWorld.isVictory || gameWorld.getPlayerController().getPlayer().currentHp <= 0) {
                 const run = gameWorld.getRunStats();
                 const { before, after } = progressStore.record(run);
                 session.dispose();
                 backButton.hidden = true;
                 document.body.classList.remove('playing');
-                rewards.showResults(run, before, after, progressStore.storageAvailable);
+                rewards.showResults(run, before, after, progressStore.storageAvailable, gameWorld.isVictory);
                 return;
             }
         },
@@ -157,17 +220,18 @@ export function createGameApplication(): () => void {
             if (!session.active || !gameWorld) return;
             fpsCounter.update();
             gameWorld.draw(context);
-            gameWorld.getPlayerController().draw(context);
             fpsCounter.draw(context);
         },
     }], { isActive: () => session.active });
 
 
     return () => {
+        cancelPreparation();
+        preparation.remove();
         stopLoop();
         applicationEvents.abort();
         session.dispose();
-        characters.dispose();
+        characters?.dispose();
         rewards.dispose();
         pauseDialog.close();
         canvas.hidden = true;

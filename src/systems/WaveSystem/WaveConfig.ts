@@ -5,6 +5,8 @@ export interface IWaveRule {
     readonly count: number;
 }
 
+export const BOSS_WAVE_INTERVAL = 12; // Один босс каждую минуту (волны идут раз в 5 секунд).
+
 export const WaveConfigs: readonly IWaveRule[] = [
     { types: [EnemyType.GRUNT], count: 5 }, // Волна 1: 5 обычных
     { types: [EnemyType.GRUNT], count: 10 }, // Волна 2: 10 обычных

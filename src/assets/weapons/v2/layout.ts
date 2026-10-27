@@ -97,5 +97,40 @@ export default {
     "width": 1680,
     "height": 413,
     "axisY": 438
+  },
+  "tesla": {
+    "x": 22,
+    "y": 256,
+    "width": 1723,
+    "height": 374,
+    "axisY": 434
+  },
+  "impulse": {
+    "x": 64,
+    "y": 172,
+    "width": 1672,
+    "height": 535,
+    "axisY": 400
+  },
+  "acid-gun": {
+    "x": 18,
+    "y": 162,
+    "width": 1906,
+    "height": 494,
+    "axisY": 399
+  },
+  "crossbow": {
+    "x": 31,
+    "y": 28,
+    "width": 1726,
+    "height": 819,
+    "axisY": 432
+  },
+  "disc-launcher": {
+    "x": 38,
+    "y": 157,
+    "width": 1727,
+    "height": 573,
+    "axisY": 446
   }
 };

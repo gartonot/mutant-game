@@ -14,6 +14,12 @@ try {
         stdin: { contents: suites.map(file => `import ${JSON.stringify(`./tests/${file}`)};`).join('\n'),
             resolveDir: process.cwd(), sourcefile: 'test-entry.ts', loader: 'ts' },
         outfile, bundle: true, platform: 'node', format: 'esm', tsconfig: 'tsconfig.json',
+        plugins: [{ name: 'headless-character-rendering', setup(plugin) {
+            // Runtime integration tests exercise real controllers, but do not load browser-only raster atlases.
+            plugin.onLoad({ filter: /[\\/]rendering[\\/]CharacterArt\.ts$/ }, () => ({
+                contents: 'export function drawCharacter() {}', loader: 'ts',
+            }));
+        } }],
     });
     const result = spawnSync(process.execPath, ['--test', outfile], { stdio: 'inherit' });
     if (result.error) throw result.error;

@@ -1,11 +1,11 @@
 import type { WeaponId } from '@/gameplay/ids';
-import atlasUrl from '@/assets/characters/assassin-combat-v2.png';
-import { loadImageAsset } from './ImageAsset';
+import atlasUrl from '@/assets/combat-runtime/characters/assassin.png';
+import { createLazyImageAsset } from './ImageAsset';
 import { drawRasterCharacter } from './RasterCharacterArt';
 import type { RasterCharacterStyle } from './RasterCharacterArt';
 
-const atlas = loadImageAsset(atlasUrl);
-export const assassinArtReady = atlas.ready;
+const atlas = createLazyImageAsset(atlasUrl);
+export function assassinArtReady(): Promise<boolean> { return atlas.ensure(); }
 
 // Preserve the authored head crop and neck anchor independently of the shared body rig.
 const style: RasterCharacterStyle = {
@@ -15,5 +15,5 @@ const style: RasterCharacterStyle = {
 };
 
 export function drawAssassin(ctx: CanvasRenderingContext2D, weapon: WeaponId, recoil: number): boolean {
-    return drawRasterCharacter(ctx, 'assassin', atlas, weapon, recoil, style);
+    return atlas.asset ? drawRasterCharacter(ctx, 'assassin', atlas.asset, weapon, recoil, style) : false;
 }

@@ -4,6 +4,7 @@ import { loadoutKey } from '@/gameplay/EquipmentDraft';
 /** The session owns a world; screens only request transitions. No DOM or rendering dependencies. */
 export interface SessionWorld {
     resume(): void;
+    dispose?(): void;
     getPlayerController(): {
         resetInput(): void;
         switchToWeapon(index: number): void;
@@ -68,6 +69,7 @@ export class GameSession<T extends SessionWorld> {
 
     /** Called on death and application teardown. Safe to call more than once. */
     dispose(): void {
+        this.currentWorld?.dispose?.();
         this.currentWorld?.getPlayerController().dispose();
         this.currentWorld = undefined;
         this.currentLoadout = undefined;
@@ -78,6 +80,7 @@ export class GameSession<T extends SessionWorld> {
     private replaceWorld(loadout: Loadout, key: string): void {
         const snapshot = structuredClone(loadout);
         const next = this.createWorld(structuredClone(snapshot));
+        this.currentWorld?.dispose?.();
         this.currentWorld?.getPlayerController().dispose();
         this.currentWorld = next;
         this.currentLoadout = snapshot;

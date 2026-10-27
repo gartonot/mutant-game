@@ -1,6 +1,7 @@
 import { drawPlasmaBeam } from '@/rendering/PlasmaEffects';
 import { segmentHit } from '@/systems/spatial/segmentHit';
 import { Bullet } from './Bullet';
+import { getArenaSize } from '@/gameplay/Arena';
 /** Plasma is a single pulse; a paid laser pulse can track aim without hitting a target twice. */
 export class Beam extends Bullet {
     private age = 0;
@@ -16,13 +17,13 @@ export class Beam extends Bullet {
         this.lifetimeMs = plasma ? 180 : 80;
         this.radius = plasma ? 22 : 7;
         this.setRay(x, y, angle);
-        this.sweepStartX = x; this.sweepStartY = y; this.sweepEndX = this.x; this.sweepEndY = this.y;
+        this.sweepStartX = this.previousX; this.sweepStartY = this.previousY; this.sweepEndX = this.x; this.sweepEndY = this.y;
     }
     private setRay(x: number, y: number, angle: number): void {
+        const { width, height } = getArenaSize();
+        y = Math.min(y, height);
         this.previousX = x; this.previousY = y; this.x = x; this.y = y;
         this.dx = Math.cos(angle); this.dy = Math.sin(angle);
-        const width = typeof window === 'undefined' ? 1920 : window.innerWidth;
-        const height = typeof window === 'undefined' ? 1080 : window.innerHeight;
         const tx = this.dx > 0 ? (width - x) / this.dx : this.dx < 0 ? -x / this.dx : Infinity;
         const ty = this.dy > 0 ? (height - y) / this.dy : this.dy < 0 ? -y / this.dy : Infinity;
         const length = Math.max(0, Math.min(tx, ty));

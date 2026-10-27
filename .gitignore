@@ -11,7 +11,9 @@ node_modules
 dist
 dist-ssr
 .playwright-cli/
-output/playwright/
+# Local screenshots, generated test bundles, benchmarks and music experiments.
+# Previously tracked reference images/originals remain tracked and are preserved.
+/output/
 *.local
 
 # Editor directories and files

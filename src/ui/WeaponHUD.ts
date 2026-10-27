@@ -2,9 +2,10 @@ import { weaponHUDLayout, WEAPON_HUD_WIDTH as PANEL_WIDTH, WEAPON_HUD_HEIGHT as 
 import type { IWeapon } from '@/entities/weapon/IWeapon';
 import { drawWeapon } from '@/rendering/WeaponArt';
 import { WEAPON_ART } from '@/rendering/WeaponGeometry';
+import { ammoImage } from '@/rendering/AmmoArt';
 
 const icons = new Map<string, HTMLCanvasElement>();
-
+const ammoCategories = ['infinite', 'shotgun', 'automatic', 'special', 'scientific'] as const;
 
 /** Cached category badges: ammunition updates never rebuild the artwork. */
 function ammoIcon(index: number, empty: boolean): HTMLCanvasElement {
@@ -19,35 +20,22 @@ function ammoIcon(index: number, empty: boolean): HTMLCanvasElement {
     const rim = c.createLinearGradient(0,0,0,50);
     rim.addColorStop(0, empty ? '#b9bec0' : '#7e9166'); rim.addColorStop(.5,empty ? '#656b6d' : '#46593b'); rim.addColorStop(1,empty ? '#949a9d' : '#71835c');
     rect(1,1,48,48,8,'#23302a'); rect(3,3,44,44,6,rim);rect(6,6,38,38,4,'#858c78');
-    const field = c.createLinearGradient(0,8,0,42);
     const colors = ['#394b32','#66532c','#355e5e','#455331','#334668'];
+    const field = c.createLinearGradient(0,8,0,42);
     field.addColorStop(0,empty?'#474b4c':colors[index]);field.addColorStop(1,empty?'#1c2022':'#183b23');
     rect(8,8,34,34,3,field);
-    c.save(); c.translate(25,25);
-    if(index === 0) {
-        c.fillStyle='#eff2e8';c.font='bold 33px Arial';c.textAlign='center';c.textBaseline='middle';c.fillText('∞',0,-1);
-    } else if(index === 1 || index === 2) {
-        c.rotate(Math.PI / 4);
-        for(let i=0;i<(index===1?2:3);i++) {
-            const x=(i-(index===1?.5:1))*7;
-            const g=c.createLinearGradient(x-3,0,x+3,0);
-            g.addColorStop(0,empty?'#777d80':index===1?'#a36515':'#458f92');
-            g.addColorStop(.45,empty?'#e1e5e6':index===1?'#c6ad6a':'#a4c1bf');
-            g.addColorStop(1,empty?'#666d70':index===1?'#b67c23':'#5ea6ac');
-            rect(x-2.5,-10,5,20,1,g);rect(x-3,7,6,3,.5,empty?'#b1b7ba':'#ad985e');
-        }
-    } else if(index === 3) {
-        c.rotate(Math.PI/4);
-        c.fillStyle=empty?'#d8dcdd':'#a1af7b';c.beginPath();c.moveTo(0,-16);c.lineTo(6,-5);c.lineTo(5,9);c.lineTo(-5,9);c.lineTo(-6,-5);c.closePath();c.fill();
-        c.fillStyle=empty?'#848b8d':'#687d48';c.fillRect(-4,-2,8,10);
-        c.beginPath();c.moveTo(-4,4);c.lineTo(-10,13);c.lineTo(0,10);c.lineTo(10,13);c.lineTo(4,4);c.fill();
-    } else {
-        const orb=c.createRadialGradient(-3,-4,1,0,0,12);
-        orb.addColorStop(0,'#d1dce0');orb.addColorStop(.3,empty?'#dde1e2':'#a8bfcc');orb.addColorStop(.65,empty?'#949b9e':'#617d9a');orb.addColorStop(1,empty?'#41474c':'#203c86');
-        c.fillStyle=orb;c.beginPath();c.arc(0,0,12,0,Math.PI*2);c.fill();
-        c.strokeStyle=empty?'#b3b9bb':'#788d9d';c.lineWidth=2;c.beginPath();c.arc(0,0,16,-1,.8);c.stroke();
+    const asset = ammoImage(ammoCategories[index]);
+    if (asset?.loaded) {
+        c.save();
+        c.imageSmoothingEnabled = true;
+        c.imageSmoothingQuality = 'high';
+        if (empty) c.filter = 'grayscale(1) brightness(0.8)';
+        c.drawImage(asset.image, 9, 9, 32, 32);
+        c.restore();
+        icons.set(key, canvas);
     }
-    c.restore(); icons.set(key,canvas);return canvas;
+    // Do not cache a frame without its artwork while the image is still loading.
+    return canvas;
 }
 
 function drawSelectedWeapon(ctx: CanvasRenderingContext2D, weapon: IWeapon): void {
@@ -79,7 +67,7 @@ export function drawWeaponHUD(ctx: CanvasRenderingContext2D, weapons: readonly (
             ctx.strokeStyle='#edd937';ctx.lineWidth=1;ctx.stroke();
         }
         ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 19px Arial';
-        const label=ammo===Infinity?'∞':String(ammo);
+        const label=ammo===Infinity?'':String(ammo);
         ctx.lineWidth=3;ctx.strokeStyle=index===selectedIndex?'#4d4525':'#465257';ctx.strokeText(label,left+24,21);
         ctx.fillStyle='#e1dfcf';ctx.fillText(label,left+24,21);
         ctx.drawImage(ammoIcon(index,ammo===0),left,37,49,49);

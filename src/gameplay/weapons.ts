@@ -14,7 +14,7 @@ export interface WeaponDefinition {
     readonly speed: number;
     readonly pushBackForce: number;
     readonly ammo: AmmoDefinition;
-    readonly projectile: 'bullet' | 'grenade' | 'flame' | 'laser' | 'plasma' | 'skull' | 'plasma-grenade';
+    readonly projectile: 'bullet' | 'grenade' | 'flame' | 'laser' | 'plasma' | 'skull' | 'plasma-grenade' | 'chain-lightning' | 'pulse' | 'acid' | 'bolt' | 'disc';
     readonly effect?: HitEffect;
     readonly cursorIndicator?: 'hidden';
     readonly chargeMs?: number;
@@ -24,7 +24,7 @@ export interface WeaponDefinition {
     readonly pellets: readonly PelletDefinition[];
 }
 const ammo = (initial: number): AmmoDefinition => ({ kind: 'finite', initial, capacity: initial * 2, perShot: 1 });
-const slow: HitEffect = { slowFactor: .55, slowMs: 1500 };
+const slow: HitEffect = { slowFactor: .5, slowMs: 1500 };
 const single = Object.freeze([{ angleOffset: 0, damageMultiplier: 1 }]);
 // Ammo counts are provisional prototype balance, not prices or character starting grants.
 export const WEAPON_DEFINITIONS: Readonly<Record<WeaponId, WeaponDefinition>> = {
@@ -61,4 +61,20 @@ export const WEAPON_DEFINITIONS: Readonly<Record<WeaponId, WeaponDefinition>> = 
         ammo: ammo(20), projectile: 'plasma-grenade', pellets: single, effect: slow, description: 'Круговой плазменный взрыв с замедлением.' },
     'grenade-launcher': { id: 'grenade-launcher', name: 'Базука', category: 'special', damage: 14, shotIntervalMs: 1400,
         speed: 7, pushBackForce: 38, ammo: { kind: 'finite', initial: 10, capacity: 20, perShot: 1 }, projectile: 'grenade', pellets: single },
+    tesla: { id: 'tesla', name: 'Электропушка', category: 'scientific', damage: 8, shotIntervalMs: 850,
+        speed: 0, pushBackForce: 6, ammo: ammo(45), projectile: 'chain-lightning', pellets: single,
+        description: 'Прицельный разряд перескакивает ещё на трёх соседних врагов, теряя урон.' },
+    impulse: { id: 'impulse', name: 'Импульсная пушка', category: 'scientific', damage: 6, shotIntervalMs: 1100,
+        speed: 0, pushBackForce: 85, ammo: ammo(35), projectile: 'pulse', pellets: single,
+        description: 'Короткий веер молний бьёт толпу перед тобой и сильно отталкивает врагов.' },
+    'acid-gun': { id: 'acid-gun', name: 'Кислотомёт', category: 'special', damage: 3, shotIntervalMs: 400,
+        speed: 11, pushBackForce: 3, ammo: ammo(80), projectile: 'acid', pellets: single,
+        effect: { acidDps: 3, acidMs: 2000 }, description: 'Сгустки кислоты наносят урон при попадании и разъедают врага ещё две секунды.' },
+    crossbow: { id: 'crossbow', name: 'Арбалет', category: 'shotgun', damage: 3, shotIntervalMs: 1000,
+        speed: 22, pushBackForce: 20, ammo: ammo(30), projectile: 'bolt',
+        pellets: [-.06, -.03, 0, .03, .06].map(angleOffset => ({ angleOffset, damageMultiplier: 1 })),
+        description: 'Пять болтов веером за один выстрел. Один заряд на весь залп.' },
+    'disc-launcher': { id: 'disc-launcher', name: 'Дискомёт', category: 'special', damage: 8, shotIntervalMs: 950,
+        speed: 13, pushBackForce: 12, ammo: ammo(40), projectile: 'disc', pellets: single,
+        description: 'Вращающееся круглое лезвие пробивает до трёх врагов.' },
 };

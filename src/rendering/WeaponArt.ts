@@ -1,10 +1,12 @@
 import type { WeaponId } from '@/gameplay/ids';
-import { drawWeaponSprite, weaponSpritesReady } from './WeaponSprites';
+import { drawWeaponSprite, isWeaponSpriteLoaded } from './WeaponSprites';
+import { drawExperimentalWeapon } from './ExperimentalWeaponArt';
 export type { WeaponId } from '@/gameplay/ids';
 export { WEAPON_ART, WEAPON_ORDER, WEAPON_MOUNT, muzzlePosition } from './WeaponGeometry';
 
 export function drawWeapon(ctx: CanvasRenderingContext2D, id: WeaponId) {
     if (drawWeaponSprite(ctx, id)) return;
+    if (drawExperimentalWeapon(ctx, id)) return;
     ctx.save();
     ctx.lineJoin = 'round';
     ctx.lineWidth = 1.2;
@@ -81,17 +83,17 @@ export function drawWeapon(ctx: CanvasRenderingContext2D, id: WeaponId) {
 }
 
 /** Transparent, cached image URL for any DOM UI; uses the same model as the game. */
-const icons = new Map<WeaponId, string>();
-void weaponSpritesReady.then(() => icons.clear());
+const icons = new Map<WeaponId, { url: string; raster: boolean }>();
 export function weaponIcon(id: WeaponId): string {
-    if (!icons.has(id)) {
+    const raster = isWeaponSpriteLoaded(id);
+    if (icons.get(id)?.raster !== raster) {
         const canvas = document.createElement('canvas');
         canvas.width = 192; canvas.height = 80;
         const ctx = canvas.getContext('2d')!;
         ctx.translate(52, 40); ctx.scale(2.1, 2.1);
         drawWeapon(ctx, id);
-        icons.set(id, canvas.toDataURL());
+        icons.set(id, { url: canvas.toDataURL(), raster });
     }
-    return icons.get(id)!;
+    return icons.get(id)!.url;
 }
 

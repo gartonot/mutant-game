@@ -1,3 +1,7 @@
+import { drawRemainsFlesh, renderRemainsAtlas } from './BloodRemains';
+import type { PreparedBloodDecal } from './BloodDecalWorkerPool';
+import { renderBloodDecal, type BloodDecalInput, type BloodDecal } from './BloodDecal';
+
 interface BloodShape {
     x: number;
     y: number;
@@ -34,13 +38,18 @@ function fillContour(ctx: CanvasRenderingContext2D, points: Float64Array): void 
     ctx.fill();
 }
 
+// Reuse the exact same angles for every independently randomized contour.
+const contourUnitCircle = Array.from({ length: 12 }, (_, i) => {
+    const theta = i / 12 * Math.PI * 2;
+    return [Math.cos(theta), Math.sin(theta)] as const;
+});
+
 function makeContour(random: () => number): Float64Array {
     const contour = new Float64Array(24);
     for (let i = 0; i < 12; i++) {
-        const theta = i / 12 * Math.PI * 2;
         const reach = .6 + random() * .65;
-        contour[i * 2] = Math.cos(theta) * reach;
-        contour[i * 2 + 1] = Math.sin(theta) * reach;
+        contour[i * 2] = contourUnitCircle[i][0] * reach;
+        contour[i * 2 + 1] = contourUnitCircle[i][1] * reach;
     }
     return contour;
 }
@@ -56,21 +65,6 @@ function drawShape(ctx: CanvasRenderingContext2D, shape: BloodShape,
     ctx.restore();
 }
 
-// Smooth, deterministic pigment variation: no animated noise or random flicker.
-function pigmentNoise(x: number, y: number, seed: number): number {
-    const ix = Math.floor(x), iy = Math.floor(y);
-    const hash = (a: number, b: number) => {
-        let h = Math.imul(a, 374761393) ^ Math.imul(b, 668265263) ^ seed;
-        h = Math.imul(h ^ (h >>> 13), 1274126177);
-        return ((h ^ (h >>> 16)) >>> 0) / 4294967295;
-    };
-    const fx = x - ix, fy = y - iy;
-    const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
-    const top = hash(ix, iy) * (1 - sx) + hash(ix + 1, iy) * sx;
-    const bottom = hash(ix, iy + 1) * (1 - sx) + hash(ix + 1, iy + 1) * sx;
-    return top * (1 - sy) + bottom * sy;
-}
-
 /** A dense directional splash and remains, with a permanent ground imprint. */
 export class ZombieDeathEffect {
     private ageMs = 0;
@@ -79,7 +73,15 @@ export class ZombieDeathEffect {
     private readonly trails: BloodShape[] = [];
     private readonly lifetimeMs = 650;
     private readonly drag = 4.5;
-    private groundDecal: { canvas: HTMLCanvasElement; x: number; y: number } | null = null;
+    private groundDecal: BloodDecal | null = null;
+    private remainsAtlas: HTMLCanvasElement | ImageBitmap | null = null;
+    private atlasAttempted = false;
+    private waitingForPreparation = false;
+    private groundStamped = false;
+    private retired = false;
+    private readonly remainsTiles = new Map<BloodParticle, {
+        sx: number; width: number; height: number; left: number; top: number; resolution: number;
+    }>();
     private readonly bloodColor: string;
     private readonly greenBlood: boolean;
 
@@ -161,6 +163,7 @@ export class ZombieDeathEffect {
     get isExpired(): boolean { return this.ageMs >= this.lifetimeMs; }
 
     update(deltaMs: number): void {
+        if (this.waitingForPreparation) return;
         if (Number.isFinite(deltaMs) && deltaMs > 0) this.ageMs += deltaMs;
     }
 
@@ -176,55 +179,42 @@ export class ZombieDeathEffect {
 
     private createGroundDecal(): void {
         if (typeof document === 'undefined') return;
-        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-        const include = (shape: BloodShape, x: number, y: number) => {
-            const cos = Math.cos(shape.rotation), sin = Math.sin(shape.rotation);
-            for (let i = 0; i < shape.contour.length; i += 2) {
-                const px = shape.contour[i] * shape.size * shape.stretch;
-                const py = shape.contour[i + 1] * shape.size;
-                const dx = x + px * cos - py * sin, dy = y + px * sin + py * cos;
-                minX = Math.min(minX, dx); maxX = Math.max(maxX, dx);
-                minY = Math.min(minY, dy); maxY = Math.max(maxY, dy);
-            }
+        this.groundDecal = renderBloodDecal(this.groundInput(), document.createElement('canvas'));
+    }
+
+    /** A snapshot of the existing geometry: no new random values or shared templates. */
+    groundInput(includeRemains = false): BloodDecalInput {
+        return {
+            shapes: [...this.trails, ...this.groundShapes,
+                ...this.particles.filter(p => !p.chunk).map(p => ({ ...p, x: p.landingX, y: p.landingY }))],
+            ...(includeRemains ? { remains: {
+                particles: this.particles.filter(p => p.chunk), greenBlood: this.greenBlood,
+                resolution: Math.max(3, typeof devicePixelRatio === 'number' ? devicePixelRatio : 1),
+            } } : {}),
+            color: this.bloodColor,
+            seed: Math.imul(Math.round(this.x * 31 + this.y * 113), 1597334677),
         };
-        for (const shape of [...this.trails, ...this.groundShapes]) include(shape, shape.x, shape.y);
-        for (const particle of this.particles) if (!particle.chunk) include(particle, particle.landingX, particle.landingY);
-        const left = Math.floor(minX) - 3, top = Math.floor(minY) - 3;
-        const canvas = document.createElement('canvas');
-        canvas.width = Math.ceil(maxX) - left + 3;
-        canvas.height = Math.ceil(maxY) - top + 3;
-        const ctx = canvas.getContext('2d', { willReadFrequently: true });
-        if (!ctx) return;
-        ctx.translate(-left, -top);
-        this.drawBlood(ctx, true);
-        const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = pixels.data;
-        const alpha = new Uint8ClampedArray(canvas.width * canvas.height);
-        for (let i = 0; i < alpha.length; i++) alpha[i] = data[i * 4 + 3];
-        const rgb = [1, 3, 5].map(offset => parseInt(this.bloodColor.slice(offset, offset + 2), 16));
-        const seed = Math.imul(Math.round(this.x * 31 + this.y * 113), 1597334677);
-        for (let y = 1; y < canvas.height - 1; y++) {
-            for (let x = 1; x < canvas.width - 1; x++) {
-                const i = y * canvas.width + x, p = i * 4;
-                if (!alpha[i]) continue;
-                const wx = x + left, wy = y + top;
-                const pool = pigmentNoise(wx / 19, wy / 19, seed);
-                const clot = pigmentNoise(wx / 5, wy / 5, seed + 47);
-                const grain = pigmentNoise(wx / 1.2, wy / 1.2, seed + 311);
-                // One continuous pigment field merges overlapping lobes into liquid.
-                // Thin translucent edges surround deep, irregular coagulated pockets.
-                const edge = (alpha[i - 1] + alpha[i + 1] + alpha[i - canvas.width] + alpha[i + canvas.width]) / 1020;
-                const depth = .49 + pool * .49 + clot * .16 + (grain - .5) * .13;
-                const pocket = Math.max(0, .43 - clot) * .75;
-                const glint = Math.max(0, grain - .71) * Math.max(0, clot - .52) * 75;
-                data[p] = rgb[0] * (depth - pocket) + glint;
-                data[p + 1] = rgb[1] * (depth - pocket) + glint * .72;
-                data[p + 2] = rgb[2] * (depth - pocket) + glint * .63;
-                data[p + 3] = alpha[i] * (.64 + pool * .29 + clot * .07) * (.66 + edge * .34);
-            }
-        }
-        ctx.putImageData(pixels, 0, 0);
-        this.groundDecal = { canvas, x: left, y: top };
+    }
+
+    deferUntilPrepared(): void { this.waitingForPreparation = true; }
+
+    /** Apply a worker result only when its ordered ground stamp is about to be drawn. */
+    acceptPrepared(prepared: PreparedBloodDecal | null): void {
+        this.waitingForPreparation = false;
+        if (!prepared?.remains) return;
+        this.remainsAtlas = prepared.remains.canvas;
+        this.atlasAttempted = true;
+        const chunks = this.particles.filter(p => p.chunk);
+        prepared.remains.tiles.forEach((tile, index) => this.remainsTiles.set(chunks[index], tile));
+    }
+
+    dispose(): void {
+        this.retired = true;
+        // A capped/expired airborne effect still owes its permanent ground stamp.
+        if (!this.groundStamped) return;
+        if (this.remainsAtlas && 'close' in this.remainsAtlas) this.remainsAtlas.close();
+        this.remainsAtlas = null;
+        this.remainsTiles.clear();
     }
 
     private drawRemains(ctx: CanvasRenderingContext2D, particle: BloodParticle,
@@ -233,71 +223,57 @@ export class ZombieDeathEffect {
         ctx.globalAlpha *= .42;
         drawShape(ctx, particle, x + .3, y + .55, rotation, '#211a17');
         ctx.restore();
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(rotation);
-        ctx.scale(particle.size * particle.stretch * .98, particle.size * .92);
-        const flesh = ctx.createLinearGradient(-.7, -.8, .7, .8);
-        if (flesh && typeof flesh.addColorStop === 'function') {
-            flesh.addColorStop(0, this.greenBlood ? '#626046' : '#815044');
-            flesh.addColorStop(.3, this.greenBlood ? '#3e492a' : '#54201e');
-            flesh.addColorStop(.7, this.greenBlood ? '#242b17' : '#2c1113');
-            flesh.addColorStop(1, '#151412');
-            ctx.fillStyle = flesh;
-        } else ctx.fillStyle = this.greenBlood ? '#343b24' : '#491b1d';
-        fillContour(ctx, particle.contour);
-        ctx.clip();
-        // Fine torn fibres and mottled tissue break up the clean gradient surface.
-        for (let i = 0; i < 42; i++) {
-            const px = pigmentNoise(i * 13.7, particle.contour[0] * 91, 71) * 2 - 1;
-            const py = pigmentNoise(i * 7.3, particle.contour[1] * 83, 97) * 2 - 1;
-            ctx.strokeStyle = i % 3 === 0
-                ? (this.greenBlood ? '#64654a' : '#885049')
-                : (this.greenBlood ? '#29321e' : '#3b161b');
-            ctx.lineWidth = .025 + (i % 4) * .012;
-            ctx.beginPath();
-            ctx.moveTo(px, py);
-            ctx.lineTo(px + .04 + (i % 3) * .035, py + .03);
-            ctx.stroke();
-        }
-        ctx.strokeStyle = this.greenBlood ? '#242719' : '#301214';
-        ctx.lineWidth = .045;
-        for (let i = 0; i < 6; i++) {
-            const px = particle.contour[i * 2] * .55, py = particle.contour[i * 2 + 1] * .55;
-            ctx.beginPath();
-            ctx.moveTo(px, py);
-            ctx.quadraticCurveTo(px * .3 - .1, py * .6, px * .2, py * .2 + .12);
-            ctx.stroke();
-        }
-        if (particle.bone) {
-            ctx.strokeStyle = '#8f816c';
-            ctx.lineWidth = .11;
-            ctx.lineCap = 'round';
-            ctx.beginPath();
-            ctx.moveTo(-.3, -.1);
-            ctx.quadraticCurveTo(0, -.22, .46, .04);
-            ctx.stroke();
-        }
-        ctx.restore();
+        if (!this.atlasAttempted) this.createRemainsAtlas();
+        const tile = this.remainsTiles.get(particle);
+        if (this.remainsAtlas && tile) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(rotation);
+            // The original per-primitive opacity is baked into this unique fragment.
+            ctx.globalAlpha = 1;
+            ctx.drawImage(this.remainsAtlas, tile.sx, 0, tile.width, tile.height,
+                tile.left, tile.top, tile.width / tile.resolution, tile.height / tile.resolution);
+            ctx.restore();
+        } else this.drawFlesh(ctx, particle, x, y, rotation);
     }
 
-    drawGround(ctx: CanvasRenderingContext2D): void {
+    private createRemainsAtlas(): void {
+        this.atlasAttempted = true;
+        if (typeof document === 'undefined') return;
+        const chunks = this.particles.filter(p => p.chunk);
+        const result = renderRemainsAtlas({ particles: chunks, greenBlood: this.greenBlood,
+            resolution: Math.max(3, typeof devicePixelRatio === 'number' ? devicePixelRatio : 1),
+        }, document.createElement('canvas'));
+        if (!result) return;
+        this.remainsAtlas = result.canvas as HTMLCanvasElement;
+        result.tiles.forEach((tile, index) => this.remainsTiles.set(chunks[index], tile));
+    }
+
+    private drawFlesh(ctx: CanvasRenderingContext2D, particle: BloodParticle,
+        x: number, y: number, rotation: number): void {
+        drawRemainsFlesh(ctx, particle, this.greenBlood, x, y, rotation);
+    }
+
+    drawGround(ctx: CanvasRenderingContext2D, prepared?: BloodDecal | null): void {
         // Stamped once on the persistent arena canvas; independent of effect age.
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.globalAlpha = .98;
-        if (!this.groundDecal) this.createGroundDecal();
-        if (this.groundDecal) ctx.drawImage(this.groundDecal.canvas, this.groundDecal.x, this.groundDecal.y);
+        if (!prepared && !this.groundDecal) this.createGroundDecal();
+        const decal = prepared ?? this.groundDecal;
+        if (decal) ctx.drawImage(decal.canvas, decal.x, decal.y);
         else this.drawBlood(ctx);
         for (const particle of this.particles) {
             if (particle.chunk) this.drawRemains(ctx, particle,
                 particle.landingX, particle.landingY, particle.rotation);
         }
         ctx.restore();
+        this.groundStamped = true;
+        if (this.retired) this.dispose();
     }
 
     draw(ctx: CanvasRenderingContext2D): void {
-        if (this.isExpired) return;
+        if (this.isExpired || this.waitingForPreparation || this.retired) return;
         const seconds = this.ageMs / 1000;
         const distanceTime = (1 - Math.exp(-this.drag * seconds)) / this.drag;
         const tailSeconds = Math.max(0, seconds - .035);

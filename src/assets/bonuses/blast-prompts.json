@@ -1,0 +1,14 @@
+{
+  "tool": "built-in image_gen",
+  "silver": [
+    {
+      "name": "ice-blast",
+      "prompt": "Use case: stylized-concept. Single ice explosion pickup medallion for a retro top-down shooter, same family as polished circular game bonuses. Silver beveled metal outer rim with dark recesses and bright upper-left highlights, thin lime green inset ring, glossy saturated cyan-blue glass interior. Center symbol is a bold luminous lemon yellow FOUR POINT STARBURST: narrow long vertical lower spike, two shorter diagonal/side spikes, small upward point. Reference motif is a yellow ice blast star on blue circle. Perfectly round, front facing, centered, diameter90% of square. Clean bold readable at32px. Painted3D game icon finish, not flat vector. Exactly one isolated icon, transparent alpha corners, no exterior glow/shadow, no snowflake, no text, no numbers, no extra objects."
+    },
+    {
+      "name": "fire-blast",
+      "prompt": "Use case: stylized-concept. Single explosion pickup medallion for a retro top-down shooter, same family as polished circular game bonuses. Silver beveled metal outer rim with dark recesses and bright upper-left highlights, thin lime green inset ring, glossy red-orange glass interior with brighter orange near center. Center symbol: three bold luminous yellow triangular lobes arranged radially like a simple three-bladed explosion/radiation trefoil, top wedge pointing upward, lower wedges bottom-left bottom-right, separated by red gaps around a small orange center. Reference motif is yellow triple blast mark on red circle. Perfectly round front facing centered diameter90% square. Bold readable at32px. Painted3D game icon finish. Exactly one isolated icon transparent alpha corners, no exterior glow/shadow, no text, no numbers, no extra objects."
+    }
+  ],
+  "goldEdit": "Use case: precise-object-edit. Change ONLY the silver outer metallic rim of this game medallion into polished gold with pale gold highlights and amber recesses. Preserve exactly the interior symbol, glass colors, green inset trim, size, composition and transparent alpha background. No changes to the central symbol, no text, no additions."
+}

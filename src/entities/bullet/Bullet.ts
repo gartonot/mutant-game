@@ -2,6 +2,7 @@ import type { HitEffect } from '@/gameplay/HitEffect';
 import { drawBulletSprite } from '@/rendering/BulletSprite';
 import { BulletTrail } from '@/effects/BulletTrail';
 import type { IGameEntity } from '@entities/interfaces';
+import { getArenaSize } from '@/gameplay/Arena';
 
 export class Bullet implements IGameEntity {
     x: number;
@@ -30,6 +31,7 @@ export class Bullet implements IGameEntity {
         speed = 10,
         pushBackForce = 5,
     ) {
+        startY = Math.min(startY, getArenaSize().height);
         // Координаты пули
         this.previousX = startX;
         this.previousY = startY;
@@ -47,20 +49,23 @@ export class Bullet implements IGameEntity {
     }
 
     update(_deltaMs = 1000 / 60) {
+        if (this.moveWithinArena(this.speed)) this.expired = true;
+        this.trail.update(this.x, this.y);
+    }
+
+    /** Keep the last swept segment so a target at the boundary can still be hit. */
+    protected moveWithinArena(distance: number): boolean {
+        const { width, height } = getArenaSize();
+        this.y = Math.min(this.y, height);
         this.previousX = this.x;
         this.previousY = this.y;
-        this.x += this.dx * this.speed;
-        this.y += this.dy * this.speed;
-
-        // Удаляем пулю, если она улетела за экран
-        if (
-            this.x < 0 || this.x > window.innerWidth ||
-            this.y < 0 || this.y > window.innerHeight
-        ) {
-            this.expired = true;
-        }
-
-        this.trail.update(this.x, this.y);
+        const tx = this.dx > 0 ? (width - this.x) / this.dx : this.dx < 0 ? -this.x / this.dx : Infinity;
+        const ty = this.dy > 0 ? (height - this.y) / this.dy : this.dy < 0 ? -this.y / this.dy : Infinity;
+        const limit = Math.max(0, Math.min(tx, ty));
+        const travel = Math.min(distance, limit);
+        this.x += this.dx * travel;
+        this.y += this.dy * travel;
+        return distance >= limit;
     }
 
     draw(ctx: CanvasRenderingContext2D) {

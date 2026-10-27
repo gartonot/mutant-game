@@ -1,11 +1,11 @@
 import type { WeaponId } from '@/gameplay/ids';
-import atlasUrl from '@/assets/characters/mercenary-combat-v2.png';
-import { loadImageAsset } from './ImageAsset';
+import atlasUrl from '@/assets/combat-runtime/characters/mercenary.png';
+import { createLazyImageAsset } from './ImageAsset';
 import { drawRasterCharacter } from './RasterCharacterArt';
 import type { RasterCharacterStyle } from './RasterCharacterArt';
 
-const atlas = loadImageAsset(atlasUrl);
-export const mercenaryArtReady = atlas.ready;
+const atlas = createLazyImageAsset(atlasUrl);
+export function mercenaryArtReady(): Promise<boolean> { return atlas.ensure(); }
 
 // Preserve the authored head crop and neck anchor independently of the shared body rig.
 const style: RasterCharacterStyle = {
@@ -15,5 +15,5 @@ const style: RasterCharacterStyle = {
 };
 
 export function drawMercenary(ctx: CanvasRenderingContext2D, weapon: WeaponId, recoil: number): boolean {
-    return drawRasterCharacter(ctx, 'mercenary', atlas, weapon, recoil, style);
+    return atlas.asset ? drawRasterCharacter(ctx, 'mercenary', atlas.asset, weapon, recoil, style) : false;
 }

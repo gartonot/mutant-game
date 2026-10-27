@@ -1,13 +1,14 @@
 import { Bullet } from './Bullet';
 
 export class Grenade extends Bullet {
-    readonly blastRadius = 95;
+    readonly blastRadius: number;
     detonated = false;
     private distance = 0;
     private elapsed = 0;
 
-    constructor(x: number, y: number, angle: number, damage: number, speed: number, pushBackForce: number, readonly variant: 'normal' | 'skull' | 'plasma' = 'normal') {
+    constructor(x: number, y: number, angle: number, damage: number, speed: number, pushBackForce: number, readonly variant: 'normal' | 'skull' | 'plasma' = 'normal', explosionRadius = 1) {
         super(x, y, angle, damage, speed, pushBackForce);
+        this.blastRadius = 95 * explosionRadius;
         this.radius = 6;
     }
 
@@ -16,11 +17,9 @@ export class Grenade extends Bullet {
         this.previousX = this.x;
         this.previousY = this.y;
         if (this.detonated) return;
-        this.x += this.dx * this.speed;
-        this.y += this.dy * this.speed;
+        const hitBoundary = this.moveWithinArena(this.speed);
         this.distance += this.speed;
-        if (this.distance >= 440 || this.elapsed >= 1600 || this.x < 0 || this.y < 0 ||
-            this.x > window.innerWidth || this.y > window.innerHeight) this.detonated = true;
+        if (this.distance >= 440 || this.elapsed >= 1600 || hitBoundary) this.detonated = true;
     }
 
     override draw(ctx: CanvasRenderingContext2D) {

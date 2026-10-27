@@ -1,5 +1,6 @@
 import type { Enemy } from '@/entities/enemy/Enemy';
 import type { Player } from '@/entities/player/Player';
+import { constrainPlayerToArena } from './playerBounds';
 
 export function resolvePlayerContact(player: Player, enemy: Enemy, moving: boolean, simulationTime: number, width: number, height: number): void {
     const dx = enemy.x - player.x, dy = enemy.y - player.y;
@@ -14,6 +15,5 @@ export function resolvePlayerContact(player: Player, enemy: Enemy, moving: boole
     const enemyShare = moving ? .7 : .3;
     enemy.x += x * enemyShare; enemy.y += y * enemyShare;
     player.x -= x * (1 - enemyShare); player.y -= y * (1 - enemyShare);
-    player.x = Math.max(player.radius, Math.min(width - player.radius, player.x));
-    player.y = Math.max(player.radius, Math.min(height - player.radius, player.y));
+    constrainPlayerToArena(player, width, height);
 }

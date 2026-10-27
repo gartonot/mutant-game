@@ -1,0 +1,578 @@
+[
+  {
+    "scenario": "artillery30",
+    "seed": "0x912df3",
+    "frames": 360,
+    "warmup": 60,
+    "viewport": {
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1
+    },
+    "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "ablation": null,
+    "profile": false,
+    "groundBatchCompleteMs": 284.39999997615814,
+    "maxPendingGround": 30,
+    "notes": [
+      "Synthetic sustained population; not a measured natural wave.",
+      "Seed fixes random sequence, not identical trajectories: rAF timing changes fixed-step counts and random consumption across runs.",
+      "Effects runs actual dual-pistol cadence plus synthetic mixed-projectile bursts every six ticks.",
+      "Update includes explicit maintenance; maintenance is separately reported.",
+      "Canvas CPU submission time excludes deferred GPU work; frame intervals include presentation scheduling.",
+      "HUD ablation excludes health/weapons/bonus HUD, leaves ability and consumable HUD."
+    ],
+    "frameIntervalMs": {
+      "mean": 12.153888888888888,
+      "p50": 10,
+      "p95": 20.09999999999991,
+      "p99": 80.20000000000005,
+      "max": 90.39999999999986,
+      "over16_7": 19,
+      "over33_3": 14,
+      "over50": 8
+    },
+    "updateMs": {
+      "mean": 0.659444446861744,
+      "p50": 0.6000000238418579,
+      "p95": 2,
+      "p99": 3.299999952316284,
+      "max": 25.399999976158142,
+      "over16_7": 1,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "renderMs": {
+      "mean": 3.6680555558866925,
+      "p50": 2.399999976158142,
+      "p95": 7.900000035762787,
+      "p99": 39,
+      "max": 74.5,
+      "over16_7": 10,
+      "over33_3": 5,
+      "over50": 2
+    },
+    "maintenanceMs": {
+      "mean": 0.0016666667328940497,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0.10000002384185791,
+      "max": 0.10000002384185791,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "fixedStepsPerFrame": {
+      "mean": 0.725,
+      "p50": 1,
+      "p95": 1,
+      "p99": 5,
+      "max": 5,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "droppedSimulationMs": 34.899999999999864,
+    "abilityActivationMs": 24.099999964237213,
+    "counts": {
+      "enemies": {
+        "min": 150,
+        "max": 150
+      },
+      "projectiles": {
+        "min": 0,
+        "max": 0
+      },
+      "pickups": {
+        "min": 0,
+        "max": 10
+      },
+      "effects": {
+        "min": 0,
+        "max": 70
+      }
+    },
+    "componentsMeanMsPerFrame": {},
+    "componentCalls": {}
+  },
+  {
+    "scenario": "artillery30",
+    "seed": "0x912df3",
+    "frames": 360,
+    "warmup": 60,
+    "viewport": {
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1
+    },
+    "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "ablation": null,
+    "profile": false,
+    "groundBatchCompleteMs": 108.90000003576279,
+    "maxPendingGround": 30,
+    "notes": [
+      "Synthetic sustained population; not a measured natural wave.",
+      "Seed fixes random sequence, not identical trajectories: rAF timing changes fixed-step counts and random consumption across runs.",
+      "Effects runs actual dual-pistol cadence plus synthetic mixed-projectile bursts every six ticks.",
+      "Update includes explicit maintenance; maintenance is separately reported.",
+      "Canvas CPU submission time excludes deferred GPU work; frame intervals include presentation scheduling.",
+      "HUD ablation excludes health/weapons/bonus HUD, leaves ability and consumable HUD."
+    ],
+    "frameIntervalMs": {
+      "mean": 11.791666666666666,
+      "p50": 10,
+      "p95": 30,
+      "p99": 60.19999999999982,
+      "max": 70.19999999999982,
+      "over16_7": 23,
+      "over33_3": 11,
+      "over50": 6
+    },
+    "updateMs": {
+      "mean": 0.40944444487492243,
+      "p50": 0.40000003576278687,
+      "p95": 0.8999999761581421,
+      "p99": 1.5,
+      "max": 17.900000035762787,
+      "over16_7": 1,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "renderMs": {
+      "mean": 2.581666666600439,
+      "p50": 1.5,
+      "p95": 8.5,
+      "p99": 25.5,
+      "max": 33.69999998807907,
+      "over16_7": 12,
+      "over33_3": 2,
+      "over50": 0
+    },
+    "maintenanceMs": {
+      "mean": 0.00027777767843670313,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.09999996423721313,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "fixedStepsPerFrame": {
+      "mean": 0.7083333333333334,
+      "p50": 1,
+      "p95": 2,
+      "p99": 3,
+      "max": 4,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "droppedSimulationMs": 0,
+    "abilityActivationMs": 17.5,
+    "counts": {
+      "enemies": {
+        "min": 150,
+        "max": 150
+      },
+      "projectiles": {
+        "min": 0,
+        "max": 0
+      },
+      "pickups": {
+        "min": 0,
+        "max": 10
+      },
+      "effects": {
+        "min": 0,
+        "max": 70
+      }
+    },
+    "componentsMeanMsPerFrame": {},
+    "componentCalls": {}
+  },
+  {
+    "scenario": "artillery30",
+    "seed": "0x912df3",
+    "frames": 360,
+    "warmup": 60,
+    "viewport": {
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1
+    },
+    "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "ablation": null,
+    "profile": false,
+    "groundBatchCompleteMs": 103.5,
+    "maxPendingGround": 30,
+    "notes": [
+      "Synthetic sustained population; not a measured natural wave.",
+      "Seed fixes random sequence, not identical trajectories: rAF timing changes fixed-step counts and random consumption across runs.",
+      "Effects runs actual dual-pistol cadence plus synthetic mixed-projectile bursts every six ticks.",
+      "Update includes explicit maintenance; maintenance is separately reported.",
+      "Canvas CPU submission time excludes deferred GPU work; frame intervals include presentation scheduling.",
+      "HUD ablation excludes health/weapons/bonus HUD, leaves ability and consumable HUD."
+    ],
+    "frameIntervalMs": {
+      "mean": 11.6525,
+      "p50": 10,
+      "p95": 20.200000000000728,
+      "p99": 50.20000000000073,
+      "max": 60.20000000000073,
+      "over16_7": 22,
+      "over33_3": 11,
+      "over50": 5
+    },
+    "updateMs": {
+      "mean": 0.40166666607062024,
+      "p50": 0.40000003576278687,
+      "p95": 0.8999999761581421,
+      "p99": 1.4000000357627869,
+      "max": 12.100000023841858,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "renderMs": {
+      "mean": 2.668611112071408,
+      "p50": 1.699999988079071,
+      "p95": 8.899999976158142,
+      "p99": 23.69999998807907,
+      "max": 30.600000023841858,
+      "over16_7": 11,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "maintenanceMs": {
+      "mean": 0.0008333335320154826,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.10000002384185791,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "fixedStepsPerFrame": {
+      "mean": 0.7,
+      "p50": 1,
+      "p95": 2,
+      "p99": 3,
+      "max": 4,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "droppedSimulationMs": 0,
+    "abilityActivationMs": 11.699999988079071,
+    "counts": {
+      "enemies": {
+        "min": 150,
+        "max": 150
+      },
+      "projectiles": {
+        "min": 0,
+        "max": 0
+      },
+      "pickups": {
+        "min": 0,
+        "max": 10
+      },
+      "effects": {
+        "min": 0,
+        "max": 70
+      }
+    },
+    "componentsMeanMsPerFrame": {},
+    "componentCalls": {}
+  },
+  {
+    "scenario": "artillery100",
+    "seed": "0x912df3",
+    "frames": 360,
+    "warmup": 60,
+    "viewport": {
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1
+    },
+    "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "ablation": null,
+    "profile": false,
+    "groundBatchCompleteMs": 369.10000002384186,
+    "maxPendingGround": 100,
+    "notes": [
+      "Synthetic sustained population; not a measured natural wave.",
+      "Seed fixes random sequence, not identical trajectories: rAF timing changes fixed-step counts and random consumption across runs.",
+      "Effects runs actual dual-pistol cadence plus synthetic mixed-projectile bursts every six ticks.",
+      "Update includes explicit maintenance; maintenance is separately reported.",
+      "Canvas CPU submission time excludes deferred GPU work; frame intervals include presentation scheduling.",
+      "HUD ablation excludes health/weapons/bonus HUD, leaves ability and consumable HUD."
+    ],
+    "frameIntervalMs": {
+      "mean": 12.29333333333333,
+      "p50": 10,
+      "p95": 20,
+      "p99": 100.20000000000073,
+      "max": 110.39999999999964,
+      "over16_7": 18,
+      "over33_3": 11,
+      "over50": 10
+    },
+    "updateMs": {
+      "mean": 0.49805555591980616,
+      "p50": 0.40000003576278687,
+      "p95": 0.800000011920929,
+      "p99": 2.300000011920929,
+      "max": 44.89999997615814,
+      "over16_7": 1,
+      "over33_3": 1,
+      "over50": 0
+    },
+    "renderMs": {
+      "mean": 3.3427777780426875,
+      "p50": 2,
+      "p95": 4.800000011920929,
+      "p99": 49.80000001192093,
+      "max": 68.19999998807907,
+      "over16_7": 11,
+      "over33_3": 7,
+      "over50": 3
+    },
+    "maintenanceMs": {
+      "mean": 0.00027777784400516084,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.10000002384185791,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "fixedStepsPerFrame": {
+      "mean": 0.725,
+      "p50": 1,
+      "p95": 1,
+      "p99": 5,
+      "max": 5,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "droppedSimulationMs": 81.46666666666582,
+    "abilityActivationMs": 44.5,
+    "counts": {
+      "enemies": {
+        "min": 150,
+        "max": 150
+      },
+      "projectiles": {
+        "min": 0,
+        "max": 0
+      },
+      "pickups": {
+        "min": 0,
+        "max": 36
+      },
+      "effects": {
+        "min": 0,
+        "max": 141
+      }
+    },
+    "componentsMeanMsPerFrame": {},
+    "componentCalls": {}
+  },
+  {
+    "scenario": "artillery100",
+    "seed": "0x912df3",
+    "frames": 360,
+    "warmup": 60,
+    "viewport": {
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1
+    },
+    "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "ablation": null,
+    "profile": false,
+    "groundBatchCompleteMs": 508.30000001192093,
+    "maxPendingGround": 100,
+    "notes": [
+      "Synthetic sustained population; not a measured natural wave.",
+      "Seed fixes random sequence, not identical trajectories: rAF timing changes fixed-step counts and random consumption across runs.",
+      "Effects runs actual dual-pistol cadence plus synthetic mixed-projectile bursts every six ticks.",
+      "Update includes explicit maintenance; maintenance is separately reported.",
+      "Canvas CPU submission time excludes deferred GPU work; frame intervals include presentation scheduling.",
+      "HUD ablation excludes health/weapons/bonus HUD, leaves ability and consumable HUD."
+    ],
+    "frameIntervalMs": {
+      "mean": 13.073888888888884,
+      "p50": 10,
+      "p95": 20,
+      "p99": 110.40000000000146,
+      "max": 230.79999999999927,
+      "over16_7": 18,
+      "over33_3": 11,
+      "over50": 10
+    },
+    "updateMs": {
+      "mean": 0.5630555556880104,
+      "p50": 0.5,
+      "p95": 1.100000023841858,
+      "p99": 2.900000035762787,
+      "max": 47.90000003576279,
+      "over16_7": 1,
+      "over33_3": 1,
+      "over50": 0
+    },
+    "renderMs": {
+      "mean": 4.028888887994819,
+      "p50": 2.199999988079071,
+      "p95": 4.600000023841858,
+      "p99": 75.09999996423721,
+      "max": 104.19999998807907,
+      "over16_7": 11,
+      "over33_3": 7,
+      "over50": 7
+    },
+    "maintenanceMs": {
+      "mean": 0.0005555556880103217,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.10000002384185791,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "fixedStepsPerFrame": {
+      "mean": 0.7305555555555555,
+      "p50": 1,
+      "p95": 1,
+      "p99": 5,
+      "max": 5,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "droppedSimulationMs": 322.56666666666797,
+    "abilityActivationMs": 47.30000001192093,
+    "counts": {
+      "enemies": {
+        "min": 150,
+        "max": 150
+      },
+      "projectiles": {
+        "min": 0,
+        "max": 0
+      },
+      "pickups": {
+        "min": 0,
+        "max": 36
+      },
+      "effects": {
+        "min": 0,
+        "max": 141
+      }
+    },
+    "componentsMeanMsPerFrame": {},
+    "componentCalls": {}
+  },
+  {
+    "scenario": "artillery100",
+    "seed": "0x912df3",
+    "frames": 360,
+    "warmup": 60,
+    "viewport": {
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1
+    },
+    "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "ablation": null,
+    "profile": false,
+    "groundBatchCompleteMs": 363.9000000357628,
+    "maxPendingGround": 100,
+    "notes": [
+      "Synthetic sustained population; not a measured natural wave.",
+      "Seed fixes random sequence, not identical trajectories: rAF timing changes fixed-step counts and random consumption across runs.",
+      "Effects runs actual dual-pistol cadence plus synthetic mixed-projectile bursts every six ticks.",
+      "Update includes explicit maintenance; maintenance is separately reported.",
+      "Canvas CPU submission time excludes deferred GPU work; frame intervals include presentation scheduling.",
+      "HUD ablation excludes health/weapons/bonus HUD, leaves ability and consumable HUD."
+    ],
+    "frameIntervalMs": {
+      "mean": 12.181944444444444,
+      "p50": 10,
+      "p95": 10.200000000000728,
+      "p99": 90.29999999999927,
+      "max": 110.40000000000146,
+      "over16_7": 17,
+      "over33_3": 10,
+      "over50": 8
+    },
+    "updateMs": {
+      "mean": 0.46944444494114984,
+      "p50": 0.40000003576278687,
+      "p95": 0.699999988079071,
+      "p99": 2.100000023841858,
+      "max": 42.40000003576279,
+      "over16_7": 1,
+      "over33_3": 1,
+      "over50": 0
+    },
+    "renderMs": {
+      "mean": 3.3130555543634626,
+      "p50": 2,
+      "p95": 4.300000011920929,
+      "p99": 55.5,
+      "max": 63.89999997615814,
+      "over16_7": 10,
+      "over33_3": 7,
+      "over50": 4
+    },
+    "maintenanceMs": {
+      "mean": 0.00027777784400516084,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.10000002384185791,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "fixedStepsPerFrame": {
+      "mean": 0.7194444444444444,
+      "p50": 1,
+      "p95": 1,
+      "p99": 5,
+      "max": 5,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "droppedSimulationMs": 74.99999999999986,
+    "abilityActivationMs": 41.80000001192093,
+    "counts": {
+      "enemies": {
+        "min": 150,
+        "max": 150
+      },
+      "projectiles": {
+        "min": 0,
+        "max": 0
+      },
+      "pickups": {
+        "min": 0,
+        "max": 36
+      },
+      "effects": {
+        "min": 0,
+        "max": 141
+      }
+    },
+    "componentsMeanMsPerFrame": {},
+    "componentCalls": {}
+  }
+]

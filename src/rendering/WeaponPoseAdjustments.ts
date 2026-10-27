@@ -8,7 +8,7 @@ export type WeaponPoseAdjustment = Readonly<{ x: number; y: number; angle: numbe
     shoulder?: Readonly<{ x: number; y: number }> }>;
 const tilt = -5 * Math.PI / 180;
 const tiltedWeapons: WeaponId[] = ['rifle', 'shotgun', 'm16', 'ak47', 'plasma-auto', 'double-barrel', 'laser'];
-const levelWeapons: WeaponId[] = ['machine-gun', 'flamethrower', 'skull-launcher', 'plasma-cannon'];
+const levelWeapons: WeaponId[] = ['machine-gun', 'flamethrower', 'skull-launcher', 'plasma-cannon', 'tesla', 'impulse', 'acid-gun', 'crossbow', 'disc-launcher'];
 const standardPoses = Object.fromEntries(CHARACTER_IDS.filter(id => id !== 'destroyer').map(id => {
     const [rear, front] = CHARACTER_RIGS[id].palms;
     const clasped = Math.hypot(front.x - rear.x, front.y - rear.y) < 10;

@@ -1,5 +1,6 @@
 import { weaponSpriteInventoryIcon, weaponSpritesReady } from './WeaponSprites';
 import type { WeaponId } from '@/gameplay/ids';
+import { drawExperimentalWeapon } from './ExperimentalWeaponArt';
 
 const cache = new Map<WeaponId, string>();
 /** Detailed side-view inventory illustrations. Combat art keeps its top-down pose. */
@@ -11,6 +12,13 @@ export function inventoryWeaponIcon(id: WeaponId): string {
     const canvas = document.createElement('canvas');
     canvas.width = 240; canvas.height = 380;
     const c = canvas.getContext('2d')!;
+    c.save();
+    c.translate(120, 190); c.rotate(-Math.PI * .59); c.scale(4.4, 4.4); c.translate(-16, 0);
+    const experimental = drawExperimentalWeapon(c, id);
+    c.restore();
+    if (experimental) {
+        const url = canvas.toDataURL(); cache.set(id, url); return url;
+    }
     c.translate(120, 190); c.rotate(-Math.PI * .59); c.scale(3.7, 3.7);
     c.lineJoin = 'round'; c.lineCap = 'round'; c.lineWidth = .75;
     const gradient = (y: number, h: number, colors: string[]) => {
@@ -109,7 +117,7 @@ export function inventoryWeaponIcon(id: WeaponId): string {
 
 /** Refresh existing images in place: loading never resets focus or equipment selection. */
 export function refreshWeaponIconsWhenReady(root: HTMLElement): void {
-    void weaponSpritesReady.then(() => {
+    void weaponSpritesReady().then(() => {
         root.querySelectorAll<HTMLImageElement>('img[data-weapon-art]').forEach(img => {
             img.src = inventoryWeaponIcon(img.dataset.weaponArt as WeaponId);
         });

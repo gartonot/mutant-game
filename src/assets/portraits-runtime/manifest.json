@@ -1,0 +1,423 @@
+{
+  "schemaVersion": 1,
+  "generator": "scripts/optimize-portraits.mjs",
+  "sharpVersion": "0.35.5",
+  "libvipsVersion": "8.18.7",
+  "settings": {
+    "full": {
+      "resize": null,
+      "webp": {
+        "lossless": true,
+        "effort": 6
+      }
+    },
+    "thumbnail": {
+      "resize": {
+        "width": 512,
+        "height": 768,
+        "fit": "inside",
+        "withoutEnlargement": true,
+        "kernel": "lanczos3"
+      },
+      "webp": {
+        "lossless": true,
+        "effort": 6
+      }
+    }
+  },
+  "verification": {
+    "fullDecodedRgbaEqualsSource": true
+  },
+  "files": [
+    {
+      "source": {
+        "path": "src/assets/characters/assassin.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2352244,
+        "sha256": "94ba804fe6d01a9dfcd02e741f5f6fd3cf29d1495b1750ccca7791eae06f4850",
+        "rgbaSha256": "008f84e36f0ba0c4e34422a1fa1c86b61bf4bbdbe8a45053dfab716385ad05ad"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/assassin.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1549960,
+          "sha256": "73fb6b237826d963c78e27e6984004c83b56714b0dcd026c3608599e8b1142fb"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/assassin.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 441108,
+          "sha256": "f616a9bc94009c97722ccbc9f0874e207260f9c1fc8dc2d979147c2b4e20c3dd"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/destroyer.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2701051,
+        "sha256": "0c84dd073a0b641273b44c68fda1bfd5592d2c24e6bef0b246f4e3db82bdc864",
+        "rgbaSha256": "4a2490934b47a0dcc74354b29a3d4e7c890eda04f4df70b4d5f36a77bb689a9d"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/destroyer.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1729690,
+          "sha256": "d22921df5b361a507104958d856b341badc195c0591c31ec31eebd54df727166"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/destroyer.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 477406,
+          "sha256": "b98344a1269e48cc3d3f2d52ccff0979cec02c7aaa4a2df151944265a46d07ea"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/mercenary.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2908297,
+        "sha256": "ca666f932c39b09413236eb15676394ca3765b4f9684aa95df80d00ac33570f4",
+        "rgbaSha256": "e885798638a8c6754f2f902e434f7703b865a68d60ff4c4f8b7d90b30eb59c6a"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/mercenary.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1833484,
+          "sha256": "527c26f3fd5b0ad2751c12f1c3bdd0431691eb27d70e47bf15ccb90a2e758445"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/mercenary.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 506268,
+          "sha256": "a2f2a9ce3ed51e10db2b8343bc5f22e5ef2023f80f9b3343f7a6645a87b5f213"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/hunter.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2608565,
+        "sha256": "749dd20c7367add733d51f1da65f7d0fcb0408ebe998a0dac949e24ef8079277",
+        "rgbaSha256": "7d303ea9799ed7b94d9fa486eb607735c16ea37b76b6f19d1c2ee006aeff5d22"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/hunter.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1639374,
+          "sha256": "fedadac5dc0760a39b51239ee78fa96fba1d340cd133c4b2d721106682d2b985"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/hunter.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 459720,
+          "sha256": "710f00d4905fe89a3bcdc61a7c2a6d4bf5462c2ce5ab12b9d159357d83221e7b"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/cyborg.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2721504,
+        "sha256": "8c087f14d72e52bbf50acb415829007c66b296ae9b7c4837e00369309f4e4523",
+        "rgbaSha256": "4e6c9464bb21dcc392e2458e848c6a1efc48b2f89abbf206c6d6aff0311a30c6"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/cyborg.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1766488,
+          "sha256": "c1654490c1ba559140d0214a1a744db50f5cdc035d55abca729a365bd5392dd0"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/cyborg.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 448742,
+          "sha256": "06c28adce94289619585b68444d81ed1061c77dcc6741cb65ff18ea3b5dc36eb"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/telepath.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2356225,
+        "sha256": "cde74ed9127d3fd2dbcfb4b9363c6d7a4b96e847ad441f5ae066a2c17fe0612e",
+        "rgbaSha256": "fbc46c5c2c78122871d72a5578b43094f64d17745d264626d15a24a8008e4953"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/telepath.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1634662,
+          "sha256": "b74c1bb17e8d7df81eeaa5797579d48b676daf741d6e31d3b4ee184ea5d8267c"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/telepath.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 445434,
+          "sha256": "896a0fb866a0b37278960718cc05b390a5cb7c2fcb41d4c62646f4976baeedb7"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/fanatic.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2462332,
+        "sha256": "b6d000b526d5081eb6c1fad7bbc225cb57524f0eff032d4c9df97f0e516ec55b",
+        "rgbaSha256": "c6c521b5f62be95fe70772a71cbf0216099bb9eb64a1f78964db0f246ac4605e"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/fanatic.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1667988,
+          "sha256": "8a7372a4fcfcd79ebf90e3a10940df2f8b99ea1c91cce0c72f3caeb3ba2beb74"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/fanatic.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 436548,
+          "sha256": "3324d938c7a4b7f93d0c56ee094685d92fe6a3e19fc1a0f61c320a525d686f16"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/witcher.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2605787,
+        "sha256": "55ba7819100724879bd54ac925f669b025eba8c056bdffd65869aaf336f5ed3c",
+        "rgbaSha256": "e82baee611ce791410b5bf27a4ac0610f97238fdfee3efe3385d4239140ab03e"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/witcher.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1709668,
+          "sha256": "52cf24de49c1480c0d6d05d8dcc7d0aab52dc8414fcf2c44be2cce9fe9a5119e"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/witcher.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 478514,
+          "sha256": "2c4b93a6d474518883ae846687032057bc0e21feda65012ec0f2943acd30991b"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/plasma-nuclear.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2540842,
+        "sha256": "bd9cb0777d66a44a87374722632608f8005b939372f97d74ed36c40852f6c4a7",
+        "rgbaSha256": "87fb563f63e3c56467bd68761c6429caae5e3b809092cef6becd14bec927a37b"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/plasma-nuclear.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1731036,
+          "sha256": "f9999f08b9b141d1c9ca61de22b91d11f4093fd220bc32caf7abe93984183bb8"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/plasma-nuclear.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 458654,
+          "sha256": "8e4e3b8118c2010b93bcd183eb52a3e73d024f6d9d72435be917d587de108909"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/nuclear.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2779071,
+        "sha256": "d939f9cd0943b9f3c7be1151c7ae50ab98a3ed0b7aa887f8139b5df852cf9007",
+        "rgbaSha256": "af3b3d752195551487efdfa5a730b2e689dc78935f26075b2f527322ae38a824"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/nuclear.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 2006502,
+          "sha256": "0e54df408b70d8bdb2d7ccc3ad3ef4ca09151a9f1f94d2b6cbbe5925a6d211f7"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/nuclear.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 571358,
+          "sha256": "705050b4153d4d02cec80df35a103152c4a0a8ec66f2b49874c22214fd762c41"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/silver-hunter.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2535519,
+        "sha256": "0fabe4ef9c55fa4201ec639fe1a6b032225dc6390bf5836159001ce7b8995847",
+        "rgbaSha256": "c851a94f0deb373491fbb2bbff0265d7d1bf77aa045f0dc6eb962a1cb27e913f"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/silver-hunter.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1777802,
+          "sha256": "3f0e5eff993291ff10d92f8dd4934f75c3001831ec71f9523168e2395f83d1c9"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/silver-hunter.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 493448,
+          "sha256": "494c172ad22fe32c75f9e1be944d645c8e59d2e348f29ceec1ed3df3b1d432db"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/goliath.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2955054,
+        "sha256": "a5b1c152c98db03347854865115b3fcedcde7a530d19b060d79f13ea659ae881",
+        "rgbaSha256": "304ff211d5ad723a0c1d8393c8a73f023f20cf2b7cf8c9a7c150484ec386191d"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/goliath.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 2039718,
+          "sha256": "89616169271da91b500c3d2de45d2f03b6d14a869646a42924e4d0f8f4a7df21"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/goliath.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 543094,
+          "sha256": "da7314cd9c538dae024666cdc491b9165869090f744ef7e818a63d8e083a8f45"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/half-mutant.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2489684,
+        "sha256": "833805178f5c76a80ce6c4a063c989144615add64a05185536483d4a0a03c6ec",
+        "rgbaSha256": "9575cc5e15dec9ff441900373c23df698993dc50dae68e6c90e0eb34e1521473"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/half-mutant.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1780576,
+          "sha256": "0d826045bd741fea662b4c1ceab8a9a608f5b92dfceed4fb2abc1c19beeacd29"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/half-mutant.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 505700,
+          "sha256": "5a261b6518493fd14282837ebe6b39a9bfe39e06fd905fe450ba844264436af6"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/unknown-white-outfit-v1.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2476916,
+        "sha256": "a8e61339c0c44a12b8d079e0e8f4a75ef28f18c2ecc5e82db71e181fe113ad40",
+        "rgbaSha256": "187ed159380cda7b5d474a542be693b77f9e46cf5857caf9bf945533b8a10cfd"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/unknown-white-outfit-v1.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1528790,
+          "sha256": "c831421fb89869afc243eccd83c7d85c69a6fff09e4141b0f467551647cb1568"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/unknown-white-outfit-v1.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 408742,
+          "sha256": "9747d7d304192bda111aefdcef6dbb6be5598de1fea7bca4eb580e139360f10a"
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/characters/unknown-crossbow-v3.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2529163,
+        "sha256": "5a4ac1b9c5840103e26b0663b7e7232faebfcc6685b7975186c7daa4b5e4e89a",
+        "rgbaSha256": "c970255eebeb11580b21facd615d41c9660adc89d853a21f1f9ab8b4ed9a5b18"
+      },
+      "outputs": {
+        "full": {
+          "path": "src/assets/portraits-runtime/full/unknown-crossbow-v3.webp",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 1664792,
+          "sha256": "1d8b98ad9c91fd44cec6a03fef0bdb2272c505b2a2b8e740a63bb4c339e1685c"
+        },
+        "thumbnail": {
+          "path": "src/assets/portraits-runtime/thumbnail/unknown-crossbow-v3.webp",
+          "width": 512,
+          "height": 768,
+          "bytes": 462892,
+          "sha256": "c08c66453b9191ef195c0b7dd0e8510efd0a334f77689073fce5ca5199bdf92b"
+        }
+      }
+    }
+  ]
+}

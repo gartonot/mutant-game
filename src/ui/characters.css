@@ -15,6 +15,17 @@
 .character-details h1 { margin: 0 0 9px -18px; padding: 8px 24px 9px 34px; font-size: 27px; line-height: 1.15; background: linear-gradient(90deg, #12a509, #12621d 60%, transparent); text-shadow: 0 2px 3px #001c00; color: #fff; }
 .character-info { flex: 1; min-height: 0; overflow-y: auto; margin-left: 15px; padding: 12px 19px; border: 2px solid #31562c; border-radius: 0 24px 24px 20px; background: #101411; box-shadow: 0 0 6px #64a73c25, inset 0 2px 10px #0008; scrollbar-color: #91a1a4 #202a2c; scrollbar-width: auto; }
 .character-stats p { margin: 0 0 7px; padding: 4px 10px; font-size: 16px; font-weight: 800; line-height: 1.4; }
+.character-stats-note { margin: 0 0 7px; padding: 0; font-size: 12px; font-weight: normal; color: #bac6af; line-height: 1.5; }
+.character-stats-details { margin: 0 0 17px; border: 1px solid #31562c; border-radius: 8px; background: #172018; }
+.character-stats-details summary { padding: 10px 12px; cursor: pointer; font-size: 16px; font-weight: bold; color: #e3e6dd; }
+.character-stats-details summary:hover { background: #254224; }
+.character-stats-details summary:focus-visible { outline: 2px solid #9df55c; outline-offset: 2px; border-radius: 8px; }
+.character-stats-content { padding: 0 12px 10px; }
+.character-resolved-stats { margin: 10px 0; font-size: 13px; color: #e4f2dc; }
+.character-resolved-stats > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 5px 0; border-bottom: 1px solid #31562c80; }
+.character-resolved-stats dt { min-width: 0; }
+.character-resolved-stats dd { margin: 0; flex-shrink: 0; font-weight: 800; font-variant-numeric: tabular-nums; }
+.character-stats .character-pending-trait { color: #bac6af; background: #64715b22; font-size: 13px; font-weight: normal; }
 .positive { color: #e4f2dc; background: linear-gradient(90deg, #135b0d, transparent 85%); }
 .negative { color: #efc6c1; background: linear-gradient(90deg, #63251d, transparent 85%); }
 .character-ability { background: linear-gradient(90deg, #15700e, transparent); padding: 6px 10px; font-size: 15px; font-weight: bold; color: #f1f7e7; margin: 11px 0 17px; }

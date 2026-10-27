@@ -113,7 +113,7 @@ test('known palm calibrations survive crop conversion and authored body rotation
     }, 'cyborg rotated crop');
 });
 
-test('all 210 combinations retain weapon size, attach to the appropriate palm and keep support clear of muzzle', () => {
+test('all character and weapon combinations retain weapon size, attach to the appropriate palm and keep support clear of muzzle', () => {
     let count = 0;
     const claspedCharacters = new Set(['mercenary', 'assassin', 'destroyer']);
     for (const character of CHARACTER_IDS) for (const weapon of WEAPON_ORDER) {
@@ -144,7 +144,7 @@ test('all 210 combinations retain weapon size, attach to the appropriate palm an
         }
         count++;
     }
-    assert.equal(count, 210);
+    assert.equal(count, CHARACTER_IDS.length * WEAPON_ORDER.length);
 });
 
 /** Minimal affine Canvas recorder: tests actual transform order, not a list of expected API calls. */

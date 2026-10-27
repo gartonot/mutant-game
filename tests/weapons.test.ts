@@ -16,8 +16,8 @@ function fixture(bullets: Bullet[]) {
     const controller = { getBullets: () => bullets, registerHit: () => hits++, registerProjectiles: (n: number) => fragments += n } as unknown as PlayerController;
     return { controller, get hits() { return hits; }, get fragments() { return fragments; } };
 }
-test('all fourteen catalog weapons fire and consume their configured ammunition', () => {
-    assert.equal(Object.keys(WEAPON_DEFINITIONS).length, 14);
+test('all nineteen catalog weapons fire and consume their configured ammunition', () => {
+    assert.equal(Object.keys(WEAPON_DEFINITIONS).length, 19);
     for (const d of Object.values(WEAPON_DEFINITIONS)) {
         const w = createWeapon(d.id), delay = d.chargeMs ?? d.spinUpMs;
         if (delay) assert.equal(w.tryFire(0, 100, 100, 0), null);
@@ -68,15 +68,116 @@ test('beam pierces multiple enemies, resolves once, and excludes enemies outside
     collisions.checkBulletEnemyCollisions(fixture([second]).controller, enemies);
     assert.deepEqual(enemies.map(e => e.isDead), [true, true, false]);
 });
-test('burn damages over time without multiplying on reapplication; slow expires', () => {
+test('burn damages over time without multiplying on reapplication', () => {
     const e = new Enemy(0, 0); e.setTarget(100, 0);
-    const effect = { burnDps: 1.5, burnMs: 1500, slowFactor: .5, slowMs: 1000 };
+    const effect = { burnDps: 1.5, burnMs: 1500 };
     e.applyEffect(effect); e.applyEffect(effect);
-    e.update(500); assert.equal(e.isDead, false); assert.equal(e.x, .5);
-    e.update(500); assert.equal(e.isDead, false); assert.equal(e.x, 1);
+    e.update(500); assert.equal(e.isDead, false); assert.equal(e.x, 1.35);
+    e.update(500); assert.equal(e.isDead, false); assert.equal(e.x, 2.7);
     e.update(500); assert.equal(e.isDead, true);
+});
+
+test('burn boosts each enemy own speed by thirty-five percent without stacking and expires', () => {
+    for (const speed of [1, 2.5, 4]) {
+        const enemy = new Enemy(0, 0);
+        enemy.speed = speed;
+        enemy.setTarget(300, 400);
+        enemy.applyEffect({ burnMs: 200, burnDps: 0 });
+        enemy.applyEffect({ burnMs: 200, burnDps: 0 });
+        for (const expectedSpeed of [speed * 1.35, speed * 1.35, speed]) {
+            const { x, y } = enemy;
+            enemy.update(100);
+            assert.ok(Math.abs(Math.hypot(enemy.x - x, enemy.y - y) - expectedSpeed) < 1e-8);
+            assert.equal(enemy.speed, speed, 'status effects must preserve base speed');
+        }
+    }
+});
+
+test('slow expires and restores normal movement', () => {
     const survivor = new Enemy(0, 0); survivor.setTarget(100, 0); survivor.applyEffect({ slowMs: 100, slowFactor: .5 });
     survivor.update(100); survivor.update(100); assert.equal(survivor.x, 1.5);
+});
+
+test('ignition cancels ice immediately and expired fire does not restore the old slow', () => {
+    const enemy = new Enemy(0, 0);
+    enemy.speed = 4;
+    enemy.setTarget(100, 0);
+    enemy.applyEffect({ slowMs: 5000, slowFactor: .5 });
+    enemy.update(100);
+    assert.equal(enemy.x, 2);
+    enemy.applyEffect({ burnMs: 200, burnDps: 1 });
+    enemy.update(100);
+    assert.ok(Math.abs(enemy.x - 7.4) < 1e-8, 'ignition immediately replaces slow with accelerated movement');
+    enemy.update(100);
+    enemy.update(100);
+    assert.ok(Math.abs(enemy.x - 16.8) < 1e-8, 'the replaced slow must not return after fire expires');
+
+    enemy.applyEffect({ slowMs: 100, slowFactor: .75 });
+    enemy.update(100);
+    assert.ok(Math.abs(enemy.x - 19.8) < 1e-8, 'a fresh slow must not inherit the replaced slow strength');
+    enemy.update(100);
+    assert.ok(Math.abs(enemy.x - 23.8) < 1e-8, 'a fresh slow must not inherit the replaced slow duration');
+});
+
+test('ice extinguishes fire immediately and the old burn never resumes', () => {
+    const enemy = new Enemy(0, 0);
+    enemy.setTarget(100, 0);
+    enemy.applyEffect({ burnMs: 5000, burnDps: 10 });
+    enemy.update(100); // One damage before cooling.
+    assert.equal(enemy.isDead, false);
+    enemy.applyEffect({ slowMs: 200, slowFactor: .5 });
+    enemy.update(100);
+    assert.equal(enemy.isDead, false, 'cooling must stop burn damage on the next update');
+    assert.ok(Math.abs(enemy.x - 1.85) < 1e-8, 'ice immediately removes the burn speed boost');
+    enemy.update(100);
+    enemy.update(100);
+    assert.equal(enemy.isDead, false, 'the replaced burn must not return after ice expires');
+    assert.ok(Math.abs(enemy.x - 3.35) < 1e-8, 'the replaced speed boost must not return after ice expires');
+
+    enemy.applyEffect({ burnMs: 100, burnDps: 1 });
+    enemy.update(100);
+    enemy.update(1000);
+    assert.equal(enemy.isDead, false, 'a fresh burn must not inherit the replaced damage or duration');
+    enemy.receiveDamage(.85);
+    assert.equal(enemy.isDead, false, 'only the original 1 damage and fresh 0.1 damage were dealt');
+    enemy.receiveDamage(.1);
+    assert.equal(enemy.isDead, true);
+});
+
+test('status rings contain four fire arcs or eight ice arcs and rotate while standing still', () => {
+    for (const [effect, expectedArcs] of [
+        [{ burnMs: 1000, burnDps: 0 }, 4],
+        [{ slowMs: 1000, slowFactor: .5 }, 8],
+    ] as const) {
+        const enemy = new Enemy(0, 0);
+        enemy.setTarget(0, 0);
+        enemy.applyEffect(effect);
+        const ringAngles: number[] = [];
+        let strokes = 0;
+        const ctx = {
+            save() {}, restore() {}, beginPath() {}, fill() {},
+            stroke() { strokes++; },
+            arc(_x: number, _y: number, radius: number, startAngle: number) {
+                if (radius > enemy.radius) ringAngles.push(startAngle);
+            },
+        } as unknown as CanvasRenderingContext2D;
+        enemy.draw(ctx);
+        assert.equal(ringAngles.length, expectedArcs);
+        assert.equal(strokes, expectedArcs);
+        const initialAngle = ringAngles[0];
+        ringAngles.length = 0;
+        enemy.update(100);
+        enemy.draw(ctx);
+        assert.equal(enemy.x, 0);
+        assert.equal(enemy.y, 0);
+        assert.equal(ringAngles.length, expectedArcs);
+        assert.notEqual(ringAngles[0], initialAngle, 'stationary enemies still have rotating rings');
+        const advancedAngle = ringAngles[0];
+        ringAngles.length = 0;
+        enemy.update(0);
+        enemy.draw(ctx);
+        assert.equal(ringAngles[0], advancedAngle, 'zero simulation time must leave ring rotation unchanged');
+    }
 });
 test('flame ignites crossed enemies without immediate damage and touches each once per puff', () => {
     const flame = createWeapon('flamethrower').tryFire(0, 0, 0, 0)![1] as Flame;
@@ -99,7 +200,25 @@ test('skull explosion creates eight damaging fragments once; plasma blast slows 
     const enemy = new Enemy(plasma.x, plasma.y, EnemyType.BOSS);
     collisions.checkBulletEnemyCollisions(fixture([plasma]).controller, [enemy]);
     const oldX = enemy.x; enemy.setTarget(oldX + 100, enemy.y); enemy.update();
-    assert.ok(Math.abs(enemy.x - oldX - .55) < 1e-8);
+    assert.ok(Math.abs(enemy.x - oldX - .5) < 1e-8);
+});
+
+test('plasma slows movement by half without stacking and restores normal speed after expiry', () => {
+    for (const id of ['plasma-auto', 'plasma-cannon', 'plasma-grenade'] as const) {
+        const enemy = new Enemy(0, 0);
+        enemy.speed = 3;
+        enemy.setTarget(300, 400);
+        enemy.applyEffect(WEAPON_DEFINITIONS[id].effect);
+        enemy.applyEffect(WEAPON_DEFINITIONS[id].effect);
+        for (let i = 0; i < 3; i++) {
+            const x = enemy.x, y = enemy.y;
+            enemy.update(500);
+            assert.ok(Math.abs(Math.hypot(enemy.x - x, enemy.y - y) - 1.5) < 1e-8, id);
+        }
+        const x = enemy.x, y = enemy.y;
+        enemy.update(500);
+        assert.ok(Math.abs(Math.hypot(enemy.x - x, enemy.y - y) - 3) < 1e-8, `${id}: expired`);
+    }
 });
 
 test('laser tracks between ammo ticks and hits a target swept over during fast aim changes', () => {

@@ -13,6 +13,7 @@ import { Grenade } from '../src/entities/bullet/Grenade';
 import type { PlayerController } from '../src/systems/Player/PlayerController';
 import { WeaponState } from '../src/gameplay/WeaponState';
 import { WaveSystem } from '../src/systems/WaveSystem/WaveSystem';
+import { BOSS_WAVE_INTERVAL } from '../src/systems/WaveSystem/WaveConfig';
 import { EnemyType } from '../src/entities/enemy/EnemyType';
 
 function controller(bullets: Bullet[]) {
@@ -180,7 +181,7 @@ test('relocation handles repeated moves and radius growth without stale or dupli
     assert.equal(grid.maxRadius, 1);
 });
 
-test('default wave progression and random draw order remain unchanged without browser globals', () => {
+test('default wave progression keeps random draw count and enters from all four sides', () => {
     const values = [0, 0, .5, 0, .25, .5, 0, .5, .5, 0, .75, .5];
     let index = 0;
     const waves = new WaveSystem({ random: () => values[index++ % values.length], viewport: () => ({ width: 800, height: 600 }) });
@@ -190,6 +191,21 @@ test('default wave progression and random draw order remain unchanged without br
     ]);
     assert.equal(index, 15);
     assert.deepEqual([first.length, ...Array.from({ length: 5 }, () => waves.spawnWave().length)], [5, 10, 4, 7, 7, 7]);
+});
+
+test('bottom spawns remain below the full viewport, including bosses after resize', () => {
+    let height = 600;
+    const waves = new WaveSystem({ random: () => .375, viewport: () => ({ width: 800, height }) });
+    let sawBoss = false;
+    for (let i = 0; i < BOSS_WAVE_INTERVAL; i++) {
+        if (i === 4) height = 180;
+        for (const enemy of waves.spawnWave()) {
+            assert.equal(enemy.x, 300);
+            assert.equal(enemy.y, height + 50);
+            sawBoss ||= enemy.radius === 40;
+        }
+    }
+    assert.equal(sawBoss, true);
 });
 
 test('custom wave rules repeat their final wave and read current arena dimensions', () => {
