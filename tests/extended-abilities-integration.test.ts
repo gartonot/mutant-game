@@ -7,6 +7,29 @@ import { CHARACTER_ABILITIES } from '../src/gameplay/CharacterAbilities';
 import type { CharacterId } from '../src/gameplay/ids';
 import type { GameWorld } from '../src/systems/GameWorld';
 import { planPlasmaTraps } from '../src/gameplay/PlasmaTraps';
+import { Pickup } from '../src/gameplay/Pickups';
+
+test('telepath hover sends a health bonus through the normal world collection path', () => withWorld('telepath', world => {
+    const controller = world.getPlayerController(), player = controller.getPlayer();
+    player.currentHp = 20;
+    const item = new Pickup('health', player.x + 200, player.y, player.x + 200, player.y, 20,
+        1, { width: 1200, height: 800 });
+    item.update(400);
+    const internal = world as unknown as { pickups: Pickup[] };
+    internal.pickups.push(item);
+    controller.getAimPosition = () => ({ x: player.x + 200, y: player.y });
+    world.update(2999);
+    assert.equal(item.attracted, false);
+    world.update(0);
+    assert.equal(item.attracted, false);
+    world.update(1);
+    assert.equal(item.attracted, true);
+    controller.getAimPosition = () => ({ x: 0, y: 0 });
+    world.update(400);
+    assert.equal(internal.pickups.length, 0);
+    world.update(400);
+    assert.ok(player.currentHp > 20);
+}));
 
 function withWorld(character: CharacterId, run: (world: GameWorld, enemies: Enemy[]) => void): void {
     const previous = ['window', 'document', 'HTMLCanvasElement'].map(key =>

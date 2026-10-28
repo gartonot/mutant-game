@@ -5,6 +5,8 @@ import type { AmmoCategory } from '@/gameplay/WeaponLoot';
 import { WEAPON_DEFINITIONS } from '@/gameplay/weapons';
 import { acceptsWeapon, WEAPON_SLOTS } from '@/gameplay/loadout';
 
+export const MAX_SHOTS_PER_STEP = 16;
+
 export class PlayerWeaponController {
     private bullets: Bullet[] = [];
     private selectedWeaponIndex: number;
@@ -81,7 +83,15 @@ export class PlayerWeaponController {
     }
     tryShoot(x: number, y: number, angle: number, onVisualEffect?: (x: number, y: number, angle: number) => void, triggerHeld = true): Bullet[] | null {
         const weapon = this.selectedWeapon;
-        const fired = weapon.tryFire(this.now(), x, y, angle, onVisualEffect, triggerHeld);
+        const now = this.now();
+        let fired: Bullet[] | null = null;
+        for (let shot = 0; shot < MAX_SHOTS_PER_STEP; shot++) {
+            const batch = weapon.tryFire(now, x, y, angle, onVisualEffect, triggerHeld);
+            if (!batch?.length) break;
+            (fired ??= []).push(...batch);
+            if (!triggerHeld || !weapon.state.canShoot(now)) break;
+            if (shot === MAX_SHOTS_PER_STEP - 1) weapon.state.discardBacklog(now);
+        }
         // Follow the actual charge state used by particles; stop before the shot transient.
         setPlasmaChargeSound(weapon.id === 'plasma-cannon' && triggerHeld && weapon.isCharging
             ? { progress: weapon.chargeProgress, durationMs: weapon.chargeDurationMs } : null);

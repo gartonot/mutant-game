@@ -31,15 +31,16 @@ export function createCharacter(loadout: Loadout, progression: readonly StatModi
     player.bonusDuration = stats.bonusDuration;
     // Capture run progression once so later loot gets the same permanent modifiers.
     const arsenal = { ...loadout.arsenal };
-    const createRunWeapon = (id: WeaponId) => {
+    const createRunWeapon = (id: WeaponId, initialAmmo?: number) => {
         const category = WEAPON_DEFINITIONS[id].category;
         const bonus = arsenalBonuses(arsenal[category] ?? 0);
         return createWeapon(id, stats.damage * (1 + bonus.damage), stats.attackSpeed * (1 + bonus.attackSpeed),
-            loadout.character, stats.explosionRadius, 1 + bonus.ammo);
+            loadout.character, stats.explosionRadius, 1 + bonus.ammo, initialAmmo);
     };
     const weapons = WEAPON_SLOTS.map(slot => {
         const entry = loadout.weapons.find(item => item.slotId === slot.id);
-        return entry ? createRunWeapon(entry.weaponId) : null;
+        return entry ? createRunWeapon(entry.weaponId,
+            definition.startingAmmo?.weaponId === entry.weaponId ? definition.startingAmmo.amount : undefined) : null;
     });
     player.weapon = weapons.find(weapon => weapon !== null)!.id;
     return { player, weapons, stats, createRunWeapon };

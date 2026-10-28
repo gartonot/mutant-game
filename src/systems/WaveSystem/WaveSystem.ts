@@ -2,7 +2,7 @@ import { Enemy } from '@/entities/enemy/Enemy';
 import { EnemyType } from '@/entities/enemy/EnemyType';
 import { getArenaSize } from '@/gameplay/Arena';
 
-import { BOSS_WAVE_INTERVAL, WaveConfigs } from './WaveConfig';
+import { BOSS_WAVE_INTERVAL, SURVIVAL_WAVE_COUNT, WaveConfigs } from './WaveConfig';
 import type { IWaveRule } from './WaveConfig';
 
 export interface WaveSystemOptions {
@@ -21,17 +21,23 @@ export class WaveSystem {
         this.rules = options.rules ?? WaveConfigs;
         this.random = options.random ?? Math.random;
         this.viewport = options.viewport ?? (() => getArenaSize());
-        if (!this.rules.length || this.rules.some(rule => !rule.types.length || !Number.isInteger(rule.count) || rule.count < 0)) {
+        if (!this.rules.length || this.rules.some(rule =>
+            !rule.types.length || !Number.isInteger(rule.count) || rule.count < 0 ||
+            (rule.composition !== undefined && (rule.composition.length !== rule.count ||
+                rule.composition.some(type => !rule.types.includes(type)))))) {
             throw new Error('Wave rules require at least one enemy type and a non-negative integer count');
         }
     }
 
     public spawnWave(): Enemy[] {
+        if (this.rules === WaveConfigs && this.currentWaveIndex >= SURVIVAL_WAVE_COUNT) return [];
         const config = this.rules[this.currentWaveIndex] ?? this.rules[this.rules.length - 1];
         const enemies: Enemy[] = [];
 
         for (let i = 0; i < config.count; i++) {
-            const type = config.types[Math.floor(this.random() * config.types.length)];
+            // Keep one type draw per enemy so seeded position streams remain stable.
+            const typeRoll = this.random();
+            const type = config.composition?.[i] ?? config.types[Math.floor(typeRoll * config.types.length)];
             enemies.push(this.createEnemy(type));
         }
 

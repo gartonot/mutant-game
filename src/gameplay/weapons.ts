@@ -48,7 +48,7 @@ export const WEAPON_DEFINITIONS: Readonly<Record<WeaponId, WeaponDefinition>> = 
         ammo: ammo(40), projectile: 'bullet', burstGapMs: 110,
         pellets: [{ angleOffset: -.06, damageMultiplier: .5 }, { angleOffset: -.02, damageMultiplier: 1 },
             { angleOffset: .02, damageMultiplier: 1 }, { angleOffset: .06, damageMultiplier: .5 }], description: 'Два выстрела подряд: по одному патрону, затем перезарядка.' },
-    flamethrower: { id: 'flamethrower', cursorIndicator: 'hidden', name: 'Огнемёт', category: 'special', damage: 0, shotIntervalMs: 65, speed: 7, pushBackForce: 0,
+    flamethrower: { id: 'flamethrower', cursorIndicator: 'hidden', name: 'Огнемёт', category: 'special', damage: 0, shotIntervalMs: 130, speed: 7, pushBackForce: 0,
         ammo: ammo(200), projectile: 'flame', pellets: [{ angleOffset: -.12, damageMultiplier: 1 }, { angleOffset: 0, damageMultiplier: 1 }, { angleOffset: .12, damageMultiplier: 1 }],
         effect: { burnDps: 4, burnMs: 1500 }, description: 'Короткий поток огня поджигает врагов.' },
     laser: { id: 'laser', cursorIndicator: 'hidden', name: 'Лазер', category: 'special', damage: 1, shotIntervalMs: 65, speed: 0, pushBackForce: 0,

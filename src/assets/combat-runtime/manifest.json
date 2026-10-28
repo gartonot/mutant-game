@@ -386,6 +386,66 @@
         "sha256": "d28e213f863339de0e39f72458463cda8f665f82e790e0de1d12a7bc9b6828d5",
         "rgbaSha256": "13c473b8e404d254c29fe4f003e061efa5529daa1e085ed136ba53b8772892c0"
       }
+    },
+    {
+      "id": "bug",
+      "category": "enemies",
+      "source": {
+        "path": "src/assets/enemies/v2/bug.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1476155,
+        "sha256": "2fb98eaa5562b789aa79295a817365cb2d0cd47de6573d130736ca8958814809",
+        "rgbaSha256": "d7e09c3065df310049415665b4344dd87aee6b11ff6ebe886c45b3210473432f"
+      },
+      "output": {
+        "path": "src/assets/combat-runtime/enemies/bug.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1389900,
+        "sha256": "39c7bde35ef210f632d903cdff4d9d0b1706eac4fcbcced566a31d4eb6f525c4",
+        "rgbaSha256": "d7e09c3065df310049415665b4344dd87aee6b11ff6ebe886c45b3210473432f"
+      }
+    },
+    {
+      "id": "runner",
+      "category": "enemies",
+      "source": {
+        "path": "src/assets/enemies/v2/runner.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 909903,
+        "sha256": "d253b0cd8ed2d0bb746325865162c972bb0f43a458f8b9c5fd4e1523ad57383e",
+        "rgbaSha256": "794615436f466b2d8950ae82d7201d644a65cbd500f979b59dcb0d094029f410"
+      },
+      "output": {
+        "path": "src/assets/combat-runtime/enemies/runner.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 852567,
+        "sha256": "cc3c2ad278e0b44eac5833e03a601a782f18884aba8b77bc75d7d2c9462644c7",
+        "rgbaSha256": "794615436f466b2d8950ae82d7201d644a65cbd500f979b59dcb0d094029f410"
+      }
+    },
+    {
+      "id": "armored",
+      "category": "enemies",
+      "source": {
+        "path": "src/assets/enemies/v2/armored.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 2043284,
+        "sha256": "03642c267004cb6449c37ca17651900b920bd4b47866b08eb0a1881569846934",
+        "rgbaSha256": "bb3fa129ce10f9a83d800e9aa05753195ef5a678a433ff401237ac1f3c7477c5"
+      },
+      "output": {
+        "path": "src/assets/combat-runtime/enemies/armored.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1925551,
+        "sha256": "602de0cf6eac0dc2c6631ecf216b7d0c5abd7351ef36f0b6c63e75cfba8598db",
+        "rgbaSha256": "bb3fa129ce10f9a83d800e9aa05753195ef5a678a433ff401237ac1f3c7477c5"
+      }
     }
   ]
 }

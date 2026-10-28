@@ -42,6 +42,20 @@ test('session resumes the same loadout without resetting health or ammunition', 
     assert.equal(world.resets, 3);
 });
 
+test('continuation label can distinguish a retained run without mutating it', () => {
+    const { session } = fixture();
+    const loadout = defaultLoadout('mercenary');
+    assert.equal(session.canContinue(loadout), false);
+    const world = session.start(loadout);
+    session.showMenu();
+    assert.equal(session.canContinue(structuredClone(loadout)), true);
+    assert.equal(session.canContinue(defaultLoadout('assassin')), false);
+    assert.equal(session.world, world);
+    assert.equal(world.disposals, 0);
+    session.dispose();
+    assert.equal(session.canContinue(loadout), false);
+});
+
 test('pause/resume is idempotent and clears input at each valid transition', () => {
     const { session } = fixture();
     assert.equal(session.pause(), false);

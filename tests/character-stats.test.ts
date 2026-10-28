@@ -27,7 +27,6 @@ test('all character passive stats match their documented bonuses and penalties',
     for (const id of CHARACTER_IDS) {
         const definition = CHARACTER_DEFINITIONS[id];
         assert.deepEqual(resolveStats(definition.baseStats, definition.modifiers), { ...BASE_STATS, ...expected[id] }, id);
-        assert.deepEqual(definition.startingWeapons, ['pistol'], `${id}: starting equipment is unchanged`);
         assert.equal(definition.ability.status, id.startsWith('unknown-') ? 'pending' : 'active', `${id}: ability availability`);
     }
 });

@@ -42,7 +42,7 @@ test('dual copies stop when primary is empty and follow weapon switches and new 
     assert.equal(controller.tryShoot(200, 200, 0)!.length, 2);
     controller.acquireWeapon(createWeapon('ak47')); controller.switchToWeapon(2);
     assert.equal(controller.tryShoot(200, 200, 0)!.length, 2);
-    controller.setDualWeaponsActive(false); now += 10000;
+    controller.setDualWeaponsActive(false); now += controller.selectedWeapon.state.shotIntervalMs;
     assert.equal(controller.tryShoot(200, 200, 0)!.length, 1);
 });
 

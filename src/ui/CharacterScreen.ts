@@ -5,6 +5,7 @@ import { CHARACTER_DEFINITIONS } from '@/gameplay/characters';
 import { BASE_STATS, resolveStats } from '@/gameplay/stats';
 import { applyImplants } from '@/gameplay/implants';
 import type { CharacterId } from '@/gameplay/ids';
+import type { Loadout } from '@/gameplay/loadout';
 import { abilityIconUrl } from '@/rendering/AbilityIcons';
 import './characters.css';
 
@@ -18,11 +19,12 @@ export class CharacterScreen {
     private equipment: EquipmentScreen;
     private upgrades = new UpgradesScreen(() => {
         if (!this.previewLocked) this.renderPortrait(characters[this.selected]);
+        this.updatePlay();
     });
     get selectedLoadout() { return { ...this.equipment.draft.get(this.selectedCharacter), implants: this.upgrades.implants, arsenal: this.upgrades.arsenal }; }
     get selectedCharacter() { return characters[this.selected].id; }
 
-    constructor(private onClose: () => void, private onPlay: () => void) {
+    constructor(private onClose: () => void, private onPlay: () => void, private playLabel: (loadout: Loadout) => string = () => 'Играть') {
         this.root.className = 'character-screen';
         this.root.hidden = true;
         document.body.append(this.root);
@@ -103,6 +105,7 @@ export class CharacterScreen {
     }
 
     private updatePlay() {
+        this.root.querySelector<HTMLButtonElement>('.preparation-play')!.textContent = this.playLabel(this.selectedLoadout);
         this.root.querySelector<HTMLButtonElement>('.preparation-play')!.disabled = this.previewLocked || !this.equipment.draft.canPlay(this.selectedCharacter);
         this.root.querySelector<HTMLButtonElement>('[data-tab="equipment"]')!.disabled = this.previewLocked;
     }
@@ -140,7 +143,7 @@ export class CharacterScreen {
             ['Длительность временных бонусов*', multiplier(stats.bonusDuration)],
         ] : [];
         const traits = c.bonuses.map(b => {
-            const pending = /патрон|рейтинга|Притягивание|Лечение/.test(b)
+            const pending = /рейтинга/.test(b)
                 || (/Невидимость/.test(b) && definition?.ability.status !== 'active');
             const status = pending ? ' — пока не действует' : '';
             return `<p class="${pending ? 'character-pending-trait' : 'positive'}">${b}${status}</p>`;
@@ -148,7 +151,7 @@ export class CharacterScreen {
         this.root.querySelector('.character-stats')!.innerHTML = `${traits || c.penalty ? '<h2>Особенности</h2>' : ''}${traits}${c.penalty ? `<p class="negative">${c.penalty}</p>` : ''}`;
         this.root.querySelector('.character-stats-disclosure')!.innerHTML = stats ? `<details class="character-stats-details"><summary>Характеристики</summary><div class="character-stats-content"><p class="character-stats-note">С учётом особенностей героя и имплантов, без достижений и снаряжения. ×1 — базовая скорость бега или исходный параметр оружия и бонуса.</p><dl class="character-resolved-stats">${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join('')}</dl><p class="character-stats-note">* Время предметов на земле — 15 секунд, временных эффектов — 10 секунд, с учётом указанных множителей.</p></div></details>` : '';
         const icon = abilityIconUrl(c.id);
-        this.root.querySelector('.character-ability')!.innerHTML = `${c.ability ? `<div class="character-ability-heading">${icon ? `<img class="character-ability-icon" src="${icon}" alt="" width="76" height="76"/>` : ''}<div><span class="character-ability-eyebrow">Активная способность</span><div class="character-ability-name">${c.ability} <kbd>F</kbd></div>${definition?.ability.status === 'active' ? '<p class="character-preview-note">Нажми F в бою. Перезарядка начинается при активации.</p>' : '<p class="character-preview-note">Способность пока не действует.</p>'}</div></div>` : ''}${c.abilityDescription ? `<p class="character-ability-description">${c.abilityDescription}</p>` : ''}<p class="character-preview-note">Стартовое оружие сейчас — пистолет.</p>${c.previewNote ? `<p class="character-preview-note">${c.previewNote}</p>` : this.previewLocked ? '<p class="character-preview-note">Персонаж закрыт. Характеристики и способность показаны для ознакомления.</p>' : ''}`;
+        this.root.querySelector('.character-ability')!.innerHTML = `${c.ability ? `<div class="character-ability-heading">${icon ? `<img class="character-ability-icon" src="${icon}" alt="" width="76" height="76"/>` : ''}<div><span class="character-ability-eyebrow">Активная способность</span><div class="character-ability-name">${c.ability} <kbd>F</kbd></div>${definition?.ability.status === 'active' ? '<p class="character-preview-note">Нажми F в бою. Перезарядка начинается при активации.</p>' : '<p class="character-preview-note">Способность пока не действует.</p>'}</div></div>` : ''}${c.abilityDescription ? `<p class="character-ability-description">${c.abilityDescription}</p>` : ''}<p class="character-preview-note">${definition?.startingAmmo ? 'Стартовое оружие героя добавлено к пистолету в снаряжении. Его можно заменить перед боем.' : 'Стартовое оружие — пистолет.'}</p>${c.previewNote ? `<p class="character-preview-note">${c.previewNote}</p>` : this.previewLocked ? '<p class="character-preview-note">Персонаж закрыт. Характеристики и способность показаны для ознакомления.</p>' : ''}`;
         this.root.querySelector<HTMLElement>('.character-story-title')!.hidden = c.story.length === 0;
         this.root.querySelector('.character-story')!.innerHTML = c.story.map(p => `<p>${p}</p>`).join('');
         this.root.querySelector('.character-info')!.scrollTop = 0;

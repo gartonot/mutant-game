@@ -12,9 +12,22 @@ export interface CharacterDefinition {
     readonly modifiers: readonly StatModifier[];
     readonly ability: { readonly id: string; readonly status: 'active' | 'pending' };
     readonly startingWeapons: readonly WeaponId[];
+    readonly startingAmmo?: { readonly weaponId: WeaponId; readonly amount: number };
 }
-const prototypeWeapons: readonly WeaponId[] = ['pistol'];
-// Starting weapons remain pending; active abilities are listed in CharacterAbilities.
+const startingGrants: Partial<Record<CharacterId, { weaponId: WeaponId; amount: number }>> = {
+    destroyer: { weaponId: 'grenade-launcher', amount: 5 },
+    mercenary: { weaponId: 'rifle', amount: 120 },
+    'half-mutant': { weaponId: 'flamethrower', amount: 100 },
+    telepath: { weaponId: 'ak47', amount: 120 },
+    witcher: { weaponId: 'ak47', amount: 120 },
+    cyborg: { weaponId: 'plasma-auto', amount: 120 },
+    goliath: { weaponId: 'machine-gun', amount: 100 },
+    fanatic: { weaponId: 'tesla', amount: 25 },
+    nuclear: { weaponId: 'tesla', amount: 25 },
+    hunter: { weaponId: 'double-barrel', amount: 24 },
+    'silver-hunter': { weaponId: 'double-barrel', amount: 24 },
+    'plasma-nuclear': { weaponId: 'plasma-cannon', amount: 5 },
+};
 const characterModifiers: Readonly<Record<CharacterId, readonly StatModifier[]>> = {
     destroyer: [
         { stat: 'explosionRadius', operation: 'percent', value: .5 },
@@ -69,7 +82,8 @@ const characterModifiers: Readonly<Record<CharacterId, readonly StatModifier[]>>
 export const CHARACTER_DEFINITIONS = Object.fromEntries(CHARACTER_IDS.map(id => [id, {
     id, baseStats: BASE_STATS, modifiers: characterModifiers[id],
     ability: { id: id === 'mercenary' ? 'dual-weapons' : id === 'assassin' ? 'victim-fear' : id === 'destroyer' ? 'artillery' : `${id}-ability`, status: CHARACTER_ABILITIES[id] ? 'active' : 'pending' },
-    startingWeapons: prototypeWeapons,
+    startingWeapons: startingGrants[id] ? ['pistol', startingGrants[id]!.weaponId] : ['pistol'],
+    startingAmmo: startingGrants[id],
 }])) as unknown as Readonly<Record<CharacterId, CharacterDefinition>>;
 export function defaultLoadout(character: CharacterId, slots: readonly WeaponSlot[] = WEAPON_SLOTS): Loadout {
     if (!Object.prototype.hasOwnProperty.call(CHARACTER_DEFINITIONS, character)) throw new Error('Unknown character');

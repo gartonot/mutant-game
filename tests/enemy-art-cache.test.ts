@@ -25,7 +25,7 @@ test('enemy tint preparation retries failures, shares work and keeps allocation 
             drawImage(...args: unknown[]) { this.draws.push(args); },
             fillRect(...args: unknown[]) { this.fills.push(args); },
             getImageData() { return { data: new Uint8ClampedArray(4) }; },
-            save() {}, restore() {}, translate() {}, beginPath() {}, ellipse() {}, fill() {}, rotate() {}, scale() {},
+            stroke() {}, moveTo() {}, lineTo() {}, closePath() {}, save() {}, restore() {}, translate() {}, beginPath() {}, ellipse() {}, fill() {}, rotate() {}, scale() {},
         };
     }
     class MockImage {
@@ -57,17 +57,17 @@ test('enemy tint preparation retries failures, shares work and keeps allocation 
             assert.equal(canvases.length, 0);
             const first = enemyArtReady();
             assert.equal(enemyArtReady(), first);
-            assert.deepEqual(await first, [false, true, true]);
-            assert.equal(imageCount, 3);
-            assert.equal(decodeCount, 3);
-            assert.deepEqual(await enemyArtReady(), [true, true, true]);
-            assert.equal(imageCount, 3, 'retry reuses decoded source images');
-            assert.equal(canvases.length, 7, 'six successful masks plus one failed allocation');
+            assert.deepEqual(await first, [false, true, true, true, true, true]);
+            assert.equal(imageCount, 6);
+            assert.equal(decodeCount, 6);
+            assert.deepEqual(await enemyArtReady(), [true, true, true, true, true, true]);
+            assert.equal(imageCount, 6, 'retry reuses decoded source images');
+            assert.equal(canvases.length, 22, 'twelve masks, nine fallback variants and one failed allocation');
         });
-        await t.test('all six masks retain native crop pixels and filter padding before the first draw', () => {
-            const masks = canvases.filter(canvas => canvas.context);
+        await t.test('all twelve masks retain native crop pixels and filter padding before the first draw', () => {
+            const masks = canvases.filter(canvas => canvas.context && canvas.width !== 128);
             assert.deepEqual(masks.map(c => [c.width, c.height]).sort(),
-                [[738, 695], [738, 695], [823, 782], [823, 782], [836, 786], [836, 786]].sort());
+                [[738, 695], [738, 695], [823, 782], [823, 782], [836, 786], [836, 786], [1214, 984], [1214, 984], [1221, 825], [1221, 825], [1167, 1124], [1167, 1124]].sort());
             for (const canvas of masks) {
                 const ctx = canvas.context!;
                 assert.equal(ctx.draws.length, 1);
@@ -75,8 +75,8 @@ test('enemy tint preparation retries failures, shares work and keeps allocation 
                 assert.equal(ctx.globalCompositeOperation, 'source-atop');
                 assert.deepEqual(ctx.fills, [[0, 0, canvas.width, canvas.height]]);
             }
-            assert.equal(masks.filter(c => c.context!.fillStyle === 'rgba(100, 205, 255, 0.52)').length, 3);
-            assert.equal(masks.filter(c => c.context!.fillStyle === 'rgba(160, 20, 48, 0.52)').length, 3);
+            assert.equal(masks.filter(c => c.context!.fillStyle === 'rgba(100, 205, 255, 0.52)').length, 6);
+            assert.equal(masks.filter(c => c.context!.fillStyle === 'rgba(160, 20, 48, 0.52)').length, 6);
         });
         await t.test('repeated preparation and 600 effect draws reuse masks without canvas allocation', async () => {
             const count = canvases.length;
@@ -93,6 +93,19 @@ test('enemy tint preparation retries failures, shares work and keeps allocation 
                 assert.ok(canvases.includes(draw[0] as typeof canvases[number]));
                 assert.deepEqual(draw.slice(1, 3), [4, 4], 'draw uses inner region with filtering guard');
             }
+        });
+        await t.test('new silhouettes and all status variants are prepared once before gameplay', () => {
+            const count = canvases.length;
+            const context = makeContext();
+            for (let repeat = 0; repeat < 20; repeat++) {
+                for (const type of [EnemyType.BUG, EnemyType.RUNNER, EnemyType.ARMORED]) {
+                    for (const tint of [undefined, 'ice', 'fire']) {
+                        assert.equal(drawEnemyArt(context, type, 10, 20, 25, 0, 0, tint), true);
+                    }
+                }
+            }
+            assert.equal(canvases.length, count);
+            assert.equal(new Set(context.draws.map(draw => draw[0])).size, 9);
         });
     } finally {
         for (const [key, descriptor] of originals) {

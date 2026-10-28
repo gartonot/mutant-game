@@ -109,6 +109,7 @@ export function createGameApplication(): () => void {
     }, { signal });
     resumeButton.addEventListener('click', resumeGame, { signal });
     document.querySelector('#restart-game')!.addEventListener('click', () => {
+        if (!session.paused || !window.confirm('Начать бой заново? Результаты текущего боя будут потеряны: убийства, время и другой прогресс не засчитаются.')) return;
         if (!session.restart()) return;
         battleMusic.stop();
         resumeGame();
@@ -134,6 +135,8 @@ export function createGameApplication(): () => void {
     async function startSurvival() {
         if (preparing || !characters || signal.aborted) return;
         const loadout = structuredClone(characters.selectedLoadout);
+        if (session.world && !session.canContinue(loadout)
+            && !window.confirm('Комплект изменён. Начать новый бой? Результаты незавершённого боя будут потеряны: убийства, время и другой прогресс не засчитаются. Отмена сохранит прежний бой — верни прежний комплект, чтобы продолжить его.')) return;
         const version = ++preparationVersion;
         preparing = true;
         retryPreparation.hidden = true;
@@ -174,7 +177,7 @@ export function createGameApplication(): () => void {
     survivalButton.addEventListener('click', () => {
         menu.hidden = true;
         hideDescription();
-        characters ??= new CharacterScreen(showMenu, () => { void startSurvival(); });
+        characters ??= new CharacterScreen(showMenu, () => { void startSurvival(); }, loadout => session.canContinue(loadout) ? 'Продолжить бой' : 'Начать новый бой');
         characters.show();
     }, { signal });
     backButton.addEventListener('click', pauseGame, { signal });

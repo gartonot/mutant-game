@@ -17,13 +17,14 @@ export class Enemy implements IGameEntity {
     private isDeadFlag: boolean = false;
     private facing = 0;
     private gait = 0;
+    private zigzagPhase = 0;
     private statusAngle = 0;
     private lastHitAngle?: number;
     private deathOrigin?: { x: number; y: number; angle: number };
 
     get deathBurst() {
         if (!this.deathOrigin) return undefined;
-        const palette = this.type === EnemyType.TANK
+        const palette = this.type === EnemyType.TANK || this.type === EnemyType.BUG
             ? ['#243b17', '#4d702b', '#79a044']
             : ['#630c13', '#a3131d', '#c51d26'];
         return { ...this.deathOrigin, radius: this.radius, palette };
@@ -38,14 +39,15 @@ export class Enemy implements IGameEntity {
         this.x = x;
         this.y = y;
         this.gait = (x * .31 + y * .17) % (Math.PI * 2);
+        this.zigzagPhase = this.gait;
 
         this.config = ENEMY_CONFIGS[type];
         this.health = this.config.maxHealth;
 
-        // Визуальные отличия врагов
-        const style = this.getVisualStyle();
-        this.radius = style.radius;
-        this.color = style.color;
+        this.radius = this.config.radius;
+        this.speed = this.config.speed;
+        this.damage = this.config.damageToPlayer;
+        this.color = this.config.color;
     }
 
     get isDead(): boolean {
@@ -158,7 +160,13 @@ export class Enemy implements IGameEntity {
         const dx = this.targetX - this.x, dy = this.targetY - this.y;
         const length = Math.hypot(dx, dy);
         if (length > 0) {
-            const direction = Math.atan2(dy, dx);
+            // Individual, simulation-timed weaving; ease out near the target to avoid orbiting it.
+            if (this.type === EnemyType.BUG) {
+                this.zigzagPhase = (this.zigzagPhase + deltaMs * Math.PI * 2 / 700) % (Math.PI * 2);
+            }
+            const weave = this.type === EnemyType.BUG
+                ? Math.sin(this.zigzagPhase) * .65 * Math.min(1, length / 60) : 0;
+            const direction = Math.atan2(dy, dx) + weave;
             this.facing = this.fearRecoveryMs > 0
                 ? this.turnTowards(this.facing, direction, deltaMs * .012) : direction;
             this.fearRecoveryMs = Math.max(0, this.fearRecoveryMs - deltaMs);
@@ -240,9 +248,11 @@ export class Enemy implements IGameEntity {
 
     // Получение урона
     public receiveDamage(amount: number, hitAngle?: number, pushBackDistance: number = 10) {
-        if (this.isDead) return;
+        if (this.isDead || !Number.isFinite(amount) || amount < 0) return;
         if (hitAngle !== undefined && Number.isFinite(hitAngle)) this.lastHitAngle = hitAngle;
-        this.health -= amount;
+        const configuredReduction = this.config.damageReduction ?? 0;
+        const reduction = Number.isFinite(configuredReduction) ? Math.max(0, Math.min(.8, configuredReduction)) : 0;
+        this.health -= amount * (1 - reduction);
         if (this.health <= 0) {
             this.deathOrigin = { x: this.x, y: this.y, angle: this.lastHitAngle ?? this.facing + Math.PI };
         }
@@ -262,19 +272,6 @@ export class Enemy implements IGameEntity {
         this.isDeadFlag = true;
     }
 
-    private getVisualStyle() {
-        switch (this.config.type) {
-            case 'grunt':
-                return { color: '#3d361a', radius: 25 };
-            case 'tank':
-                return { color: '#093908', radius: 25 };
-            case 'boss':
-                return { color: '#d22e2e', radius: 40 };
-            default:
-                return { color: '#3d361a', radius: 15 };
-        }
-    }
-
     canDamage(now: number): boolean {
         if (!this.isDead && !this.isFeared && now - this.lastHitTime > this.hitCooldown) {
             this.lastHitTime = now;
@@ -283,4 +280,3 @@ export class Enemy implements IGameEntity {
         return false;
     }
 }
-

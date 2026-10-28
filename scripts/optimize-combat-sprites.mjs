@@ -32,6 +32,9 @@ const sources = [
   ...['grunt', 'tank', 'boss'].map((id) => ({
     id, category: 'enemies', path: `src/assets/enemies/v1/${id}.png`,
   })),
+  ...['bug', 'runner', 'armored'].map((id) => ({
+    id, category: 'enemies', path: `src/assets/enemies/v2/${id}.png`,
+  })),
 ];
 
 // Check the two additional-character inventories as data, without evaluating TS.

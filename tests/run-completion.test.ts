@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import { GameWorld } from '../src/systems/GameWorld';
 import { Player } from '../src/entities/player/Player';
 import type { PlayerController } from '../src/systems/Player/PlayerController';
+import { WaveConfigs } from '../src/systems/WaveSystem/WaveConfig';
 import { WaveSystem } from '../src/systems/WaveSystem/WaveSystem';
 
 test('four minute survival finishes exactly at zero and cannot continue advancing', () => {
@@ -31,10 +32,10 @@ test('a new boss is guaranteed every twelve waves even while earlier bosses rema
     for (let wave = 1; wave <= 48; wave++) {
         const enemies = waves.spawnWave();
         const bosses = enemies.filter(enemy => enemy.radius === 40);
-        assert.equal(bosses.length, wave % 12 === 0 ? 1 : 0, `wave ${wave}`);
+        assert.equal(bosses.length, wave < 48 && wave % 12 === 0 ? 1 : 0, `wave ${wave}`);
         livingBosses.push(...bosses);
         assert.ok(livingBosses.every(boss => !boss.isDead));
-        assert.equal(livingBosses.length, Math.floor(wave / 12));
-        if (wave % 12 === 0) assert.equal(enemies.length, 8);
+        assert.equal(livingBosses.length, Math.min(3, Math.floor(wave / 12)));
+        assert.equal(enemies.length, wave === 48 ? 0 : WaveConfigs[wave - 1].count + bosses.length);
     }
 });

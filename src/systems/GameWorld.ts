@@ -29,6 +29,7 @@ import { UIRenderer } from '@/systems/UIRenderer';
 import { WaveSystem } from '@/systems/WaveSystem/WaveSystem';
 import type { IGameEntity } from '@entities/interfaces';
 import { Pickup } from '@/gameplay/Pickups';
+import { TelepathAttraction } from '@/gameplay/TelepathAttraction';
 import { rollPickupDrop, rollWeaponDrop } from '@/gameplay/PickupDrops';
 import { ALL_DROP_WEAPONS } from '@/gameplay/WeaponLoot';
 import type { WeaponId } from '@/gameplay/ids';
@@ -38,7 +39,7 @@ export class GameWorld implements IGameEntity {
     public static readonly DURATION_MS = 4 * 60 * 1000;
     public get remainingMs() { return Math.max(0, GameWorld.DURATION_MS - this.elapsed); }
     public get isVictory() { return this.remainingMs === 0 && this.controller.getPlayer().currentHp > 0; }
-    private waveSystem = new WaveSystem();
+    private waveSystem: WaveSystem;
     private enemies: Enemy[] = [];
     private controller: PlayerController;
     private uiRenderer: UIRenderer;
@@ -52,6 +53,7 @@ export class GameWorld implements IGameEntity {
     private pickupExplosions: PickupExplosionEffect[] = [];
     private deathEffects: ZombieDeathEffect[] = [];
     private pickups: Pickup[] = [];
+    private readonly telepathAttraction = new TelepathAttraction();
     private bloodLayer?: HTMLCanvasElement;
     private readonly groundStamps = new GroundStampQueue();
     private readonly consumables: ConsumableInventory;
@@ -104,7 +106,9 @@ export class GameWorld implements IGameEntity {
     constructor(controller: PlayerController, private readonly random = Math.random,
         private readonly unlockedGoldPickups: readonly GoldPickupKind[] = DEFAULT_UNLOCKED_GOLD_PICKUPS,
         private readonly unlockedWeapons: readonly WeaponId[] = ALL_DROP_WEAPONS,
-        consumables: readonly ConsumableSelection[] = [], consumableSlotsUnlocked?: number) {
+        consumables: readonly ConsumableSelection[] = [], consumableSlotsUnlocked?: number,
+        waveRandom: () => number = random) {
+        this.waveSystem = new WaveSystem({ random: waveRandom });
         this.controller = controller;
         this.lastVisiblePlayer = { x: controller.getPlayer().x, y: controller.getPlayer().y };
         warmBloodDecalWorkers();
@@ -163,8 +167,11 @@ export class GameWorld implements IGameEntity {
                 if (variant === 'normal') this.stampGround(ctx => drawScorchMark(ctx, x, y, 35));
             });
         this.processEnemyDeaths();
+        if (player.character === 'telepath') {
+            this.telepathAttraction.update(deltaMs, this.pickups, this.controller.getAimPosition(), true);
+        }
         for (const pickup of this.pickups) pickup.update(deltaMs,
-            arena);
+            arena, player);
         compact(this.pickups, pickup => {
             if (pickup.expired) return false;
             if (!pickup.canCollect(player)) return true;

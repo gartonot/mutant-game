@@ -19,7 +19,7 @@ function assertPoint(actual: { x: number; y: number }, expected: { x: number; y:
     assert.ok(Math.abs(actual.y - expected.y) < 1e-8, `${context}: y ${actual.y} != ${expected.y}`);
 }
 
-test('all fifteen characters start playable with their own identity, character stats and only a pistol', () => {
+test('all fifteen characters start playable with their own identity, stats and starting weapons', () => {
     assert.equal(CHARACTER_IDS.length, 15);
     assert.equal(new Set(CHARACTER_IDS).size, 15);
     for (const id of CHARACTER_IDS) {
@@ -32,7 +32,7 @@ test('all fifteen characters start playable with their own identity, character s
         assert.equal(player.maxHp, stats.maxHp, id);
         assert.equal(player.speed, stats.speed, id);
         assert.equal(player.weapon, 'pistol', id);
-        assert.deepEqual(weapons.map(w => w?.id ?? null), ['pistol', null, null, null, null], id);
+        assert.deepEqual(weapons.filter(w => w !== null).map(w => w.id).sort(), [...CHARACTER_DEFINITIONS[id].startingWeapons].sort(), id);
     }
 });
 
@@ -40,7 +40,7 @@ test('equipment edits and weapon state remain isolated across the full character
     const draft = new EquipmentDraft();
     for (const selected of CHARACTER_IDS) {
         const before = CHARACTER_IDS.map(id => draft.get(id));
-        draft.equip(selected, 'rifle');
+        draft.assign(selected, '3', 'rifle');
         for (const [index, id] of CHARACTER_IDS.entries()) {
             if (id !== selected) assert.deepEqual(draft.get(id), before[index], `${selected} changed ${id}`);
         }
@@ -50,7 +50,7 @@ test('equipment edits and weapon state remain isolated across the full character
         a.weapons[2]!.tryFire(0, 0, 0, 0);
         assert.equal(a.weapons[2]!.state.ammoRemaining, b.weapons[2]!.state.ammoRemaining - 1, selected);
         draft.assign(selected, '3', null);
-        assert.deepEqual(draft.get(selected), defaultLoadout(selected));
+        assert.equal(draft.get(selected).weapons.some(entry => entry.slotId === '3'), false);
     }
 });
 
@@ -72,8 +72,8 @@ test('every character and weapon rotates its mount and muzzle with the player', 
 test('character factory passes each character mount to shots, flashes, tracking lasers and charged plasma', () => {
     for (const character of CHARACTER_IDS) {
         const draft = new EquipmentDraft();
-        draft.equip(character, 'laser');
-        draft.equip(character, 'plasma-cannon');
+        draft.assign(character, '4', 'laser');
+        draft.assign(character, '5', 'plasma-cannon');
         const { weapons, stats } = createCharacter(draft.get(character));
         const pistol = weapons[0]!;
         let flash: { x: number; y: number } | undefined;
@@ -123,7 +123,6 @@ test('equipment selection reaches exact category slots and stays isolated per ch
 
 test('pistol is permanent, four optional slots can be cleared, identity ignores ordering', () => {
     const draft = new EquipmentDraft();
-    draft.equip('mercenary', 'rifle');
     const before = draft.get('mercenary');
     assert.equal(loadoutKey(before), loadoutKey({ ...before, weapons: [...before.weapons].reverse() }));
     assert.throws(() => draft.assign('mercenary', '1', null));
@@ -238,10 +237,12 @@ test('empty slots preserve hotkey positions and independent cooldowns', () => {
 });
 
 
-test('default characters carry only pistol; catalog selection fills category and blocks alternatives until removed', () => {
+test('hero starting weapons occupy categories and alternatives stay blocked until removed', () => {
     const draft = new EquipmentDraft();
-    for (const character of ['mercenary', 'assassin', 'destroyer'] as const)
-        assert.deepEqual(createCharacter(defaultLoadout(character)).weapons.map(w => w?.id ?? null), ['pistol', null, null, null, null]);
+    assert.deepEqual(createCharacter(defaultLoadout('assassin')).weapons.map(w => w?.id ?? null), ['pistol', null, null, null, null]);
+    assert.deepEqual(createCharacter(defaultLoadout('mercenary')).weapons.map(w => w?.id ?? null), ['pistol', null, 'rifle', null, null]);
+    assert.deepEqual(createCharacter(defaultLoadout('destroyer')).weapons.map(w => w?.id ?? null), ['pistol', null, null, 'grenade-launcher', null]);
+    draft.assign('mercenary', '3', null);
     assert.equal(draft.equip('mercenary', 'm16'), '3');
     assert.equal(draft.canEquip('mercenary', 'ak47'), false);
     assert.throws(() => draft.equip('mercenary', 'ak47'));

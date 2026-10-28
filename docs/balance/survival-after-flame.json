@@ -1,0 +1,2614 @@
+{
+  "revision": "9f7fe5c39114ffe614fe78a0ea8bea065d75fa81",
+  "workingTreeSourceHashes": {
+    "src/systems/GameWorld.ts": "8d2ac77fb4447597d14c495770b257d09b11447617758282b2698ff07b55cfdf",
+    "src/entities/weapon/WeaponFactory.ts": "f0cdda204f46f5586acc867784a524287f3dc99cbe276ff31d4a8c98a3ea8299",
+    "src/gameplay/WeaponState.ts": "411d78fbbb48366d687b4b3e187d05216c3822143b0c54b51aed41115a41a365",
+    "src/systems/Player/PlayerWeaponController.ts": "45ddbb0a4451162b542cbbbbc57f74fac1ab4bce6b71e26ed5546da70c77abde"
+  },
+  "provenance": {
+    "capturedAt": "2026-10-28T22:38:03.618Z",
+    "timing": "before bundling",
+    "sourceHashes": {
+      "src/GameRuntime.ts": "09dd2b7347be0d1682117ccdbc39a5c0d29ee2cbdf426bfd6cf07ee876f4da11",
+      "src/main.ts": "5aa78bbe58b91a9b90f002b6ad9e62fd6c1297ca4d04a2815f9a7f854728d198",
+      "src/vite-env.d.ts": "424faf9241dd699dda995b367ed36665732da1e6ec1f33b2fd40394488ecac92",
+      "src/utils/math.ts": "472ab2c08c017a275d5d58fe7089412fc3856da6c6387a2985a605f992952128",
+      "src/ui/AbilityHUD.ts": "8e5e95310f1b661237f19c2b3a33246b9ee5dcf6958154205b48057b69e04558",
+      "src/ui/BonusHUD.ts": "54fa3ab7b4132bfba18d53a0bde09c093a51f7711d06240059bc12a5799ae5c6",
+      "src/ui/BottomHUDLayout.ts": "b632195ec99afb23b15f95fd1c7ef2ed28a517a0e1df1dd69f6db8332314bd04",
+      "src/ui/CharacterPresentations.ts": "6fc3bca6f314968e58ecf184823d72fef84e0ddd88bd3766d1d932f0dab59723",
+      "src/ui/CharacterScreen.ts": "d9fa4dda6a58a7651edf2b080284c4ecf635571277e9fe430fc3ddb4cfb91a45",
+      "src/ui/ConsumableHUD.ts": "6f66b33d54b24cc7c1cdd5b3d0ac201bb883b1981ef00f327ca80406a9943860",
+      "src/ui/EquipmentFlight.ts": "5acaeeb6b11027555066c9165556bd0e3de770d1b106c78d1336a88a3768c84f",
+      "src/ui/EquipmentScreen.ts": "9c49f32012dbdfd84d4f3fd8cb9b6a1d5cbafe9ca2724afb6aada6b443efe44b",
+      "src/ui/FpsCounter.ts": "ef437a698c59c30e2da55e071da154bb6e50c2e977b46cd497f294747ee1281b",
+      "src/ui/HealthBar.ts": "789b26ea6761df31f2c6caaeb3554cc0d34ff93fe949ebfc1b40243eae631b21",
+      "src/ui/ModeDescriptions.ts": "c6db30789ce03d4699d6d7dcec70a6ee6d0473a6a1d7f62fac96c42002c78c54",
+      "src/ui/MusicSettings.ts": "203a28a6a44654f9492b70050536294cb41e1c48cf364ab41eab323f1467b3af",
+      "src/ui/RewardsScreen.ts": "85114dbcc9c0059c6886139e66ddc4d8da140b8e2d1f8bce3259d42cb0f08c25",
+      "src/ui/UpgradesScreen.ts": "83c8f2e78b9700c47be5bad8ec8ee4d74567f65a6b5ae1d26be3d7002436e157",
+      "src/ui/WeaponHUD.ts": "4b02aeb46b91ff875fb3c69da841c2f0bf474f6e6a1279dfeeeda18b8f0ac058",
+      "src/ui/WeaponHUDLayout.ts": "af1a38679a3cdbd5f875f16bfadc90f1c36dc2f7dcddca5942ed05b91ec5bc65",
+      "src/systems/CollisionSystem.ts": "898f57e502562a392bbbea5a019d27fb20aa7204988b55799598be1827d114cd",
+      "src/systems/GameWorld.ts": "8d2ac77fb4447597d14c495770b257d09b11447617758282b2698ff07b55cfdf",
+      "src/systems/InputSystem.ts": "a82642fade1ea886b19bec1648a534fb22129c7a892546e5e4d733109701e86f",
+      "src/systems/UIRenderer.ts": "24c792d77c3b5f4c16807946dfc44f6c651b8684e16858704752ca2e5d014361",
+      "src/systems/WaveSystem/WaveConfig.ts": "db4f49a37402aef29ecbab9cf33abe11ffa4528ec1bb27d9be6d207ea4c66c6a",
+      "src/systems/WaveSystem/WaveSystem.ts": "83bc54c2a05bd94408037380a692bf486e5f7ab5a6ca501b6d5f17bbac31954d",
+      "src/systems/spatial/EnemySeparation.ts": "12cd90ee9e03fd6208fae8c26b3d87725815393a0b09b3ccacf25475f9cfb4e1",
+      "src/systems/spatial/playerBounds.ts": "e003932a11466908b31666d988aba909eefa77fae89445e4e3b21d97c419dff7",
+      "src/systems/spatial/playerContact.ts": "090b630454218dead45fe8a0a5ec1516411f94d6db97607f4e43cdcc31c0cd24",
+      "src/systems/spatial/segmentHit.ts": "593fb883b9973308ecbdf66c7dd4fd77f973fb547ed885e3acb213868da979e4",
+      "src/systems/spatial/SpatialGrid.ts": "9aea38f56fe6cdc0156578527be0d4162fbe7f8cc26abcf68fee9aacd922467f",
+      "src/systems/Player/PlayerController.ts": "b445933272ccd077008bb00ef111eb0465d03f1c9c9e083fe065e235f2d38dfa",
+      "src/systems/Player/PlayerInputController.ts": "2f0ddc3178c10c2d0d25a4d4f40d660268362d6d1d1f4d8f94c8332501a57f7a",
+      "src/systems/Player/PlayerMovementController.ts": "d9ef9e55d8852edf54d213f8dc785fd4431e9611571ee54a2cf92659faee5858",
+      "src/systems/Player/PlayerStatsController.ts": "c1456b423745243ecbe8bb2475d8e4cb89d609e350567a7496f4715e50bbdeb6",
+      "src/systems/Player/PlayerWeaponController.ts": "45ddbb0a4451162b542cbbbbc57f74fac1ab4bce6b71e26ed5546da70c77abde",
+      "src/rendering/AbilityIcons.ts": "19a73a3bc1c53f970b472e7f5825b3d53c59c0c9ca566bc0e06695538b74420c",
+      "src/rendering/AdditionalCharacterArt.ts": "c40aa92d9c8474f3c5f01371315d058b9cc6a5ed6dc178f6be0bf308e9d72d2b",
+      "src/rendering/AmmoArt.ts": "af4a7ae7f49027cae48744b11634f4036f27062ec8178e05b3138b70589795af",
+      "src/rendering/AssassinArt.ts": "2f667e63b950855eb8f6f6886598b4ba49c084e54bb7e3aa31910f0a1118104b",
+      "src/rendering/BeetleSwarm.ts": "f751109dc30132f2b13ab9bc19c2f7bdadd9e2b1317bea9f88eda696815264d2",
+      "src/rendering/BonusArt.ts": "a33a69c0c673c68492411af9710d6222b95a047b39262f781011722e0a8fd148",
+      "src/rendering/BulletSprite.ts": "c030b7023666d7eb13d8add3313c1b63c37d44e72d0e7d262b6a15d74f975e3a",
+      "src/rendering/CharacterArt.ts": "55ae6317f545509a20d69f19ab05406c12e995d464182fea10fb07d6442b63e9",
+      "src/rendering/CharacterRig.ts": "5808751703c7955b6c78081dbb32f80987260d7567ef3ab99eee197b83d6c20c",
+      "src/rendering/DestroyerArt.ts": "a198e1923b4ac8434601187f1697a6d706b0a90b88d512253d8bc7ef5b2e4fc4",
+      "src/rendering/EnemyArt.ts": "fb8666e1cd8fdc512690770995ac228adcbd8e00c8a6d3c1ca239cc5b0cac477",
+      "src/rendering/ExperimentalWeaponArt.ts": "efdc395cdc40f26fcd4fe1307522b07cb7161a7154063944560c2bc365811f25",
+      "src/rendering/GoliathSlamArt.ts": "0e72154622251fb9a7317499079535061f98811c765edb1ac704ddf032a0c647",
+      "src/rendering/HandOverlay.ts": "960d906218da58aaa17aa8c21602530b83899c62a073c58099ec4b12f19bc98e",
+      "src/rendering/ImageAsset.ts": "c4cd4563de510320512bc68bfa72a234a4bc1e731d0ef71b70ce7dd702bee249",
+      "src/rendering/InventoryWeaponArt.ts": "4b9f8f91030d41721fc712acd4bb40a382e531ebaf10aa79bbe516914cabce99",
+      "src/rendering/MercenaryArt.ts": "34014d0cbdfa22161062b76169ffbfedac97a1dd1f20bb41b2bc949009347c01",
+      "src/rendering/MutantClaws.ts": "364493f4e8594b8fcf995cb067e9e03d443cc30642c58f2db8b8720d43cfeab8",
+      "src/rendering/MutantTransformation.ts": "0eaa697087103eabef5619e93167e2929e3ca71a4af611a44655f30483ed03ab",
+      "src/rendering/PlasmaEffects.ts": "9206643f34aa93da41c120aa0c26f8272102e5fd9259c358f3e1c0d612733126",
+      "src/rendering/PlasmaOrbArt.ts": "7b1e6b94f593eb580dbb44ff1be6d70868745048b1d08d390bc3fe11b1f32ce7",
+      "src/rendering/PyrokinesisFire.ts": "1af1ad2375fbad241605be0445391715c9282d779a80ea8c937f992818603d4d",
+      "src/rendering/RasterCharacterArt.ts": "0b7d74744f446cbc7a1abc43029acdd8446701a67df63b22a05fed6ead3cbc12",
+      "src/rendering/StormLightning.ts": "b6d540803f59e1b987152cfec81bf5f5f1ce83acd6519ff0c088b6f9f5be9bd8",
+      "src/rendering/WeaponArt.ts": "4b1e354582bf76f17423e956665ebbd59406b78132210f60fcaa8a119e9bcec8",
+      "src/rendering/WeaponGeometry.ts": "d2c189e0a7de69b2c4343922333404f3ace0c98a29e0cbc08e7bc7b89ecfcfea",
+      "src/rendering/WeaponPoseAdjustments.ts": "72cfefde2a023566ed32a3c2fd1eaf855b80915211201233291768d6aacb2da0",
+      "src/rendering/WeaponSprites.ts": "4d9b6271fdffb7baed3f728d1ce75763cd43f2bb09ff39268e9a94187f2c5d87",
+      "src/progression/AchievementDefinitions.ts": "4f5657fe422996ed0d944d1fa7ab79d23b559fad608852dbad37c35b2b9b64d9",
+      "src/progression/Achievements.ts": "68b16b2a29a6cd39bf34588ac287ce4f7921bfa3dd7f750e2564b033ebe239c1",
+      "src/progression/AchievementTypes.ts": "e4fc740f729484327817a4e2d74051b708eee24b42758b841cbb9e4614ec6f1b",
+      "src/gameplay/Arena.ts": "20ac9bee4ad10f3110e5c7d0deef32fe3774865a55e5cd77948ee3e0a34566e4",
+      "src/gameplay/arsenal.ts": "c8e0d8d7416d8b4aa25db54a6ebc4f5422e56a166ae86759b4a61f6d10f8faa9",
+      "src/gameplay/bonuses.ts": "e74f80e8eb62a70182528ef09ef73a31651689fc23714306642aaa545a7dbf4f",
+      "src/gameplay/CharacterAbilities.ts": "57f7b1c857c987bf050847e2d44598bcc9f633a914f8a8c2726cc79b0821df5c",
+      "src/gameplay/CharacterFactory.ts": "9aac2f3433eddc929c866f16422ffd092d2c9024b105f0279bb355768d2edf8e",
+      "src/gameplay/characters.ts": "8c592d3ff863a135a5a5b9acd5793d314ec34459dfe8177a38fb4c7e9afd4a76",
+      "src/gameplay/ConsumableInventory.ts": "e64602f59a6799108d3a19403a9fa2174c29be4937a51a0d0ac810f7e2a598cd",
+      "src/gameplay/Consumables.ts": "38b1b08fa3d8637817bb1a4f4e52080d4d247cdab3a46e018545de1f27f05161",
+      "src/gameplay/EquipmentDraft.ts": "ee96caa8c03ec0b6f5e07231401482069ba99a27433a945e4130c2d78b8a3f9c",
+      "src/gameplay/ExtendedCharacterAbilities.ts": "d9fc31f3b57ac08df40a99a724d8483b13493489fba53f9a2e0f004bd963a00c",
+      "src/gameplay/HitEffect.ts": "9e8c6db1cef6bfd1999826f5f268dd68f33a9dcf28461bdc71f28d8d9b90dc91",
+      "src/gameplay/ids.ts": "d527b06e452b3f03cf28e47e820015a9288dd201d728cf9fa657202d1aa8268c",
+      "src/gameplay/implants.ts": "63f4b08c4021ccb951b4da8d8afd993d6dc8b64dc1a784a955537d5a4630d5fc",
+      "src/gameplay/loadout.ts": "632b780759fa50bf33881bb4d7d56cfcd9a616656abcf6d387480386786e6326",
+      "src/gameplay/PickupBlasts.ts": "885f9ab88f848aab88b7915ea4ace28fd08eceb6b4d448529253701069b241cc",
+      "src/gameplay/PickupDrops.ts": "f296276be52ef9c3572c2444c3c804f5a63bcbd7081a92400d601f9bc8b1c058",
+      "src/gameplay/Pickups.ts": "0cbfca12c6d3f93dd8872b8033e9a297af75899653dbbd84b3ec51d0fccd0cca",
+      "src/gameplay/PickupVariants.ts": "1526ba747f5c1c5da8fb5d72c6182ebfd310afd7521da50e4c910d070f926d95",
+      "src/gameplay/PlasmaTraps.ts": "ff03d258da152a03c3dabd9e54a759f2a4f99e23517ac2b36b8945db6ec9005d",
+      "src/gameplay/stats.ts": "fe46c29ff7cb595f027ed904532590c3d9455c5ccd27bbe5422b2975afda7d78",
+      "src/gameplay/TelepathAttraction.ts": "f9d35e47f62ee071254d9f57892cf6287e2cefbc42231e9147a901bc0fa5d4c8",
+      "src/gameplay/WeaponLoot.ts": "110d48eefabc4c652119181d14c7e956ad0720b98bf3964ef6be08d3f2444d96",
+      "src/gameplay/weapons.ts": "93d1bf0091ab9f55d23f99bd4ebca11db68bea63468df61c14cf5fc9e0a0eba9",
+      "src/gameplay/WeaponState.ts": "411d78fbbb48366d687b4b3e187d05216c3822143b0c54b51aed41115a41a365",
+      "src/entities/weapon/IWeapon.ts": "e280ae7d4d51ce51bb978b17315583d5d1e84acc3067a24124ee86f28d60603c",
+      "src/entities/weapon/ProjectileFactory.ts": "156039f6314a4802787faaf538a21deb5b1c96f34ea6cd7e2a61678af714885e",
+      "src/entities/weapon/WeaponFactory.ts": "f0cdda204f46f5586acc867784a524287f3dc99cbe276ff31d4a8c98a3ea8299",
+      "src/entities/player/Player.ts": "579f2996a68a4385bea6335efe5abb384dab9f6171e89b4790a67314601b8013",
+      "src/entities/interfaces/IDrawable.ts": "e201ee0b1cd816121953f9472d3d369fca304c4c4c490acfe21695d28d1c339f",
+      "src/entities/interfaces/IEnemyConfig.ts": "e6689d46d8bfa95a00f8f4431ed0ff299e98ee7ace879e963dc6a3adaccc1efe",
+      "src/entities/interfaces/IGameEntity.ts": "c6af4612031ed01ca530866c5b5e4616a675485950881c6daec09c47dc663495",
+      "src/entities/interfaces/index.ts": "d290a7fcc5251f62311799aaa79fe2a4f504af2a05047fc5ad6ef5096717433f",
+      "src/entities/interfaces/interfaces.ts": "d49bfdb19f8f44f07bd5aaa41b9cf7d76bfcdd6c6886bfa97be431382564dd8a",
+      "src/entities/interfaces/IUpdatable.ts": "aebd2dd3ac33dce09c02c71e52bbe504d07e28a3b36010ba2d09c383f25cdbde",
+      "src/entities/enemy/Enemy.ts": "03b566f38f14d6849276c93dcbd4a93b49f3796811dcb19dbe1843c3048a5b01",
+      "src/entities/enemy/enemyConfigs.ts": "db417887c9252a26363c8fb898c0eb2990c8fe75c253f66847f6f20d66fd81a4",
+      "src/entities/enemy/EnemyType.ts": "56be77785cd47210eb069f305ea54821d04c69a1436181c65c9d5a92940c0ea8",
+      "src/entities/bullet/Beam.ts": "02e84d2cb11c0f9472446df76e69f708f462724a2474930e6d815475242f1af5",
+      "src/entities/bullet/Bullet.ts": "d0e3dd8905dd9df7c6196931ab82aedc6d9971bddbf0ea4a401ba35b45113da8",
+      "src/entities/bullet/Flame.ts": "c9311e11f68aa3a352cb09aa0a116a1d76b337017cccb97cebde2987ca2807f7",
+      "src/entities/bullet/Grenade.ts": "2b8ab8fec583e85915c14cdf75717bfb73202c01d4dacb1c2d1e9148eb46d241",
+      "src/entities/bullet/SpecialProjectiles.ts": "abb8ef58a89d8fdcc328310e178ec1d46713e552a1133f8a806f9235f7f6bfc4",
+      "src/effects/ArtilleryGroundMark.ts": "f48c4109cc5c325d72419eb5288b8d1121d8c63302c79995b70bf201864e7890",
+      "src/effects/ArtilleryImpactEffect.ts": "9aa9381692e3b244ae35baf2c8f466b43fac962599d7519df3cb61640a21d79d",
+      "src/effects/blood-decal.worker.ts": "495cfe46f8902e3dc7d6a68d912ba845cc19748f97e40024959b211e098728ee",
+      "src/effects/BloodDecal.ts": "a8b0f2489f9c93400126ec283332bbef83210a57d21b44b6668367e0411fcf30",
+      "src/effects/BloodDecalWorkerPool.ts": "d383d45456a2aa36302fc1131bcaf8848481280b48085afbcc4527a35bdd1a90",
+      "src/effects/BloodPigment.ts": "5cb774affdef1d5e63267c7bd48a847e4a837a6eb089329122404662c3dce956",
+      "src/effects/BloodRemains.ts": "4e1c768a7cce0f5905c55e4c66f78042953dad60624c79ac29cb2b3141a5a8a1",
+      "src/effects/BulletTrail.ts": "246140660b3dba24375c5e90b7d72b61213eaa12c0894ca5c1ccf95d79def7e3",
+      "src/effects/ExplosionEffect.ts": "3450808caa8a226ff82c9d4b9ce61e61add41301d5f1613f0aa246390bdb81d2",
+      "src/effects/FearWaveEffect.ts": "63554c691609334fff3d1a7dd07965a3aa6b7c32373c1b6fb3f0339ea4c2360a",
+      "src/effects/GoliathSlamEffect.ts": "f332f8c52f7839a0f585e0d143d93438495a68d7eef0c4f6276755a18acbf7b8",
+      "src/effects/GravityPulseEffect.ts": "6ac31b12741a8cab0a1a0b0eef5d0bbc4dfae0038cf0d7d0e3b65f27f1cc949a",
+      "src/effects/GroundStampQueue.ts": "c30c568cd7732308c2987c68643ef3c302fdae466a71c3b30ad3df731f496036",
+      "src/effects/MuzzleFlashEffect.ts": "bacee26139a85d6be86e113f2737b470ff2a91478ae429c42cd8223a22f26365",
+      "src/effects/PickupExplosionEffect.ts": "6437a598e6448dcf3f8c275189596c3a58e03f2858b4370c30324cec503d34da",
+      "src/effects/PickupWaveEffect.ts": "cc985be5dcf00c6ecce0cde9ae4d4ed0b7be072e5193bfe8a61f6b24b404ce82",
+      "src/effects/PlasmaOrbScorch.ts": "dccd375c1a832d7a34b1090cee252f9ce4c1b9ac4257ca7f430665d318d77c11",
+      "src/effects/PyrokinesisScorch.ts": "14da5e62f8dd85b5ccaf874117058dd4f5e861c25f31277f56481c483ec1d7fb",
+      "src/effects/ScorchMark.ts": "aa9740feb6aef61287ab9cb7742db3161de972fa8dc3a21501c2ab953c515d7d",
+      "src/effects/ZombieDeathEffect.ts": "97c88f488ccdd2b517ff13e654695165e300741ccac444770d839cf88f0fe62f",
+      "src/core/compact.ts": "bd789da2f76852d635ee245d83e1b1ff9587c8e31857d407cd2253759fcb687a",
+      "src/core/FixedStep.ts": "bfa100a6c53aca847344b7503c7ff8ffbd31cdbc2618fb71051e31316fb6d6e7",
+      "src/core/GameLoop.ts": "cf5bbd982b4945f59321d915d535177adeb657e1d05510958d54d9ac317feb9a",
+      "src/constants/InputKey.ts": "d0a2dee7515cfd55e84f6b9d0331c0af7c29fc38363b8187a33f5a73dca261b2",
+      "src/audio/CombatAudio.ts": "7cae11f8e2dc38e088d75c35bcc30ce41a2784627ce1b8fe5bd2372528f5ec87",
+      "src/audio/MusicTrack.ts": "b50ae9a2b3aaeed43279af8788fe5c2ccc99429465f77fe197e46aff2fb1f71e",
+      "src/audio/MusicVolume.ts": "135832b318950a0fc060fd6632ddc1868253e6cbaf7de332731bd73568856251",
+      "src/audio/SoundEvents.ts": "9f097387d81a4f8c4fcb29afb135fcc657b3410cee62d6b43692cb3554f9d7e7",
+      "src/assets/weapons/v2/layout.ts": "e25dce51db1ee858414993da58fce3a11f2e314a662bbb99bbcd6a80eda40dac",
+      "src/assets/characters/combat-v4/layout.ts": "d4ae77e97b2d719234d7d6d5fc7c20f37d5f724fa9100d3d502218aec019802c",
+      "src/assets/characters/combat-v3/layout.ts": "2b9bfda75689c93a191d8fd96ed351e03a5730d361ec2e1eaee06c9ef893f306",
+      "src/app/GameApplication.ts": "bd911a5f849054fdc59f866c705084d6c23af034d9d75d6a94fc592c57ee0bc7",
+      "src/app/GameSession.ts": "fe5282e023972ad91de42a5a324a0f499e6ff4c3d810d53c46838a3003771a75",
+      "scripts/balance/survival.ts": "b14cd59099e7b28568a09581b3b6243244fb5a454ce374e7cb8fc950797ce0f0",
+      "scripts/run-survival-balance.mjs": "64b34d77b77a1e88e8b3ef91baa7d95d5a8fb9ed65e70c885a7fa2e4eed0f09e"
+    }
+  },
+  "profiles": {
+    "new": {
+      "implants": {
+        "health": 0,
+        "attackSpeed": 0,
+        "moveSpeed": 0,
+        "damage": 0,
+        "armor": 0
+      },
+      "arsenal": {
+        "sidearm": 0,
+        "automatic": 0,
+        "shotgun": 0,
+        "special": 0,
+        "scientific": 0
+      }
+    },
+    "mid": {
+      "implants": {
+        "health": 10,
+        "attackSpeed": 10,
+        "moveSpeed": 10,
+        "damage": 10,
+        "armor": 10
+      },
+      "arsenal": {
+        "sidearm": 5,
+        "automatic": 5,
+        "shotgun": 5,
+        "special": 5,
+        "scientific": 5
+      }
+    },
+    "max": {
+      "implants": {
+        "health": 20,
+        "attackSpeed": 20,
+        "moveSpeed": 20,
+        "damage": 20,
+        "armor": 20
+      },
+      "arsenal": {
+        "sidearm": 10,
+        "automatic": 10,
+        "shotgun": 10,
+        "special": 10,
+        "scientific": 10
+      }
+    }
+  },
+  "seeds": [
+    17,
+    43,
+    91
+  ],
+  "deterministicRepeat": true,
+  "timestepMs": 16.666666666666668,
+  "method": "Real GameWorld/PlayerController at 60Hz; nearest-target aim, first available non-pistol slot; elliptical orbit, flee within100px; ability whenever nearest within300px and ready. Loot variant targets nearest pickup when enemy farther150px. Kite: full-speed tangent around arena center, summed repulsion within220px plus130px wall avoidance. Passive: no movement/fire/abilities. Range-aware policy: half-mutant within85px, fanatic130px, goliath220px; destroyer/mercenary at least5 enemies within500px.",
+  "limitations": [
+    "Balanced budgets only; no achievement rewards, consumables or gold pickups; max means full budgets, not all possible allocations.",
+    "Bot has perfect enemy coordinates; no leading shots, no character-specific tactics or Telepath pickup hovering.",
+    "Only art and ground stamps disabled; no rendering/performance inference.",
+    "Drop/wave streams separate, but same seed does not mean same killed enemies or collected drops. Weapon spread shares seeded stream with effects.",
+    "Pistol-only equal gear can diverge after ordinary drops. Ammo counts are final inventory, not total consumption.",
+    "Experimental enemy axes mutate test instances only; not proposed finished enemy types or armor. fast-weak:HP1/radius9/speed3x; durable:HP5x; heavy-contact:damage5x; swarm:3x count/HP1/radius9.",
+    "No damage-source, overheal or boss-time attribution; no manual play validation.",
+    "Orbit follows a slowly moving waypoint and can be trapped by packs. Compare kite strategy; these are bot outcomes, not human win rates. Runtime diagonal movement is unnormalized."
+  ],
+  "rows": [
+    {
+      "hero": "destroyer",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": false,
+      "seconds": 70.183,
+      "hp": 0,
+      "maxHp": 100,
+      "damageTaken": 100,
+      "kills": 46,
+      "projectileCount": 99,
+      "accuracy": 96,
+      "abilityUses": 1,
+      "pistolSeconds": 58.767,
+      "exhaustedSeconds": 58.767,
+      "equipmentPickups": 0,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "grenade-launcher",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "destroyer",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 0,
+      "kills": 312,
+      "projectileCount": 1072,
+      "accuracy": 36,
+      "abilityUses": 4,
+      "pistolSeconds": 56.633,
+      "exhaustedSeconds": 56.633,
+      "equipmentPickups": 10,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-auto",
+          "remaining": 0
+        },
+        {
+          "weapon": "grenade-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "destroyer",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": false,
+      "seconds": 229.633,
+      "hp": 0,
+      "maxHp": 100,
+      "damageTaken": 100,
+      "kills": 284,
+      "projectileCount": 550,
+      "accuracy": 68,
+      "abilityUses": 4,
+      "pistolSeconds": 133.567,
+      "exhaustedSeconds": 133.567,
+      "equipmentPickups": 4,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "crossbow",
+          "remaining": 0
+        },
+        {
+          "weapon": "rifle",
+          "remaining": 0
+        },
+        {
+          "weapon": "grenade-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "assassin",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 80,
+      "maxHp": 80,
+      "damageTaken": 0,
+      "kills": 310,
+      "projectileCount": 1203,
+      "accuracy": 35,
+      "abilityUses": 8,
+      "pistolSeconds": 87.067,
+      "exhaustedSeconds": 50.567,
+      "equipmentPickups": 9,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "skull-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "impulse",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "assassin",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 80,
+      "maxHp": 80,
+      "damageTaken": 0,
+      "kills": 328,
+      "projectileCount": 1955,
+      "accuracy": 39,
+      "abilityUses": 8,
+      "pistolSeconds": 95.333,
+      "exhaustedSeconds": 39.017,
+      "equipmentPickups": 11,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "crossbow",
+          "remaining": 0
+        },
+        {
+          "weapon": "m16",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-cannon",
+          "remaining": 6
+        }
+      ]
+    },
+    {
+      "hero": "assassin",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 80,
+      "maxHp": 80,
+      "damageTaken": 16,
+      "kills": 326,
+      "projectileCount": 1556,
+      "accuracy": 58,
+      "abilityUses": 8,
+      "pistolSeconds": 166.4,
+      "exhaustedSeconds": 117.45,
+      "equipmentPickups": 5,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "mercenary",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": false,
+      "seconds": 93.3,
+      "hp": 0,
+      "maxHp": 100,
+      "damageTaken": 100,
+      "kills": 83,
+      "projectileCount": 222,
+      "accuracy": 73,
+      "abilityUses": 2,
+      "pistolSeconds": 52.383,
+      "exhaustedSeconds": 52.383,
+      "equipmentPickups": 0,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "rifle",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "mercenary",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 0,
+      "kills": 330,
+      "projectileCount": 720,
+      "accuracy": 57,
+      "abilityUses": 5,
+      "pistolSeconds": 43.917,
+      "exhaustedSeconds": 43.917,
+      "equipmentPickups": 9,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "crossbow",
+          "remaining": 0
+        },
+        {
+          "weapon": "rifle",
+          "remaining": 21
+        },
+        {
+          "weapon": "disc-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 10
+        }
+      ]
+    },
+    {
+      "hero": "mercenary",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": false,
+      "seconds": 212.717,
+      "hp": 0,
+      "maxHp": 100,
+      "damageTaken": 110,
+      "kills": 254,
+      "projectileCount": 551,
+      "accuracy": 65,
+      "abilityUses": 4,
+      "pistolSeconds": 105.533,
+      "exhaustedSeconds": 105.533,
+      "equipmentPickups": 3,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "crossbow",
+          "remaining": 0
+        },
+        {
+          "weapon": "rifle",
+          "remaining": 0
+        },
+        {
+          "weapon": "grenade-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "half-mutant",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 49.3,
+      "maxHp": 120,
+      "damageTaken": 82,
+      "kills": 326,
+      "projectileCount": 1475,
+      "accuracy": 50,
+      "abilityUses": 4,
+      "pistolSeconds": 100.95,
+      "exhaustedSeconds": 100.95,
+      "equipmentPickups": 6,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 5
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-cannon",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "half-mutant",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 102.3,
+      "maxHp": 120,
+      "damageTaken": 36,
+      "kills": 317,
+      "projectileCount": 1665,
+      "accuracy": 53,
+      "abilityUses": 4,
+      "pistolSeconds": 66.667,
+      "exhaustedSeconds": 66.667,
+      "equipmentPickups": 9,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "m16",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "half-mutant",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 120,
+      "maxHp": 120,
+      "damageTaken": 24,
+      "kills": 314,
+      "projectileCount": 1149,
+      "accuracy": 58,
+      "abilityUses": 4,
+      "pistolSeconds": 114.75,
+      "exhaustedSeconds": 114.75,
+      "equipmentPickups": 5,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "telepath",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 76,
+      "maxHp": 100,
+      "damageTaken": 24,
+      "kills": 312,
+      "projectileCount": 700,
+      "accuracy": 60,
+      "abilityUses": 5,
+      "pistolSeconds": 94.717,
+      "exhaustedSeconds": 94.717,
+      "equipmentPickups": 8,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "ak47",
+          "remaining": 0
+        },
+        {
+          "weapon": "grenade-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "impulse",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "telepath",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 0,
+      "kills": 326,
+      "projectileCount": 934,
+      "accuracy": 45,
+      "abilityUses": 4,
+      "pistolSeconds": 72.55,
+      "exhaustedSeconds": 72.55,
+      "equipmentPickups": 9,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "ak47",
+          "remaining": 0
+        },
+        {
+          "weapon": "skull-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "telepath",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 2,
+      "kills": 320,
+      "projectileCount": 1178,
+      "accuracy": 45,
+      "abilityUses": 4,
+      "pistolSeconds": 91.317,
+      "exhaustedSeconds": 91.317,
+      "equipmentPickups": 5,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "crossbow",
+          "remaining": 0
+        },
+        {
+          "weapon": "ak47",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "cyborg",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 164,
+      "maxHp": 170,
+      "damageTaken": 6,
+      "kills": 322,
+      "projectileCount": 1513,
+      "accuracy": 39,
+      "abilityUses": 8,
+      "pistolSeconds": 101.967,
+      "exhaustedSeconds": 101.967,
+      "equipmentPickups": 5,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-auto",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "impulse",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "cyborg",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 170,
+      "maxHp": 170,
+      "damageTaken": 0,
+      "kills": 330,
+      "projectileCount": 1039,
+      "accuracy": 48,
+      "abilityUses": 7,
+      "pistolSeconds": 64.65,
+      "exhaustedSeconds": 64.65,
+      "equipmentPickups": 8,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-auto",
+          "remaining": 44
+        },
+        {
+          "weapon": "laser",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "cyborg",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 150,
+      "maxHp": 170,
+      "damageTaken": 20,
+      "kills": 307,
+      "projectileCount": 1799,
+      "accuracy": 37,
+      "abilityUses": 7,
+      "pistolSeconds": 85.05,
+      "exhaustedSeconds": 85.05,
+      "equipmentPickups": 7,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-auto",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "goliath",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 200,
+      "maxHp": 200,
+      "damageTaken": 102,
+      "kills": 330,
+      "projectileCount": 1282,
+      "accuracy": 32,
+      "abilityUses": 14,
+      "pistolSeconds": 65.85,
+      "exhaustedSeconds": 65.85,
+      "equipmentPickups": 9,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "crossbow",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "acid-gun",
+          "remaining": 6
+        },
+        {
+          "weapon": "impulse",
+          "remaining": 9
+        }
+      ]
+    },
+    {
+      "hero": "goliath",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 200,
+      "maxHp": 200,
+      "damageTaken": 2,
+      "kills": 317,
+      "projectileCount": 1214,
+      "accuracy": 29,
+      "abilityUses": 14,
+      "pistolSeconds": 42.317,
+      "exhaustedSeconds": 42.317,
+      "equipmentPickups": 10,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "skull-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "goliath",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 200,
+      "maxHp": 200,
+      "damageTaken": 25,
+      "kills": 321,
+      "projectileCount": 717,
+      "accuracy": 56,
+      "abilityUses": 15,
+      "pistolSeconds": 139.95,
+      "exhaustedSeconds": 139.95,
+      "equipmentPickups": 6,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "grenade-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "fanatic",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 5,
+      "kills": 330,
+      "projectileCount": 651,
+      "accuracy": 61,
+      "abilityUses": 4,
+      "pistolSeconds": 60.85,
+      "exhaustedSeconds": 60.85,
+      "equipmentPickups": 7,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "rifle",
+          "remaining": 0
+        },
+        {
+          "weapon": "disc-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "fanatic",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 50,
+      "kills": 330,
+      "projectileCount": 897,
+      "accuracy": 37,
+      "abilityUses": 4,
+      "pistolSeconds": 43.383,
+      "exhaustedSeconds": 43.383,
+      "equipmentPickups": 14,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "crossbow",
+          "remaining": 12
+        },
+        {
+          "weapon": "m16",
+          "remaining": 47
+        },
+        {
+          "weapon": "skull-launcher",
+          "remaining": 13
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 90
+        }
+      ]
+    },
+    {
+      "hero": "fanatic",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 6,
+      "kills": 320,
+      "projectileCount": 1407,
+      "accuracy": 45,
+      "abilityUses": 4,
+      "pistolSeconds": 92.6,
+      "exhaustedSeconds": 92.6,
+      "equipmentPickups": 5,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "nuclear",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 120,
+      "maxHp": 120,
+      "damageTaken": 138,
+      "kills": 329,
+      "projectileCount": 1042,
+      "accuracy": 44,
+      "abilityUses": 4,
+      "pistolSeconds": 100.283,
+      "exhaustedSeconds": 100.283,
+      "equipmentPickups": 7,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "acid-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 14
+        }
+      ]
+    },
+    {
+      "hero": "nuclear",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 120,
+      "maxHp": 120,
+      "damageTaken": 0,
+      "kills": 323,
+      "projectileCount": 838,
+      "accuracy": 44,
+      "abilityUses": 4,
+      "pistolSeconds": 46.85,
+      "exhaustedSeconds": 46.85,
+      "equipmentPickups": 8,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 10
+        },
+        {
+          "weapon": "plasma-auto",
+          "remaining": 0
+        },
+        {
+          "weapon": "disc-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "nuclear",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 68,
+      "maxHp": 120,
+      "damageTaken": 52,
+      "kills": 290,
+      "projectileCount": 901,
+      "accuracy": 49,
+      "abilityUses": 4,
+      "pistolSeconds": 65.6,
+      "exhaustedSeconds": 65.6,
+      "equipmentPickups": 6,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "laser",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "silver-hunter",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 4,
+      "kills": 313,
+      "projectileCount": 1152,
+      "accuracy": 49,
+      "abilityUses": 4,
+      "pistolSeconds": 97.933,
+      "exhaustedSeconds": 97.933,
+      "equipmentPickups": 7,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "ak47",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "impulse",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "silver-hunter",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 33,
+      "kills": 325,
+      "projectileCount": 1131,
+      "accuracy": 43,
+      "abilityUses": 4,
+      "pistolSeconds": 91.6,
+      "exhaustedSeconds": 91.6,
+      "equipmentPickups": 7,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "laser",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "silver-hunter",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 12,
+      "maxHp": 100,
+      "damageTaken": 138,
+      "kills": 283,
+      "projectileCount": 799,
+      "accuracy": 46,
+      "abilityUses": 4,
+      "pistolSeconds": 100.467,
+      "exhaustedSeconds": 100.467,
+      "equipmentPickups": 5,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "ak47",
+          "remaining": 0
+        },
+        {
+          "weapon": "skull-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-cannon",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "witcher",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 70,
+      "maxHp": 70,
+      "damageTaken": 0,
+      "kills": 324,
+      "projectileCount": 654,
+      "accuracy": 60,
+      "abilityUses": 5,
+      "pistolSeconds": 84.567,
+      "exhaustedSeconds": 84.567,
+      "equipmentPickups": 9,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "ak47",
+          "remaining": 0
+        },
+        {
+          "weapon": "disc-launcher",
+          "remaining": 50
+        },
+        {
+          "weapon": "impulse",
+          "remaining": 3
+        }
+      ]
+    },
+    {
+      "hero": "witcher",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 70,
+      "maxHp": 70,
+      "damageTaken": 0,
+      "kills": 329,
+      "projectileCount": 928,
+      "accuracy": 36,
+      "abilityUses": 4,
+      "pistolSeconds": 32.983,
+      "exhaustedSeconds": 32.983,
+      "equipmentPickups": 9,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "crossbow",
+          "remaining": 0
+        },
+        {
+          "weapon": "ak47",
+          "remaining": 0
+        },
+        {
+          "weapon": "skull-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "witcher",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 70,
+      "maxHp": 70,
+      "damageTaken": 2,
+      "kills": 320,
+      "projectileCount": 526,
+      "accuracy": 68,
+      "abilityUses": 5,
+      "pistolSeconds": 88.583,
+      "exhaustedSeconds": 88.583,
+      "equipmentPickups": 5,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "ak47",
+          "remaining": 0
+        },
+        {
+          "weapon": "grenade-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "plasma-nuclear",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 110,
+      "maxHp": 120,
+      "damageTaken": 14,
+      "kills": 328,
+      "projectileCount": 1014,
+      "accuracy": 47,
+      "abilityUses": 4,
+      "pistolSeconds": 107.017,
+      "exhaustedSeconds": 107.017,
+      "equipmentPickups": 6,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-auto",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-cannon",
+          "remaining": 2
+        }
+      ]
+    },
+    {
+      "hero": "plasma-nuclear",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": false,
+      "seconds": 82.7,
+      "hp": 0,
+      "maxHp": 120,
+      "damageTaken": 120,
+      "kills": 75,
+      "projectileCount": 143,
+      "accuracy": 98,
+      "abilityUses": 2,
+      "pistolSeconds": 73.417,
+      "exhaustedSeconds": 73.417,
+      "equipmentPickups": 0,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "plasma-cannon",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "plasma-nuclear",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 60,
+      "maxHp": 120,
+      "damageTaken": 110,
+      "kills": 321,
+      "projectileCount": 996,
+      "accuracy": 41,
+      "abilityUses": 4,
+      "pistolSeconds": 121.767,
+      "exhaustedSeconds": 121.767,
+      "equipmentPickups": 5,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "skull-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-cannon",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "hunter",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 72,
+      "maxHp": 100,
+      "damageTaken": 28,
+      "kills": 322,
+      "projectileCount": 1203,
+      "accuracy": 50,
+      "abilityUses": 4,
+      "pistolSeconds": 152.267,
+      "exhaustedSeconds": 152.267,
+      "equipmentPickups": 5,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "ak47",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "impulse",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "hunter",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": false,
+      "seconds": 166.7,
+      "hp": 0,
+      "maxHp": 100,
+      "damageTaken": 100,
+      "kills": 197,
+      "projectileCount": 459,
+      "accuracy": 59,
+      "abilityUses": 3,
+      "pistolSeconds": 66.433,
+      "exhaustedSeconds": 66.433,
+      "equipmentPickups": 4,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "m16",
+          "remaining": 0
+        },
+        {
+          "weapon": "acid-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "hunter",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 74,
+      "kills": 319,
+      "projectileCount": 986,
+      "accuracy": 45,
+      "abilityUses": 4,
+      "pistolSeconds": 101.783,
+      "exhaustedSeconds": 101.783,
+      "equipmentPickups": 7,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "rifle",
+          "remaining": 0
+        },
+        {
+          "weapon": "skull-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "destroyer",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": false,
+      "seconds": 70.183,
+      "hp": 0,
+      "maxHp": 100,
+      "damageTaken": 100,
+      "kills": 46,
+      "projectileCount": 101,
+      "accuracy": 97,
+      "abilityUses": 1,
+      "pistolSeconds": 58.767,
+      "exhaustedSeconds": 58.767,
+      "equipmentPickups": 0,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "grenade-launcher",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "destroyer",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 0,
+      "kills": 330,
+      "projectileCount": 1424,
+      "accuracy": 32,
+      "abilityUses": 4,
+      "pistolSeconds": 33.65,
+      "exhaustedSeconds": 33.65,
+      "equipmentPickups": 10,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-auto",
+          "remaining": 0
+        },
+        {
+          "weapon": "grenade-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "destroyer",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 13,
+      "maxHp": 100,
+      "damageTaken": 137,
+      "kills": 301,
+      "projectileCount": 860,
+      "accuracy": 53,
+      "abilityUses": 4,
+      "pistolSeconds": 161.467,
+      "exhaustedSeconds": 161.467,
+      "equipmentPickups": 4,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "grenade-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "mercenary",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 90,
+      "maxHp": 100,
+      "damageTaken": 10,
+      "kills": 321,
+      "projectileCount": 780,
+      "accuracy": 62,
+      "abilityUses": 5,
+      "pistolSeconds": 75.85,
+      "exhaustedSeconds": 75.85,
+      "equipmentPickups": 7,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "rifle",
+          "remaining": 0
+        },
+        {
+          "weapon": "impulse",
+          "remaining": 10
+        }
+      ]
+    },
+    {
+      "hero": "mercenary",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 0,
+      "kills": 330,
+      "projectileCount": 1099,
+      "accuracy": 48,
+      "abilityUses": 4,
+      "pistolSeconds": 47.233,
+      "exhaustedSeconds": 47.233,
+      "equipmentPickups": 9,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "crossbow",
+          "remaining": 0
+        },
+        {
+          "weapon": "rifle",
+          "remaining": 0
+        },
+        {
+          "weapon": "laser",
+          "remaining": 241
+        }
+      ]
+    },
+    {
+      "hero": "mercenary",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 80,
+      "kills": 319,
+      "projectileCount": 649,
+      "accuracy": 62,
+      "abilityUses": 5,
+      "pistolSeconds": 92.4,
+      "exhaustedSeconds": 92.4,
+      "equipmentPickups": 4,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "crossbow",
+          "remaining": 0
+        },
+        {
+          "weapon": "rifle",
+          "remaining": 0
+        },
+        {
+          "weapon": "disc-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "half-mutant",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 120,
+      "maxHp": 120,
+      "damageTaken": 55,
+      "kills": 311,
+      "projectileCount": 1805,
+      "accuracy": 41,
+      "abilityUses": 2,
+      "pistolSeconds": 86.833,
+      "exhaustedSeconds": 86.833,
+      "equipmentPickups": 8,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-cannon",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "half-mutant",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 120,
+      "maxHp": 120,
+      "damageTaken": 14,
+      "kills": 325,
+      "projectileCount": 1982,
+      "accuracy": 41,
+      "abilityUses": 3,
+      "pistolSeconds": 74.2,
+      "exhaustedSeconds": 74.2,
+      "equipmentPickups": 9,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "crossbow",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "half-mutant",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": false,
+      "seconds": 223.533,
+      "hp": 0,
+      "maxHp": 120,
+      "damageTaken": 181.9,
+      "kills": 241,
+      "projectileCount": 1343,
+      "accuracy": 49,
+      "abilityUses": 2,
+      "pistolSeconds": 122.25,
+      "exhaustedSeconds": 122.25,
+      "equipmentPickups": 5,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "m16",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "goliath",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 196,
+      "maxHp": 200,
+      "damageTaken": 108,
+      "kills": 330,
+      "projectileCount": 1087,
+      "accuracy": 37,
+      "abilityUses": 12,
+      "pistolSeconds": 75.967,
+      "exhaustedSeconds": 75.967,
+      "equipmentPickups": 10,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 82
+        },
+        {
+          "weapon": "skull-launcher",
+          "remaining": 14
+        },
+        {
+          "weapon": "plasma-cannon",
+          "remaining": 8
+        }
+      ]
+    },
+    {
+      "hero": "goliath",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 200,
+      "maxHp": 200,
+      "damageTaken": 7,
+      "kills": 325,
+      "projectileCount": 1036,
+      "accuracy": 36,
+      "abilityUses": 12,
+      "pistolSeconds": 58.683,
+      "exhaustedSeconds": 58.683,
+      "equipmentPickups": 9,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "crossbow",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "disc-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "goliath",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 200,
+      "maxHp": 200,
+      "damageTaken": 72,
+      "kills": 319,
+      "projectileCount": 918,
+      "accuracy": 42,
+      "abilityUses": 13,
+      "pistolSeconds": 130.917,
+      "exhaustedSeconds": 130.917,
+      "equipmentPickups": 4,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "skull-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "plasma-grenade",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "fanatic",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 17,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 86,
+      "maxHp": 100,
+      "damageTaken": 30,
+      "kills": 302,
+      "projectileCount": 1997,
+      "accuracy": 36,
+      "abilityUses": 3,
+      "pistolSeconds": 85.617,
+      "exhaustedSeconds": 85.617,
+      "equipmentPickups": 8,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "double-barrel",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "flamethrower",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "hero": "fanatic",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 43,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 0,
+      "kills": 330,
+      "projectileCount": 1083,
+      "accuracy": 43,
+      "abilityUses": 1,
+      "pistolSeconds": 34.3,
+      "exhaustedSeconds": 34.3,
+      "equipmentPickups": 9,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 13
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "laser",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 14
+        }
+      ]
+    },
+    {
+      "hero": "fanatic",
+      "profile": "new",
+      "gear": "personal",
+      "width": 1280,
+      "height": 720,
+      "seed": 91,
+      "ability": true,
+      "strategy": "kite",
+      "enemies": "default",
+      "abilityPolicy": "range-aware",
+      "victory": true,
+      "seconds": 240,
+      "hp": 100,
+      "maxHp": 100,
+      "damageTaken": 123,
+      "kills": 326,
+      "projectileCount": 799,
+      "accuracy": 54,
+      "abilityUses": 3,
+      "pistolSeconds": 112.167,
+      "exhaustedSeconds": 112.167,
+      "equipmentPickups": 5,
+      "ammo": [
+        {
+          "weapon": "pistol",
+          "remaining": null
+        },
+        {
+          "weapon": "shotgun",
+          "remaining": 0
+        },
+        {
+          "weapon": "machine-gun",
+          "remaining": 0
+        },
+        {
+          "weapon": "grenade-launcher",
+          "remaining": 0
+        },
+        {
+          "weapon": "tesla",
+          "remaining": 0
+        }
+      ]
+    }
+  ]
+}

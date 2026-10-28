@@ -6,6 +6,7 @@ export class WeaponState {
     private lastShot = -Infinity;
     private interval = 0;
     private cadenceMultiplier = 1;
+    private continuousCadence = false;
     constructor(private readonly ammo: AmmoDefinition, private readonly baseShotIntervalMs: number) {
         const shotIntervalMs = baseShotIntervalMs;
         if (!Number.isFinite(shotIntervalMs) || shotIntervalMs <= 0) throw new Error('Invalid shot interval');
@@ -18,6 +19,10 @@ export class WeaponState {
     get hasAmmo(): boolean { return this.remaining >= (this.ammo.kind === 'finite' ? this.ammo.perShot : 1); }
     get ammoCapacity(): number { return this.ammo.kind === 'finite' ? this.ammo.capacity : Infinity; }
     get shotIntervalMs(): number { return this.baseShotIntervalMs / this.cadenceMultiplier; }
+    get nextShotAt(): number { return this.lastShot + this.interval; }
+    /** Release, charge and spin-up must not bank unused firing time. */
+    resetCadence(): void { this.continuousCadence = false; }
+    discardBacklog(now: number): void { this.lastShot = now; this.continuousCadence = true; }
     setCadenceMultiplier(multiplier: number, now: number): void {
         if (!Number.isFinite(multiplier) || multiplier <= 0 || !Number.isFinite(now)) throw new Error('Invalid cadence modifier');
         if (multiplier === this.cadenceMultiplier) return;
@@ -29,19 +34,20 @@ export class WeaponState {
     }
     canShoot(now: number): boolean {
         return Number.isFinite(now) && this.hasAmmo &&
-            now - this.lastShot >= this.interval;
+            now - this.lastShot + 1e-7 >= this.interval;
     }
     consumeShot(now: number, interval = this.shotIntervalMs): boolean {
         if (!Number.isFinite(interval) || interval <= 0) throw new Error('Invalid shot interval');
         if (!this.canShoot(now)) return false;
         if (this.ammo.kind === 'finite') this.remaining -= this.ammo.perShot;
-        this.lastShot = now;
+        this.lastShot = this.continuousCadence && Number.isFinite(this.lastShot) ? this.nextShotAt : now;
+        this.continuousCadence = this.hasAmmo;
         this.interval = interval;
         return true;
     }
     delay(now: number): void {
         if (!Number.isFinite(now)) throw new Error('Invalid weapon time');
-        this.lastShot = now; this.interval = this.shotIntervalMs;
+        this.lastShot = now; this.interval = this.shotIntervalMs; this.resetCadence();
     }
     addAmmo(amount: number): void {
         if (!Number.isInteger(amount) || amount < 0) throw new Error('Invalid ammo pickup');

@@ -19,7 +19,8 @@ test('starting grants use compatible slots independently of grant order and cust
         { id: 'backup', fixedWeapon: 'pistol' },
     ] as const;
     const draft = new EquipmentDraft(slots);
-    assert.deepEqual(defaultLoadout('mercenary', slots).weapons, [{ slotId: 'backup', weaponId: 'pistol' }]);
+    assert.deepEqual(defaultLoadout('mercenary', slots).weapons, [{ slotId: 'backup', weaponId: 'pistol' }, { slotId: 'primary', weaponId: 'rifle' }]);
+    draft.assign('mercenary', 'primary', null);
     assert.equal(draft.equip('mercenary', 'rifle'), 'primary');
     assert.equal(draft.canPlay('mercenary'), true);
     assert.throws(() => placeStartingWeapons(['rifle', 'ak47']));
@@ -31,6 +32,7 @@ test('fixed slots share compatibility rules with drafts and loadout validation',
     assert.equal(acceptsWeapon(slots[0], 'pistol'), true);
     const draft = new EquipmentDraft(slots);
     assert.equal(draft.slotFor('rifle').id, 'open');
+    draft.assign('mercenary', 'open', null);
     assert.equal(draft.equip('mercenary', 'rifle'), 'open');
     assert.throws(() => draft.assign('mercenary', 'fixed', 'rifle'));
     assert.throws(() => validateLoadout(defaultLoadout('mercenary'), [{ id: '1' }, { id: '1' }]));

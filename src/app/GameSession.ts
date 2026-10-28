@@ -27,6 +27,10 @@ export class GameSession<T extends SessionWorld> {
     get paused(): boolean { return this.currentPhase === 'paused'; }
     get active(): boolean { return this.currentPhase === 'playing'; }
 
+    canContinue(loadout: Loadout): boolean {
+        return !!this.currentWorld && this.currentKey === loadoutKey(loadout);
+    }
+
     start(loadout: Loadout): T {
         const key = loadoutKey(loadout);
         if (!this.currentWorld || this.currentKey !== key) this.replaceWorld(loadout, key);

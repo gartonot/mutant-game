@@ -129,7 +129,10 @@ export class ExtendedCharacterAbilities {
                 this.remaining = 0;
             }
         } else if (kind === 'half-mutant' || kind === 'fanatic' || kind === 'telepath' || kind === 'witcher') {
-            if (kind === 'witcher') this.followAim(delta, 360);
+            if (kind === 'witcher') {
+                this.followAim(delta, 360);
+                this.player.heal(3 * delta / 1000);
+            }
             this.pulseElapsed += delta;
             const interval = kind === 'telepath' ? 500 : 250;
             while (this.pulseElapsed >= interval) {

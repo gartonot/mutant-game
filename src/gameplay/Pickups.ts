@@ -22,6 +22,8 @@ export class Pickup {
     public x: number;
     public y: number;
     public expired = false;
+    public attracted = false;
+    public attractionProgress = 0;
     private ageMs = 0;
     private readonly flightMs = 400;
     private readonly lifetimeMs: number;
@@ -56,7 +58,7 @@ export class Pickup {
 
     public get inFlight(): boolean { return this.ageMs < this.flightMs; }
 
-    public update(deltaMs: number, viewport?: PickupViewport): void {
+    public update(deltaMs: number, viewport?: PickupViewport, attractionTarget?: { x: number; y: number }): void {
         if (this.expired) return;
         if (viewport) {
             this.viewport = viewport;
@@ -65,8 +67,18 @@ export class Pickup {
         this.ageMs += Math.max(0, deltaMs);
         const t = Math.min(1, this.ageMs / this.flightMs);
         const eased = 1 - (1 - t) ** 2;
-        this.x = this.startX + (this.targetX - this.startX) * eased;
-        this.y = this.startY + (this.targetY - this.startY) * eased;
+        if (this.attracted) {
+            if (attractionTarget) {
+                const dx = attractionTarget.x - this.x, dy = attractionTarget.y - this.y;
+                const distance = Math.hypot(dx, dy);
+                const fraction = distance ? Math.min(1, Math.max(0, deltaMs) * .6 / distance) : 0;
+                this.x += dx * fraction;
+                this.y += dy * fraction;
+            }
+        } else {
+            this.x = this.startX + (this.targetX - this.startX) * eased;
+            this.y = this.startY + (this.targetY - this.startY) * eased;
+        }
         this.clampPosition();
         this.expired = this.ageMs >= this.flightMs + this.lifetimeMs;
     }
@@ -97,6 +109,13 @@ export class Pickup {
         ctx.save();
         ctx.globalAlpha = remaining < 3000 && Math.floor(this.ageMs / 150) % 2 ? 0.4 : 1;
         ctx.translate(this.x, this.y);
+        if (this.attractionProgress > 0) {
+            ctx.strokeStyle = '#bba0ff';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(0, 0, this.radius + 7, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * this.attractionProgress);
+            ctx.stroke();
+        }
         ctx.fillStyle = 'rgba(0,0,0,0.35)';
         ctx.beginPath();
         ctx.ellipse(0, 9, 13, 5, 0, 0, Math.PI * 2);

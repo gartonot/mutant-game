@@ -9,6 +9,8 @@
     "preview": "vite preview",
     "test": "node tests/run.mjs",
     "bench": "node scripts/run-bench.mjs",
+    "balance:weapons": "node scripts/run-weapon-balance.mjs",
+    "balance:survival": "node scripts/run-survival-balance.mjs",
     "assets:icons": "node scripts/optimize-icons.mjs",
     "assets:icons:check": "node scripts/optimize-icons.mjs --check",
     "assets:portraits": "node scripts/optimize-portraits.mjs",

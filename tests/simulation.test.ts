@@ -190,7 +190,7 @@ test('default wave progression keeps random draw count and enters from all four 
         { x: 400, y: -50 }, { x: 400, y: 650 }, { x: -50, y: 300 }, { x: 850, y: 300 },
     ]);
     assert.equal(index, 15);
-    assert.deepEqual([first.length, ...Array.from({ length: 5 }, () => waves.spawnWave().length)], [5, 10, 4, 7, 7, 7]);
+    assert.deepEqual([first.length, ...Array.from({ length: 5 }, () => waves.spawnWave().length)], [5, 6, 6, 7, 7, 7]);
 });
 
 test('bottom spawns remain below the full viewport, including bosses after resize', () => {

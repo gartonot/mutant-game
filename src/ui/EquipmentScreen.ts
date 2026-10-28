@@ -1,4 +1,5 @@
 import { EquipmentDraft } from '@/gameplay/EquipmentDraft';
+import { CHARACTER_DEFINITIONS } from '@/gameplay/characters';
 import { CONSUMABLE_SLOT_COUNT, DEFAULT_CONSUMABLE_SLOTS_UNLOCKED } from '@/gameplay/Consumables';
 import { GOLD_PICKUP_KINDS } from '@/gameplay/PickupVariants';
 import type { GoldPickupKind, PickupTier } from '@/gameplay/PickupVariants';
@@ -225,7 +226,9 @@ export class EquipmentScreen {
             const weapon = WEAPON_DEFINITIONS[button.dataset.info as keyof typeof WEAPON_DEFINITIONS];
             const equipped = this.draft.get(this.character).weapons.some(entry => entry.weaponId === weapon.id);
             const blocked = !equipped && !this.draft.canEquip(this.character, weapon.id);
-            this.tooltip.innerHTML = `<div class="equipment-tooltip-body"><strong>${weapon.name}</strong><p>+${weapon.ammo.kind === 'finite' ? weapon.ammo.initial : '∞'} патронов</p><p>${weapon.description ?? ''}</p><small>${equipped ? 'Нажми, чтобы снять' : blocked ? 'Сначала сними оружие этого типа' : categories[weapon.category] + ' · нажми, чтобы выбрать'}</small></div>`;
+            const grant = CHARACTER_DEFINITIONS[this.character].startingAmmo;
+            const initialAmmo = grant?.weaponId === weapon.id ? grant.amount : weapon.ammo.kind === 'finite' ? weapon.ammo.initial : '∞';
+            this.tooltip.innerHTML = `<div class="equipment-tooltip-body"><strong>${weapon.name}</strong><p>${initialAmmo} патронов до улучшений арсенала</p><p>${weapon.description ?? ''}</p><small>${equipped ? 'Нажми, чтобы снять' : blocked ? 'Сначала сними оружие этого типа' : categories[weapon.category] + ' · нажми, чтобы выбрать'}</small></div>`;
         }
         this.tooltip.hidden = false;
         button.setAttribute('aria-describedby', this.tooltip.id);
