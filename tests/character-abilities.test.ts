@@ -53,7 +53,38 @@ test('artillery hits visible enemies exactly once, credits kills, and excludes o
     });
 });
 
-test('fear fixes affected enemies in place, blocks contact damage and excludes later arrivals', () => {
+test('artillery leaves bounded ground marks at impacts, expires them and clears on disposal', () => {
+    withWorld('destroyer', world => {
+        const visuals = world as unknown as {
+            artilleryBursts: { delayMs: number }[];
+            artilleryImpacts: { radius: number }[];
+            artilleryMarks: unknown[];
+        };
+        world.activateAbility();
+        const total = visuals.artilleryBursts.length + 1;
+        assert.ok(total >= 4 && total <= 6);
+        assert.equal(visuals.artilleryMarks.length, 1);
+        assert.equal(visuals.artilleryImpacts[0].radius, 145);
+        world.update(139);
+        assert.equal(visuals.artilleryMarks.length, 1);
+        world.update(1);
+        assert.equal(visuals.artilleryMarks.length, 2);
+        world.update(1000);
+        assert.equal(visuals.artilleryMarks.length, total);
+        world.update(4000);
+        assert.equal(visuals.artilleryMarks.length, total, 'marks outlive smoke');
+        world.update(12000);
+        assert.equal(visuals.artilleryMarks.length, 0);
+        world.update(60000);
+        world.activateAbility();
+        assert.equal(visuals.artilleryMarks.length, 1);
+        world.dispose();
+        assert.equal(visuals.artilleryMarks.length, 0);
+        assert.equal(visuals.artilleryBursts.length, 0);
+    });
+});
+
+test('fear scatters affected enemies, blocks contact damage and excludes later arrivals', () => {
     withWorld('assassin', (world, player, internal) => {
         const overlapping = new Enemy(400, 400), nearby = new Enemy(405, 400);
         const boundary = new Enemy(715, 400), outside = new Enemy(715.01, 400);
@@ -63,9 +94,11 @@ test('fear fixes affected enemies in place, blocks contact damage and excludes l
         const hp = player.currentHp;
         world.update(16);
         assert.equal(player.currentHp, hp);
-        assert.deepEqual([overlapping.x, overlapping.y, nearby.x, nearby.y], [400, 400, 405, 400]);
+        for (let i = 0; i < 30; i++) world.update(16);
+        assert.ok(Math.hypot(nearby.x - player.x, nearby.y - player.y) > 5, 'victims run away rather than freeze');
         assert.equal(overlapping.canDamage(1000), false);
-        nearby.receiveDamage(.1, 0, 100); assert.equal(nearby.x, 405, 'fear prevents hit displacement');
+        const beforeHit = nearby.x;
+        nearby.receiveDamage(.1, 0, 10); assert.equal(nearby.x, beforeHit + 10, 'panic does not disable weapon knockback');
         const arrival = new Enemy(450, 400); internal.enemies.push(arrival);
         world.update(16); assert.equal(arrival.isFeared, false);
         overlapping.update(4968); assert.equal(overlapping.isFeared, false);
@@ -85,5 +118,5 @@ test('dual weapons expire on simulation time, and dead or finished runs cannot a
         player.currentHp = 100; internal.elapsed = GameWorld.DURATION_MS;
         assert.equal(world.activateAbility(), false);
     });
-    withWorld('goliath', world => { assert.equal(world.abilityState, null); assert.equal(world.activateAbility(), false); });
+    withWorld('unknown-white-outfit', world => { assert.equal(world.abilityState, null); assert.equal(world.activateAbility(), false); });
 });

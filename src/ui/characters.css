@@ -28,7 +28,13 @@
 .character-stats .character-pending-trait { color: #bac6af; background: #64715b22; font-size: 13px; font-weight: normal; }
 .positive { color: #e4f2dc; background: linear-gradient(90deg, #135b0d, transparent 85%); }
 .negative { color: #efc6c1; background: linear-gradient(90deg, #63251d, transparent 85%); }
-.character-ability { background: linear-gradient(90deg, #15700e, transparent); padding: 6px 10px; font-size: 15px; font-weight: bold; color: #f1f7e7; margin: 11px 0 17px; }
+.character-ability { background: linear-gradient(120deg, #234329, #16251b); border: 1px solid #486842; border-radius: 10px; padding: 12px; font-size: 15px; font-weight: bold; color: #f1f7e7; margin: 11px 0 17px; }
+.character-ability-heading { display: flex; align-items: center; gap: 13px; }
+.character-ability-heading > div { min-width: 0; }
+.character-ability-icon { display: block; flex: 0 0 76px; width: 76px; height: 76px; object-fit: cover; border: 1px solid #abc88c; border-radius: 9px; box-shadow: 0 3px 10px #0008; }
+.character-ability-eyebrow { display: block; color: #a6c49b; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.character-ability-name { line-height: 1.4; }
+.character-ability-heading .character-preview-note { margin-top: 5px; }
 .character-ability kbd { display: inline-block; border: 1px solid #7c9c6f; border-radius: 3px; padding: 0 5px; color: #ecf5df; font-size: 12px; margin-left: 6px; }
 .character-info h2 { font-size: 16px; margin: 0 0 7px; color: #e3e6dd; }
 .character-story p { font-size: 15px; line-height: 1.65; color: #bec6ba; margin: 0 0 13px; text-shadow: 0 1px 1px #000; }

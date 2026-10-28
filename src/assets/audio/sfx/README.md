@@ -44,7 +44,7 @@ Preparation script: output/audio/crossbow-real/prepare.py.
 Original procedural sound made for this project, without third-party recordings.
 Layered filtered-noise fractures, inharmonic shard tones, a low impact and fading air.
 1.15 seconds, mono 48 kHz PCM16, normalized peak -1 dBFS, shared runtime gain 15%.
-Plays once on iceBlast activation (pickup or consumable); sandbox has a separate audition.
+Plays once on iceBlast activation (pickup or consumable).
 Reproducible fixed-seed script: `output/audio/ice-bomb/generate.py`.
 
 ## gauss-charge.wav, gauss.wav
@@ -82,7 +82,7 @@ Prepared from public HQ MP3 preview, selected by user as flamethrower option 1.
 First 6-second burst excerpt starting at 2.203354 seconds, mono 48 kHz PCM16,
 peak -1 dBFS; 15% shared output gain applied once. Short edge fades and 80ms
 crossfade into repeat point; gameplay loops from .25s to 5.5s while firing.
-Sandbox plays the six-second excerpt once. Script: `output/audio/fire-candidates/install.py`.
+Preparation script: `output/audio/fire-candidates/install.py`.
 
 ## laser.wav
 

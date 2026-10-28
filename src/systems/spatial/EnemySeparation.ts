@@ -46,7 +46,7 @@ export class EnemySeparation {
                 const enemy = enemies[i];
                 const body = this.bodies[i] ?? (this.bodies[i] = { x: 0, y: 0, radius: 0, index: i, fixed: false, startX: 0, startY: 0 });
                 body.x = enemy.x; body.y = enemy.y; body.radius = enemy.radius;
-                body.fixed = enemy.isFeared;
+                body.fixed = enemy.speed === 0;
                 if (iteration === 0) { body.startX = enemy.x; body.startY = enemy.y; }
             }
             this.bodies.length = enemies.length;

@@ -1,0 +1,35 @@
+{
+  "generator": "Built-in image_gen",
+  "assets": [
+    {
+      "id": "fanatic",
+      "prompt": "Use case: stylized-concept. Asset type: sci-fi survival game active ability inventory icon. Square 1:1 full-bleed dark charcoal background, illustrated gritty realistic painterly style, detailed metal and energy materials, central bold easily legible silhouette occupying 75% of canvas, subtle vignette. Readable at 64px. No text, letters, numbers, UI frame, watermark. A single violent electric storm vortex, bright electric blue and white branching lightning bolts bursting from a dark central thundercloud; powerful radial silhouette.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183e9-b452-7452-ab13-24c4fb336147\\exec-7afbd2f5-b0ef-400a-822b-a6d5c937ee72.png"
+    },
+    {
+      "id": "nuclear",
+      "prompt": "Use case: stylized-concept. Asset type: sci-fi survival game active ability inventory icon. Square 1:1 full-bleed dark charcoal background, illustrated gritty realistic painterly style, detailed metal and energy materials, central bold easily legible silhouette occupying 75% of canvas, subtle vignette. Readable at 64px. No text, letters, numbers, UI frame, watermark. A single brilliant CYAN freezing plasma orb with a luminous icy core, jagged ice crystal fragments and frosty energy halo, blue cold light.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183e9-b452-7452-ab13-24c4fb336147\\exec-a1691bca-3f2c-439a-9093-845855dcdaa4.png"
+    },
+    {
+      "id": "silver-hunter",
+      "prompt": "Use case: stylized-concept. Asset type: sci-fi survival game active ability inventory icon. Square 1:1 full-bleed dark charcoal background, illustrated gritty realistic painterly style, detailed metal and energy materials, central bold easily legible silhouette occupying 75% of canvas, subtle vignette. Readable at 64px. No text, letters, numbers, UI frame, watermark. Three compact silver metal plasma bear traps in a triangular group, front one largest, icy white glowing teeth and a flowing translucent ghostly silver veil wrapping the group. Silver and pale blue palette.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183e9-b452-7452-ab13-24c4fb336147\\exec-77a1f813-44b0-462c-b471-5199554ac684.png"
+    },
+    {
+      "id": "witcher",
+      "prompt": "Use case: stylized-concept. Asset type: sci-fi survival game active ability inventory icon. Square 1:1 full-bleed dark charcoal background, illustrated gritty realistic painterly style, detailed metal and energy materials, central bold easily legible silhouette occupying 75% of canvas, subtle vignette. Readable at 64px. No text, letters, numbers, UI frame, watermark. A swarm of emerald green armored beetles spiraling around one huge central beetle, glowing toxic green chitin and wisps, bold unmistakable beetle silhouette.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183e9-b452-7452-ab13-24c4fb336147\\exec-d1656859-6b44-47b3-8dd1-c2442e0511ac.png"
+    },
+    {
+      "id": "plasma-nuclear",
+      "prompt": "Use case: stylized-concept. Asset type: sci-fi survival game active ability inventory icon. Square 1:1 full-bleed dark charcoal background, illustrated gritty realistic painterly style, detailed metal and energy materials, central bold easily legible silhouette occupying 75% of canvas, subtle vignette. Readable at 64px. No text, letters, numbers, UI frame, watermark. A single furious VIOLET HOT plasma orb with incandescent magenta core and sweeping purple solar flares, dark metallic debris suspended in halo. Clearly hot cosmic energy, no ice.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183e9-b452-7452-ab13-24c4fb336147\\exec-c5e6c412-8524-4d60-a8c5-fc926cbd3cd2.png"
+    },
+    {
+      "id": "hunter",
+      "prompt": "Use case: stylized-concept. Square inventory icon for a fictional science-fiction video game. Three bronze mechanical energy devices in a triangular arrangement, the front device largest. Each device is an open circular ring with angular metal fins and a glowing orange plasma center. Warm amber light, rugged bronze material, dark charcoal background, bold central silhouette, painterly realistic illustration, subtle vignette, full bleed. No people, animals, violence, text, numbers, frame, or watermark. Readable at 64px.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183e9-b452-7452-ab13-24c4fb336147\\exec-4c68154d-64ef-4075-a869-007adb201429.png"
+    }
+  ]
+}

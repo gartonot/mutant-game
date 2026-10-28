@@ -3,6 +3,7 @@ import { emitSound } from '@/audio/SoundEvents';
 import { prepareBloodDecal, warmBloodDecalWorkers } from '@/effects/BloodDecalWorkerPool';
 import { compact } from '@/core/compact';
 import { CHARACTER_ABILITIES, CharacterAbilityClock } from '@/gameplay/CharacterAbilities';
+import { ExtendedCharacterAbilities } from '@/gameplay/ExtendedCharacterAbilities';
 import { drawAbilityHUD } from '@/ui/AbilityHUD';
 import { ConsumableInventory } from '@/gameplay/ConsumableInventory';
 import type { ConsumableSelection } from '@/gameplay/Consumables';
@@ -14,6 +15,9 @@ import { PickupWaveEffect } from '@/effects/PickupWaveEffect';
 import { PickupExplosionEffect } from '@/effects/PickupExplosionEffect';
 import { drawScorchMark } from '@/effects/ScorchMark';
 import { ExplosionEffect } from '@/effects/ExplosionEffect';
+import { FearWaveEffect } from '@/effects/FearWaveEffect';
+import { ArtilleryImpactEffect } from '@/effects/ArtilleryImpactEffect';
+import { ArtilleryGroundMark } from '@/effects/ArtilleryGroundMark';
 import { ZombieDeathEffect } from '@/effects/ZombieDeathEffect';
 import { MuzzleFlashEffect } from '@/effects/MuzzleFlashEffect.ts';
 import { Enemy } from '@/entities/enemy/Enemy';
@@ -41,6 +45,9 @@ export class GameWorld implements IGameEntity {
     private collisionSystem = new CollisionSystem();
     private muzzleFlashes: MuzzleFlashEffect[] = [];
     private explosions: ExplosionEffect[] = [];
+    private fearWaves: FearWaveEffect[] = [];
+    private artilleryImpacts: ArtilleryImpactEffect[] = [];
+    private artilleryMarks: ArtilleryGroundMark[] = [];
     private pickupWaves: PickupWaveEffect[] = [];
     private pickupExplosions: PickupExplosionEffect[] = [];
     private deathEffects: ZombieDeathEffect[] = [];
@@ -49,8 +56,12 @@ export class GameWorld implements IGameEntity {
     private readonly groundStamps = new GroundStampQueue();
     private readonly consumables: ConsumableInventory;
     private readonly abilityClock: CharacterAbilityClock;
+    private readonly extendedAbilities: ExtendedCharacterAbilities;
     private artilleryBursts: { x: number; y: number; delayMs: number }[] = [];
-    public get abilityState() { return this.abilityClock.state; }
+    public get abilityState() {
+        const state = this.abilityClock.state;
+        return state ? { ...state, character: this.controller.getPlayer().character } : null;
+    }
     public get consumableSlots() { return this.consumables.slots; }
 
     private stampBlood(effect: ZombieDeathEffect) {
@@ -88,14 +99,18 @@ export class GameWorld implements IGameEntity {
     private separation = new EnemySeparation();
     private elapsed = 0;
     private wavesStarted = 0;
+    private lastVisiblePlayer = { x: 0, y: 0 };
 
     constructor(controller: PlayerController, private readonly random = Math.random,
         private readonly unlockedGoldPickups: readonly GoldPickupKind[] = DEFAULT_UNLOCKED_GOLD_PICKUPS,
         private readonly unlockedWeapons: readonly WeaponId[] = ALL_DROP_WEAPONS,
         consumables: readonly ConsumableSelection[] = [], consumableSlotsUnlocked?: number) {
         this.controller = controller;
+        this.lastVisiblePlayer = { x: controller.getPlayer().x, y: controller.getPlayer().y };
         warmBloodDecalWorkers();
         this.abilityClock = new CharacterAbilityClock(CHARACTER_ABILITIES[controller.getPlayer().character]);
+        this.extendedAbilities = new ExtendedCharacterAbilities(controller.getPlayer(), () => this.enemies,
+            () => controller.getAimPosition());
         this.consumables = new ConsumableInventory(consumables, consumableSlotsUnlocked);
 
         this.uiRenderer = new UIRenderer(this.controller.getPlayer());
@@ -112,7 +127,7 @@ export class GameWorld implements IGameEntity {
         for (const burst of this.artilleryBursts) burst.delayMs -= deltaMs;
         compact(this.artilleryBursts, burst => {
             if (burst.delayMs > 0) return true;
-            this.pickupExplosions.push(new PickupExplosionEffect(burst.x, burst.y, 210));
+            this.spawnArtilleryImpact(burst.x, burst.y);
             return false;
         });
         this.waveElapsed += deltaMs;
@@ -128,13 +143,18 @@ export class GameWorld implements IGameEntity {
         }
         // Input and projectile motion precede collision detection in the same tick.
         this.controller.update(deltaMs);
+        this.extendedAbilities.update(deltaMs);
+        if (['hunter', 'silver-hunter'].includes(this.controller.getPlayer().character) && !this.extendedAbilities.isActive) {
+            this.abilityClock.endActive();
+        }
         const player = this.controller.getPlayer();
         const arena = getArenaSize();
+        if (!player.abilityInvisible) this.lastVisiblePlayer = { x: player.x, y: player.y };
         for (const enemy of this.enemies) {
-            enemy.setTarget(player.x, player.y);
+            enemy.setTarget(this.lastVisiblePlayer.x, this.lastVisiblePlayer.y);
             enemy.update(deltaMs);
             if (enemy.isDead) continue;
-            if (!enemy.isFeared) resolvePlayerContact(player, enemy, this.controller.isMoving, this.elapsed, window.innerWidth, window.innerHeight);
+            if (!enemy.isFeared && !player.abilityInvisible) resolvePlayerContact(player, enemy, this.controller.isMoving, this.elapsed, window.innerWidth, window.innerHeight);
         }
         this.collisionSystem.checkBulletEnemyCollisions(this.controller, this.enemies,
             (x, y, radius, plasma, variant) => {
@@ -168,9 +188,15 @@ export class GameWorld implements IGameEntity {
             return true;
         });
         for (const effect of this.pickupWaves) effect.update(deltaMs);
+        for (const effect of this.fearWaves) effect.update(deltaMs);
+        compact(this.fearWaves, effect => !effect.isExpired);
         compact(this.pickupWaves, effect => !effect.isExpired);
         for (const effect of this.pickupExplosions) effect.update(deltaMs);
         compact(this.pickupExplosions, effect => !effect.isExpired);
+        for (const effect of this.artilleryImpacts) effect.update(deltaMs);
+        compact(this.artilleryImpacts, effect => !effect.isExpired);
+        for (const mark of this.artilleryMarks) mark.update(deltaMs);
+        compact(this.artilleryMarks, mark => !mark.isExpired);
         for (const effect of this.explosions) effect.update();
         compact(this.explosions, effect => !effect.isExpired);
         for (const flash of this.muzzleFlashes) flash.update(deltaMs);
@@ -189,24 +215,42 @@ export class GameWorld implements IGameEntity {
                     enemy.y + enemy.radius < 0 || enemy.y - enemy.radius > height) continue;
                 enemy.receiveDamage(blast.damage, Math.atan2(enemy.y - player.y, enemy.x - player.x), 0);
             }
-            const columns = Math.max(2, Math.ceil(width / 270)), rows = Math.max(2, Math.ceil(height / 230));
+            const columns = Math.min(3, Math.max(2, Math.ceil(width / 520)));
+            const rows = 2;
+            const points: { x: number; y: number; order: number }[] = [];
             for (let row = 0; row < rows; row++) for (let col = 0; col < columns; col++) {
-                const x = (col + .5) * width / columns, y = (row + .5) * height / rows;
-                const delayMs = ((col * 3 + row * 5) % 8) * 55;
-                if (delayMs === 0) this.pickupExplosions.push(new PickupExplosionEffect(x, y, 210));
-                else this.artilleryBursts.push({ x, y, delayMs });
+                const seed = col * 17 + row * 31;
+                const x = (col + .5 + Math.sin(seed + 2) * .2) * width / columns;
+                const y = (row + .5 + Math.sin(seed + 7) * .2) * height / rows;
+                points.push({ x, y, order: Math.sin(seed + 13) });
             }
+            // Separate local impacts in time instead of overlapping screen-wide fireballs.
+            points.sort((a, b) => a.order - b.order).forEach(({ x, y }, index) => {
+                if (index === 0) this.spawnArtilleryImpact(x, y);
+                else this.artilleryBursts.push({ x, y, delayMs: index * 140 });
+            });
             this.processEnemyDeaths();
         } else if (player.character === 'assassin') {
+            this.fearWaves.push(new FearWaveEffect(player.x, player.y, blast.radius));
             for (const enemy of this.enemies) {
                 if (Math.hypot(enemy.x - player.x, enemy.y - player.y) <= blast.radius) {
-                    enemy.applyFear(CHARACTER_ABILITIES.assassin!.durationMs);
+                    enemy.applyFear(CHARACTER_ABILITIES.assassin!.durationMs, player.x, player.y);
                 }
             }
         } else if (player.character === 'mercenary') {
             this.controller.setDualWeaponsActive(true);
+        } else {
+            this.lastVisiblePlayer = { x: player.x, y: player.y };
+            this.extendedAbilities.activate();
+            this.processEnemyDeaths();
         }
         return true;
+    }
+
+    private spawnArtilleryImpact(x: number, y: number): void {
+        this.artilleryImpacts.push(new ArtilleryImpactEffect(x, y, 145));
+        this.artilleryMarks.push(new ArtilleryGroundMark(x, y, 48));
+        if (this.artilleryMarks.length > 24) this.artilleryMarks.shift();
     }
 
     public activateConsumable(slotIndex: number): boolean {
@@ -268,17 +312,22 @@ export class GameWorld implements IGameEntity {
     draw(ctx: CanvasRenderingContext2D) {
         if (this.groundStamps.pendingCount) this.applyGround(layer => this.groundStamps.flush(layer));
         if (this.bloodLayer) ctx.drawImage(this.bloodLayer, 0, 0);
+        this.artilleryMarks.forEach(mark => mark.draw(ctx));
+        this.extendedAbilities.drawGroundEffects(ctx);
         this.pickups.forEach(pickup => pickup.draw(ctx));
+        this.fearWaves.forEach(effect => effect.draw(ctx));
         // Отрисовываем врагов
         this.enemies.forEach(enemy => enemy.draw(ctx));
         this.deathEffects.forEach(effect => effect.draw(ctx));
         this.explosions.forEach(effect => effect.draw(ctx));
         this.pickupWaves.forEach(effect => effect.draw(ctx));
         this.pickupExplosions.forEach(effect => effect.draw(ctx));
+        this.artilleryImpacts.forEach(effect => effect.draw(ctx));
 
         // Отрисовываем вспышки от пуль
         this.muzzleFlashes.forEach(flash => flash.draw(ctx));
         this.controller.draw(ctx);
+        this.extendedAbilities.draw(ctx);
 
         // All HUD elements render after every world object, including the player.
         this.uiRenderer.draw(ctx);
@@ -296,6 +345,11 @@ export class GameWorld implements IGameEntity {
     }
 
     public dispose() {
+        this.artilleryBursts = [];
+        this.artilleryImpacts = [];
+        this.artilleryMarks = [];
+        this.fearWaves = [];
+        this.extendedAbilities.dispose();
         this.groundStamps.dispose();
         for (const effect of this.deathEffects) effect.dispose();
         this.deathEffects = [];

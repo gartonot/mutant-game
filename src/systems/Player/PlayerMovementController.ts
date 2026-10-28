@@ -19,7 +19,7 @@ export class PlayerMovementController {
 
     private handleMovement(): void {
         this.isMoving = false;
-        const speed = this.player.speed * this.player.pickupMoveSpeed;
+        const speed = this.player.speed * this.player.pickupMoveSpeed * this.player.abilityMoveSpeed;
         if (this.input.isPressed(InputKey.W)) { this.player.y -= speed; this.isMoving = true; }
         if (this.input.isPressed(InputKey.S)) { this.player.y += speed; this.isMoving = true; }
         if (this.input.isPressed(InputKey.A)) { this.player.x -= speed; this.isMoving = true; }

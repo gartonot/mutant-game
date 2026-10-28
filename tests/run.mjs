@@ -17,7 +17,7 @@ try {
         plugins: [{ name: 'headless-character-rendering', setup(plugin) {
             // Runtime integration tests exercise real controllers, but do not load browser-only raster atlases.
             plugin.onLoad({ filter: /[\\/]rendering[\\/]CharacterArt\.ts$/ }, () => ({
-                contents: 'export function drawCharacter() {}', loader: 'ts',
+                contents: 'export function drawCharacter() {} export function drawGoliathSlam() {} export function drawStormCharacter() {}', loader: 'ts',
             }));
         } }],
     });

@@ -49,7 +49,7 @@ export const CHARACTER_RIGS: Readonly<Record<CharacterId, CharacterRig>> = {
 };
 
 /** Recoil is always in character +X space, before the sprite's authored rotation. */
-export function drawRigBody(ctx: CanvasRenderingContext2D, image: HTMLImageElement, body: CharacterRig, recoil: number) {
+export function drawRigBody(ctx: CanvasRenderingContext2D, image: CanvasImageSource, body: CharacterRig, recoil: number) {
     ctx.save();
     ctx.translate(-recoil, 0);
     ctx.rotate(body.rotation);

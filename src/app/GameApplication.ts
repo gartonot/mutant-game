@@ -8,6 +8,7 @@ import { ProgressStore, bonusesOf } from '@/progression/Achievements';
 import { RewardsScreen } from '@/ui/RewardsScreen';
 import { CharacterScreen } from '@/ui/CharacterScreen';
 import { ensureCharacterArt } from '@/rendering/CharacterArt';
+import { ensureAbilityIcons } from '@/rendering/AbilityIcons';
 import { weaponSpritesReady } from '@/rendering/WeaponSprites';
 import { enemyArtReady } from '@/rendering/EnemyArt';
 import { MusicTrack } from '@/audio/MusicTrack';
@@ -141,7 +142,7 @@ export function createGameApplication(): () => void {
         if (!preparation.open) preparation.showModal();
         try {
             const [hero, weapons, enemies] = await Promise.all([
-                ensureCharacterArt(loadout.character), weaponSpritesReady(), enemyArtReady(),
+                ensureCharacterArt(loadout.character), weaponSpritesReady(), enemyArtReady(), ensureAbilityIcons(),
             ]);
             if (version !== preparationVersion || signal.aborted) return;
             if (!hero || !weapons.every(Boolean) || !enemies.every(Boolean)) throw new Error('Battle artwork unavailable');

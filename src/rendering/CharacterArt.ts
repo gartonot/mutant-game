@@ -3,7 +3,8 @@ import type { WeaponId } from './WeaponArt';
 import { drawMercenary, mercenaryArtReady } from './MercenaryArt';
 import { drawAssassin, assassinArtReady } from './AssassinArt';
 import { drawDestroyer, destroyerArtReady } from './DestroyerArt';
-import { drawAdditionalCharacter, ensureAdditionalCharacterArt } from './AdditionalCharacterArt';
+import { drawAdditionalCharacter, drawAdditionalStormCharacter, ensureAdditionalCharacterArt } from './AdditionalCharacterArt';
+export { drawAdditionalGoliathSlam as drawGoliathSlam } from './AdditionalCharacterArt';
 import { DUAL_WEAPON_OFFSET, weaponMount } from './WeaponGeometry';
 import { CHARACTER_RIGS } from './CharacterRig';
 
@@ -23,6 +24,14 @@ const looks = {
     assassin: { cloth: '#842c33', light: '#bf5050', skin: '#d8b39a', head: '#b75b32', size: .92 },
     destroyer: { cloth: '#53623b', light: '#8b9860', skin: '#c29a75', head: '#d0ab85', size: 1.13 },
 };
+
+export function drawStormCharacter(ctx: CanvasRenderingContext2D, x: number, y: number,
+    angle: number, weapon: WeaponId, recoil = 0): void {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(angle);
+    const drawn = drawAdditionalStormCharacter(ctx, weapon, recoil);
+    ctx.restore();
+    if (!drawn) drawSingleCharacter(ctx, 'fanatic', weapon, x, y, angle, 1, recoil);
+}
 
 /** Extra weapon shares the same geometry as its free projectile muzzle. */
 export function drawCharacter(ctx: CanvasRenderingContext2D, character: CharacterId, weapon: WeaponId,

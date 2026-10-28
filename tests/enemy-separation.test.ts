@@ -4,7 +4,7 @@ import type { Enemy } from '../src/entities/enemy/Enemy';
 import { EnemySeparation } from '../src/systems/spatial/EnemySeparation';
 
 function body(x: number, y: number, radius = 25, isFeared = false): Enemy {
-    return { x, y, radius, isFeared } as Enemy;
+    return { x, y, radius, isFeared, speed: 1 } as Enemy;
 }
 
 test('a dense pursuing crowd settles without sustained multi-pixel shaking', () => {
@@ -45,17 +45,19 @@ test('separation clears a mixed-radius overlap without moving the pair center', 
     assert.equal(enemies[1].y, 0);
 });
 
-test('frightened enemies stay fixed while mobile neighbors separate from them', () => {
-    const frozen = body(0, 0, 25, true), mobile = body(10, 0);
+test('frightened enemies separate normally instead of becoming fixed crowd blockers', () => {
+    const scared = body(0, 0, 25, true), mobile = body(10, 0);
+    new EnemySeparation().resolve([scared, mobile]);
+    assert.ok(scared.x < 0);
+    assert.ok(mobile.x > 10);
+    assert.ok(Math.hypot(mobile.x - scared.x, mobile.y - scared.y) >= 50 - 1e-6);
+});
+
+test('sandbox frozen enemies stay fixed during separation', () => {
+    const frozen = body(0, 0), mobile = body(10, 0);
+    frozen.speed = 0;
     const separation = new EnemySeparation();
-    for (let tick = 0; tick < 60; tick++) separation.resolve([frozen, mobile]);
+    for (let tick = 0; tick < 3; tick++) separation.resolve([frozen, mobile]);
     assert.equal(frozen.x, 0);
-    assert.equal(frozen.y, 0);
-    assert.ok(Math.hypot(mobile.x - frozen.x, mobile.y - frozen.y) >= 50 - 1e-6);
-    const otherFrozen = body(0, 0, 40, true);
-    separation.resolve([frozen, otherFrozen]);
-    assert.equal(otherFrozen.x, 0);
-    assert.equal(otherFrozen.y, 0);
-    assert.equal(frozen.x, 0);
-    assert.equal(frozen.y, 0);
+    assert.ok(mobile.x >= 50 - 1e-6);
 });

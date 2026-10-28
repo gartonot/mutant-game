@@ -18,9 +18,10 @@ export const DEFAULT_CHARACTER_STYLE: RasterCharacterStyle = { shadow: [-3, 3, 2
 
 /** One layer pipeline for every raster character; rigs remain the sole attachment calibration. */
 export function drawRasterCharacter(ctx: CanvasRenderingContext2D, character: CharacterId,
-    asset: ImageAsset, weapon: WeaponId, recoil: number, style = DEFAULT_CHARACTER_STYLE): boolean {
+    asset: ImageAsset, weapon: WeaponId, recoil: number, style = DEFAULT_CHARACTER_STYLE,
+    imageOverride?: CanvasImageSource): boolean {
     if (!asset.loaded) return false;
-    const body = CHARACTER_RIGS[character], image = asset.image;
+    const body = CHARACTER_RIGS[character], image = imageOverride ?? asset.image;
     ctx.save();
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';

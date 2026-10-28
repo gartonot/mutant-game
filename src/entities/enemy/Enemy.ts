@@ -59,8 +59,71 @@ export class Enemy implements IGameEntity {
     private slowMs = 0;
     private slowFactor = 1;
     private fearMs = 0;
+    private fearElapsed = 0;
+    private fearHeading = 0;
+    private fearSourceX = 0;
+    private fearSourceY = 0;
+    private fearTurn = 1;
+    private fearRecoveryMs = 0;
     get isFeared(): boolean { return this.fearMs > 0; }
-    applyFear(durationMs: number): void { this.fearMs = Math.max(this.fearMs, durationMs); }
+    applyFear(durationMs: number, sourceX = this.targetX, sourceY = this.targetY): void {
+        if (!Number.isFinite(durationMs) || durationMs <= 0) return;
+        if (!this.isFeared) {
+            this.fearElapsed = 0;
+            // Stable variation spreads a pack into individual paths, without per-frame noise.
+            const seed = Math.sin(this.x * 12.9898 + this.y * 78.233) * 43758.5453;
+            const variation = seed - Math.floor(seed);
+            this.fearTurn = variation < .5 ? -1 : 1;
+            this.fearHeading = Math.hypot(this.x - sourceX, this.y - sourceY) > .01
+                ? Math.atan2(this.y - sourceY, this.x - sourceX) + (variation - .5) * .5
+                : variation * Math.PI * 2;
+        }
+        this.fearSourceX = sourceX;
+        this.fearSourceY = sourceY;
+        this.fearMs = Math.max(this.fearMs, durationMs);
+    }
+    private turnTowards(current: number, target: number, limit: number): number {
+        const difference = Math.atan2(Math.sin(target - current), Math.cos(target - current));
+        return current + Math.max(-limit, Math.min(limit, difference));
+    }
+    private flee(deltaMs: number, movement: number): void {
+        this.fearElapsed += deltaMs;
+        this.fearRecoveryMs = 300;
+        let dx = this.x - this.fearSourceX, dy = this.y - this.fearSourceY;
+        const length = Math.hypot(dx, dy);
+        if (length > .01) { dx /= length; dy /= length; }
+        else { dx = Math.cos(this.fearHeading); dy = Math.sin(this.fearHeading); }
+        // A gentle, stable bend makes individuals fan out rather than move as a rigid ring.
+        const bend = this.fearTurn * .18;
+        let steerX = dx * Math.cos(bend) - dy * Math.sin(bend);
+        let steerY = dx * Math.sin(bend) + dy * Math.cos(bend);
+        const width = typeof window !== 'undefined' ? window.innerWidth : 0;
+        const height = typeof window !== 'undefined' ? window.innerHeight : 0;
+        const margin = this.radius + 8;
+        if (width > margin * 2 && height > margin * 2) {
+            const zone = 100;
+            const pressure = (distance: number) => Math.max(0, Math.min(1, 1 - distance / zone));
+            const left = pressure(this.x - margin), right = pressure(width - margin - this.x);
+            const top = pressure(this.y - margin), bottom = pressure(height - margin - this.y);
+            const wallX = left - right, wallY = top - bottom;
+            // Inward pressure plus a persistent tangential turn guides runners around corners.
+            steerX += wallX * 2.6 - wallY * this.fearTurn * 1.3;
+            steerY += wallY * 2.6 + wallX * this.fearTurn * 1.3;
+        }
+        this.fearHeading = this.turnTowards(this.fearHeading, Math.atan2(steerY, steerX), deltaMs * .006);
+        this.facing = this.turnTowards(this.facing, this.fearHeading, deltaMs * .014);
+        const easeIn = Math.min(1, this.fearElapsed / 180);
+        const easeOut = Math.min(1, this.fearMs / 350);
+        const step = this.speed * movement * (1 + .75 * easeIn * easeOut);
+        this.gait += step * .23;
+        const nextX = this.x + Math.cos(this.fearHeading) * step;
+        const nextY = this.y + Math.sin(this.fearHeading) * step;
+        // Only clamp runners already inside: offscreen spawns must enter without teleporting.
+        this.x = width > margin * 2 && this.x >= margin && this.x <= width - margin
+            ? Math.max(margin, Math.min(width - margin, nextX)) : nextX;
+        this.y = height > margin * 2 && this.y >= margin && this.y <= height - margin
+            ? Math.max(margin, Math.min(height - margin, nextY)) : nextY;
+    }
     applyEffect(effect?: HitEffect): void {
         if (!effect) return;
         if (effect.acidMs) { this.acidMs = Math.max(this.acidMs, effect.acidMs); this.acidDps = Math.max(this.acidDps, effect.acidDps ?? 0); }
@@ -90,14 +153,18 @@ export class Enemy implements IGameEntity {
         if (!this.acidMs) this.acidDps = 0;
         this.slowMs = Math.max(0, this.slowMs - deltaMs);
         if (!this.slowMs) this.slowFactor = 1;
-        if (this.isDead || feared) return;
+        if (this.isDead) return;
+        if (feared) { this.flee(deltaMs, movement); return; }
         const dx = this.targetX - this.x, dy = this.targetY - this.y;
         const length = Math.hypot(dx, dy);
         if (length > 0) {
-            this.facing = Math.atan2(dy, dx);
+            const direction = Math.atan2(dy, dx);
+            this.facing = this.fearRecoveryMs > 0
+                ? this.turnTowards(this.facing, direction, deltaMs * .012) : direction;
+            this.fearRecoveryMs = Math.max(0, this.fearRecoveryMs - deltaMs);
             this.gait += this.speed * movement * .16;
-            this.x += dx / length * this.speed * movement;
-            this.y += dy / length * this.speed * movement;
+            this.x += Math.cos(this.facing) * this.speed * movement;
+            this.y += Math.sin(this.facing) * this.speed * movement;
         }
     }
 
@@ -139,18 +206,22 @@ export class Enemy implements IGameEntity {
             }
         }
         if (this.isFeared) {
-            // A frightened face remains legible without relying on platform emoji fonts.
-            const y = this.y - this.radius - 19;
-            ctx.fillStyle = '#f5e8a5'; ctx.strokeStyle = '#45324f'; ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.arc(this.x, y, 11, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-            ctx.fillStyle = '#45324f';
-            for (const dx of [-4, 4]) {
-                ctx.beginPath(); ctx.ellipse(this.x + dx, y - 3, 2, 3, 0, 0, Math.PI * 2); ctx.fill();
+            // Three restrained wisps trail the actual run direction; no floating emoji or blur.
+            ctx.save();
+            ctx.translate(this.x, this.y); ctx.rotate(this.fearHeading);
+            ctx.globalAlpha *= Math.min(1, this.fearMs / 300) * Math.min(1, this.fearElapsed / 120);
+            ctx.lineCap = 'round';
+            for (let i = -1; i <= 1; i++) {
+                const pulse = Math.sin(this.statusAngle * 3 + i * 2) * 3;
+                const y = i * this.radius * .65;
+                ctx.strokeStyle = i === 0 ? 'rgba(209, 66, 113, .65)' : 'rgba(181, 119, 222, .65)';
+                ctx.lineWidth = i === 0 ? 2.5 : 1.5;
+                ctx.beginPath();
+                ctx.moveTo(-this.radius * .65, y);
+                ctx.quadraticCurveTo(-this.radius - 12, y + pulse, -this.radius - 27 - pulse, y * .8);
+                ctx.stroke();
             }
-            ctx.beginPath(); ctx.ellipse(this.x, y + 5, 3, 4, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeStyle = '#bfeafa';
-            ctx.beginPath(); ctx.moveTo(this.x - 15, y - 7); ctx.lineTo(this.x - 13, y - 1);
-            ctx.moveTo(this.x + 15, y - 7); ctx.lineTo(this.x + 13, y - 1); ctx.stroke();
+            ctx.restore();
         }
         ctx.restore();
     }
@@ -177,7 +248,7 @@ export class Enemy implements IGameEntity {
         }
 
         // Отталкивание при попадании, если передан угол
-        if (hitAngle !== undefined && !this.isFeared) {
+        if (hitAngle !== undefined) {
             this.x += Math.cos(hitAngle) * pushBackDistance;
             this.y += Math.sin(hitAngle) * pushBackDistance;
         }

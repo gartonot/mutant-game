@@ -13,6 +13,12 @@ export class Player {
     weapon: WeaponId = 'pistol';
     angle = 0;
     recoil = 0;
+    abilityMoveSpeed = 1;
+    abilityBlocksShooting = false;
+    abilityInvisible = false;
+    abilityForm: 'mutant' | 'storm' | null = null;
+    abilityPoseProgress: number | null = null;
+    abilityPoseAngle = 0;
 
     // Здоровье игрока
     maxHp = 100;

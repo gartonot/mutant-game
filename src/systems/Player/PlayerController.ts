@@ -8,7 +8,7 @@ import { PlayerWeaponController } from '@/systems/Player/PlayerWeaponController.
 import { Bullet } from '@entities/bullet/Bullet.ts';
 import { compact } from '@/core/compact';
 import type { IGameEntity } from '@entities/interfaces';
-import { drawCharacter } from '@/rendering/CharacterArt';
+import { drawCharacter, drawGoliathSlam, drawStormCharacter } from '@/rendering/CharacterArt';
 import { drawWeaponHUD } from '@/ui/WeaponHUD';
 import type { IWeapon } from '@/entities/weapon/IWeapon';
 import { Player } from '@entities/player/Player.ts';
@@ -58,7 +58,8 @@ export class PlayerController implements IGameEntity {
         this.player.weapon = this.weaponController.selectedWeapon.id;
         this.player.recoil *= .7;
         // Обработчик выстрела
-        this.handleShooting();
+        if (this.player.abilityBlocksShooting) this.weaponController.resetTrigger();
+        else this.handleShooting();
         this.player.weapon = this.weaponController.selectedWeapon.id;
 
         const bullets = this.weaponController.getBullets();
@@ -80,7 +81,12 @@ export class PlayerController implements IGameEntity {
         this.weaponController.getBullets().forEach(bullet => bullet.draw(ctx));
         // Рисуем персонажа
         const p = this.player;
-        drawCharacter(ctx, p.character, p.weapon, p.x, p.y, p.angle, 1, p.recoil, this.weaponController.hasDualWeapons);
+        ctx.save();
+        if (p.abilityInvisible) ctx.globalAlpha *= .3;
+        if (p.abilityPoseProgress !== null) drawGoliathSlam(ctx, p.x, p.y, p.abilityPoseAngle, p.abilityPoseProgress);
+        else if (p.abilityForm === 'storm') drawStormCharacter(ctx, p.x, p.y, p.angle, p.weapon, p.recoil);
+        else if (!p.abilityForm) drawCharacter(ctx, p.character, p.weapon, p.x, p.y, p.angle, 1, p.recoil, this.weaponController.hasDualWeapons);
+        ctx.restore();
         this.drawBonuses(ctx);
         const charging = this.weaponController.selectedWeapon;
         if (charging.id === 'plasma-cannon' && charging.chargeProgress > 0) {
@@ -116,6 +122,8 @@ export class PlayerController implements IGameEntity {
     public getPlayer() {
         return this.player;
     }
+
+    public getAimPosition(): { x: number; y: number } { return this.inputController.getMousePosition(); }
 
     public collectDrop(drop: PickupDrop): void {
         if (this.player.currentHp <= 0) return;

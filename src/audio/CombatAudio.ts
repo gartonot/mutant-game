@@ -61,6 +61,13 @@ export class CombatAudio {
                     if (!response.ok) throw new Error('Audio unavailable');
                     return response.arrayBuffer();
                 }).then(data => context.decodeAudioData(data)).then(buffer => {
+                    // Balance the loud blast against weapon shots before the shared master volume.
+                    if (sound === 'explosion') {
+                        for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+                            const samples = buffer.getChannelData(channel);
+                            for (let i = 0; i < samples.length; i++) samples[i] *= .5;
+                        }
+                    }
                     if (!this.disposed) this.buffers.set(sound as SoundId, buffer);
                 }).catch(() => { /* A missing sound must not interrupt gameplay. */ })
             ));

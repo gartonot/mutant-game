@@ -1,0 +1,40 @@
+{
+  "generator": "built-in image_gen",
+  "assets": [
+    {
+      "id": "destroyer",
+      "prompt": "Use case: stylized-concept. A single square 1:1 full-bleed ability icon for a gritty realistic sci-fi survival shooter. Ability: artillery strike. Subject: three heavy military artillery shells plunging diagonally toward a fiery orange ground explosion, powerful clear silhouette. Painterly highly detailed worn steel and glowing ember materials, dramatic rim light, charcoal black background, subtle vignette. Central subject occupies 75% with safe margins; readable at 64px. No text, letters, numbers, logo, watermark, UI frame, border, collage or additional icons.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183dc-3ff0-7371-9a33-232c4f36c43e\\exec-00aa52b7-14b5-4aa2-a5b4-63bb8c639f42.png"
+    },
+    {
+      "id": "assassin",
+      "prompt": "Use case: stylized-concept. A single square 1:1 full-bleed ability icon for a gritty realistic sci-fi survival shooter. Subject: Fear of the prey: a screaming ghostly ivory skull face with wide terrified hollow eyes, framed by crimson psychic shockwaves and sharp red wisps; pale bone and dark red palette. Painterly highly detailed realistic materials, dramatic rim light, charcoal black background and subtle vignette. One central bold easily legible silhouette occupying 75% with safe margins, readable at64px. No text letters numbers logo watermark UI frame border collage or multiple icons.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183dc-3ff0-7371-9a33-232c4f36c43e\\exec-5a74de45-1f8c-4565-9a0f-708bc0fae65c.png"
+    },
+    {
+      "id": "mercenary",
+      "prompt": "Use case: stylized-concept. A single square 1:1 full-bleed ability icon for a gritty realistic sci-fi survival shooter. Subject: Dual weapons: two identical rugged automatic pistols mirrored diagonally, both firing brilliant golden muzzle flashes, dark gunmetal and amber palette. Exactly two separate complete guns. Painterly highly detailed realistic materials, dramatic rim light, charcoal black background and subtle vignette. One central bold easily legible silhouette occupying 75% with safe margins, readable at64px. No text letters numbers logo watermark UI frame border collage or multiple icons.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183dc-3ff0-7371-9a33-232c4f36c43e\\exec-9a445dcf-2508-440e-8e6e-26375ec878c7.png"
+    },
+    {
+      "id": "half-mutant",
+      "prompt": "Use case: stylized-concept. A single square 1:1 full-bleed ability icon for a gritty realistic sci-fi survival shooter. Subject: Transformation: a massive green mutated clawed hand breaking through torn leather and metal shackles, toxic green veins, bold muscular silhouette, olive green and ivory palette. Painterly highly detailed realistic materials, dramatic rim light, charcoal black background and subtle vignette. One central bold easily legible silhouette occupying 75% with safe margins, readable at64px. No text letters numbers logo watermark UI frame border collage or multiple icons.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183dc-3ff0-7371-9a33-232c4f36c43e\\exec-0da400d3-b9fd-418f-a685-42afc99b7778.png"
+    },
+    {
+      "id": "telepath",
+      "prompt": "Use case: stylized-concept. A single square 1:1 full-bleed ability icon for a gritty realistic sci-fi survival shooter. Subject: Pyrokinesis: an open human hand controlling a swirling bright orange fireball above its palm, embers and curved flame tongues, burnt copper and orange palette. Painterly highly detailed realistic materials, dramatic rim light, charcoal black background and subtle vignette. One central bold easily legible silhouette occupying 75% with safe margins, readable at64px. No text letters numbers logo watermark UI frame border collage or multiple icons.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183dc-3ff0-7371-9a33-232c4f36c43e\\exec-c24a6863-1160-4650-a3bf-fd182d3703a5.png"
+    },
+    {
+      "id": "cyborg",
+      "prompt": "Use case: stylized-concept. A single square 1:1 full-bleed ability icon for a gritty realistic sci-fi survival shooter. Subject: Gravity strike: a futuristic steel armored fist striking the ground, concentric violet gravity shockwaves and levitating stone fragments, gunmetal and violet palette. Painterly highly detailed realistic materials, dramatic rim light, charcoal black background and subtle vignette. One central bold easily legible silhouette occupying 75% with safe margins, readable at64px. No text letters numbers logo watermark UI frame border collage or multiple icons.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183dc-3ff0-7371-9a33-232c4f36c43e\\exec-fe3ebe23-30d5-4e53-a1ba-5ed3cd658dd8.png"
+    },
+    {
+      "id": "goliath",
+      "prompt": "Use case: stylized-concept. A single square 1:1 full-bleed ability icon for a gritty realistic sci-fi survival shooter. Subject: Goliath ground slam: two enormous muscular armored fists smashing cracked earth, amber shockwave and flying rock, bronze and warm ochre palette. Painterly highly detailed realistic materials, dramatic rim light, charcoal black background and subtle vignette. One central bold easily legible silhouette occupying 75% with safe margins, readable at64px. No text letters numbers logo watermark UI frame border collage or multiple icons.",
+      "source": "C:\\Users\\garto\\.codex\\generated_images\\01a183dc-3ff0-7371-9a33-232c4f36c43e\\exec-552aca3c-577c-4105-a5f5-6d1559f6f2e2.png"
+    }
+  ]
+}
