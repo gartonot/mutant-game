@@ -1,4 +1,5 @@
 import type { Bullet } from '@/entities/bullet/Bullet';
+import { emitSound, setFlameSoundActive, setLaserSoundActive, setPlasmaChargeSound, weaponSound } from '@/audio/SoundEvents';
 import type { IWeapon } from '@/entities/weapon/IWeapon';
 import type { AmmoCategory } from '@/gameplay/WeaponLoot';
 import { WEAPON_DEFINITIONS } from '@/gameplay/weapons';
@@ -72,10 +73,27 @@ export class PlayerWeaponController {
             if (this.weapons[index]?.state.hasAmmo) { this.switchToWeapon(index); return; }
         }
     }
-    resetTrigger(): void { this.selectedWeapon.resetTrigger(this.now()); }
+    resetTrigger(): void {
+        this.selectedWeapon.resetTrigger(this.now());
+        setLaserSoundActive(false);
+        setFlameSoundActive(false);
+        setPlasmaChargeSound(null);
+    }
     tryShoot(x: number, y: number, angle: number, onVisualEffect?: (x: number, y: number, angle: number) => void, triggerHeld = true): Bullet[] | null {
-        const fired = this.selectedWeapon.tryFire(this.now(), x, y, angle, onVisualEffect, triggerHeld);
-        if (fired) this.bullets.push(...fired);
+        const weapon = this.selectedWeapon;
+        const fired = weapon.tryFire(this.now(), x, y, angle, onVisualEffect, triggerHeld);
+        // Follow the actual charge state used by particles; stop before the shot transient.
+        setPlasmaChargeSound(weapon.id === 'plasma-cannon' && triggerHeld && weapon.isCharging
+            ? { progress: weapon.chargeProgress, durationMs: weapon.chargeDurationMs } : null);
+        if (fired?.length) {
+            this.bullets.push(...fired);
+            if (weapon.id === 'laser') setLaserSoundActive(true);
+            else if (weapon.id === 'flamethrower') setFlameSoundActive(true);
+            else emitSound(weaponSound(weapon.id));
+        }
+        // Keep one continuous sound across the beam's ammunition pulses.
+        if (weapon.id !== 'laser' || !triggerHeld || !weapon.state.hasAmmo) setLaserSoundActive(false);
+        if (weapon.id !== 'flamethrower' || !triggerHeld || !weapon.state.hasAmmo) setFlameSoundActive(false);
         if (!this.selectedWeapon.state.hasAmmo && this.weapons.filter(weapon => weapon && weapon.id !== 'pistol').length === 1) {
             const pistolIndex = this.weapons.findIndex(weapon => weapon?.id === 'pistol');
             if (pistolIndex >= 0) {

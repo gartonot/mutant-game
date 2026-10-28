@@ -203,6 +203,25 @@ test('skull explosion creates eight damaging fragments once; plasma blast slows 
     assert.ok(Math.abs(enemy.x - oldX - .5) < 1e-8);
 });
 
+test('skull detonation notifies its variant exactly once when fragments are released', () => {
+    for (const impact of [false, true]) {
+        const skull = createWeapon('skull-launcher').tryFire(0, 100, 100, 0)![0] as Grenade;
+        const f = fixture([skull]), collisions = new CollisionSystem();
+        const variants: (Grenade['variant'] | undefined)[] = [];
+        const onExplosion = (_x: number, _y: number, _radius: number, _plasma?: boolean, variant?: Grenade['variant']) => variants.push(variant);
+        collisions.checkBulletEnemyCollisions(f.controller, [], onExplosion);
+        assert.deepEqual(variants, []);
+        assert.equal(f.fragments, 0);
+        if (!impact) skull.detonated = true;
+        const enemies = impact ? [new Enemy(skull.x, skull.y)] : [];
+        collisions.checkBulletEnemyCollisions(f.controller, enemies, onExplosion);
+        assert.deepEqual(variants, ['skull']);
+        assert.equal(f.fragments, 8);
+        collisions.checkBulletEnemyCollisions(f.controller, enemies, onExplosion);
+        assert.deepEqual(variants, ['skull']);
+    }
+});
+
 test('plasma slows movement by half without stacking and restores normal speed after expiry', () => {
     for (const id of ['plasma-auto', 'plasma-cannon', 'plasma-grenade'] as const) {
         const enemy = new Enemy(0, 0);

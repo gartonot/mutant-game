@@ -1,4 +1,5 @@
 import { GroundStampQueue } from '@/effects/GroundStampQueue';
+import { emitSound } from '@/audio/SoundEvents';
 import { prepareBloodDecal, warmBloodDecalWorkers } from '@/effects/BloodDecalWorkerPool';
 import { compact } from '@/core/compact';
 import { CHARACTER_ABILITIES, CharacterAbilityClock } from '@/gameplay/CharacterAbilities';
@@ -137,6 +138,7 @@ export class GameWorld implements IGameEntity {
         }
         this.collisionSystem.checkBulletEnemyCollisions(this.controller, this.enemies,
             (x, y, radius, plasma, variant) => {
+                emitSound(variant === 'skull' ? 'bone-break' : variant === 'plasma' ? 'plasma-explosion' : 'explosion');
                 this.explosions.push(new ExplosionEffect(x, y, radius, plasma));
                 if (variant === 'normal') this.stampGround(ctx => drawScorchMark(ctx, x, y, 35));
             });
@@ -223,9 +225,11 @@ export class GameWorld implements IGameEntity {
         if (kind !== 'iceBlast' && kind !== 'fireBlast') return;
         const blast = applyPickupBlast(kind, tier, x, y, this.enemies);
         if (kind === 'fireBlast') {
+            emitSound('explosion');
             this.stampGround(ctx => drawScorchMark(ctx, x, y, 55));
             this.pickupExplosions.push(new PickupExplosionEffect(x, y, blast.radius));
         } else {
+            emitSound('ice-explosion');
             this.pickupWaves.push(new PickupWaveEffect(x, y, blast.radius, kind, tier));
         }
     }

@@ -1,0 +1,33 @@
+Audio credits
+
+Plasma weapon sound (plasma.wav)
+"Energy Shot_v1_01.wav" from "JC Sounds Sci-Fi Pack Vol 1" by JC Sounds.
+Source: https://opengameart.org/content/jc-sounds-sci-fi-pack-vol-1
+License: Creative Commons Attribution 4.0 International (CC BY 4.0).
+https://creativecommons.org/licenses/by/4.0/
+Changes: converted to mono 48 kHz PCM16 and peak-normalized to -1 dBFS.
+The full recording is retained, with no trimming or pitch changes.
+
+Railgun_ChargeLoop and RailGun_Fire1 by BaggoNotes
+https://freesound.org/people/BaggoNotes/sounds/785400/
+https://freesound.org/people/BaggoNotes/sounds/785380/
+CC0: https://creativecommons.org/publicdomain/zero/1.0/
+Adapted: rising charge mixed with reversed firing tail, time-compressed to 450ms;
+converted to mono 48k PCM16, normalized. Used for plasma cannon.
+
+Crossbow Shoot — Ben Jaszczak and Brian Nelson
+Medieval sound effects — Weapon Textures
+https://opengameart.org/content/medieval-sound-effects-weapon-textures
+CC0 https://creativecommons.org/publicdomain/zero/1.0/
+Adapted: isolated shot, mono48k PCM16, edge fades and normalization.
+
+RPG launcher three shots — klangfabrik
+https://freesound.org/people/klangfabrik/sounds/249298/
+CC0 https://creativecommons.org/publicdomain/zero/1.0/
+Adapted: isolated launch, mono48k PCM16, fades and normalization. Used for bazooka.
+
+Plasma blast.mp3 — MountLava
+https://freesound.org/people/MountLava/sounds/581176/
+CC0 https://creativecommons.org/publicdomain/zero/1.0/
+Adapted: mono48k PCM16, edge fades, normalization. Used for plasma grenade explosion.
+

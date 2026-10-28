@@ -44,7 +44,7 @@ canvas { display: block; }
 .robot-beam { position: absolute; width: 68px; height: 80px; top: 78px; left: 32px; background: linear-gradient(#66ecef33, transparent); filter: blur(8px); clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%); }
 .robot-aerial { position: absolute; width: 2px; height: 18px; background: #688779; left: 61px; top: 10px; transform: rotate(-15deg); }
 .playing canvas { cursor: none; }
-.back-to-menu { position: fixed; top: 16px; right: 20px; border: 1px solid #5a7350; border-radius: 6px; padding: 9px 12px; background: #142518ee; font-size: 12px; }
+.back-to-menu { position: fixed; top: 16px; left: 20px; border: 1px solid #5a7350; border-radius: 6px; padding: 9px 12px; background: #142518ee; font-size: 12px; }
 kbd { margin-left: 12px; font-size: 10px; color: #92a68b; }
 @keyframes hover { 50% { transform: translateY(-7px); } }
 @keyframes haze { to { opacity: .7; transform: translateY(-6px); } }

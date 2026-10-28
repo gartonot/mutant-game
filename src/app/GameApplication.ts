@@ -10,12 +10,31 @@ import { CharacterScreen } from '@/ui/CharacterScreen';
 import { ensureCharacterArt } from '@/rendering/CharacterArt';
 import { weaponSpritesReady } from '@/rendering/WeaponSprites';
 import { enemyArtReady } from '@/rendering/EnemyArt';
+import { MusicTrack } from '@/audio/MusicTrack';
+import { MusicSettings } from '@/ui/MusicSettings';
+import { CombatAudio } from '@/audio/CombatAudio';
+import battleMusicUrl from '@/assets/audio/battle-temporary.webm?url';
+import menuMusicUrl from '@/assets/audio/menu-temporary.webm?url';
 import './battle-preparation.css';
 
 
 export function createGameApplication(): () => void {
     const applicationEvents = new AbortController();
     const { signal } = applicationEvents;
+    const combatAudio = new CombatAudio();
+    const unlockCombatAudio = () => combatAudio.unlock();
+    window.addEventListener('pointerdown', unlockCombatAudio, { signal });
+    window.addEventListener('keydown', unlockCombatAudio, { signal });
+    const battleMusic = new MusicTrack(battleMusicUrl, 'battle');
+    const menuMusic = new MusicTrack(menuMusicUrl, 'menu');
+    const musicSettings = new MusicSettings();
+    for (const id of ['menu-music-settings', 'pause-music-settings']) {
+        document.getElementById(id)!.addEventListener('click', () => musicSettings.show(), { signal });
+    }
+    let menuMusicActive = true;
+    function playMenuMusic() {
+        if (menuMusicActive && !document.hidden && document.hasFocus()) menuMusic.play();
+    }
     // Covers dynamically created portraits and weapon icons as well.
     document.addEventListener('dragstart', event => {
         if (event.target instanceof HTMLImageElement) event.preventDefault();
@@ -69,12 +88,16 @@ export function createGameApplication(): () => void {
 
     function pauseGame() {
         if (!session.pause()) return;
+        combatAudio.setActive(false);
+        battleMusic.pause();
         pauseDialog.showModal();
         resumeButton.focus();
     }
 
     function resumeGame() {
         if (!session.resume()) return;
+        combatAudio.setActive(true);
+        battleMusic.play();
         pauseDialog.close();
         backButton.blur();
     }
@@ -86,11 +109,14 @@ export function createGameApplication(): () => void {
     resumeButton.addEventListener('click', resumeGame, { signal });
     document.querySelector('#restart-game')!.addEventListener('click', () => {
         if (!session.restart()) return;
+        battleMusic.stop();
         resumeGame();
     }, { signal });
     document.querySelector('#pause-main-menu')!.addEventListener('click', showMenu, { signal });
 
     function showMenu() {
+        combatAudio.setActive(false);
+        battleMusic.stop();
         pauseDialog.close();
         cancelPreparation();
         characters?.hide();
@@ -100,6 +126,8 @@ export function createGameApplication(): () => void {
         backButton.hidden = true;
         document.body.classList.remove('playing');
         survivalButton.focus();
+        menuMusicActive = true;
+        playMenuMusic();
     }
 
     async function startSurvival() {
@@ -127,6 +155,8 @@ export function createGameApplication(): () => void {
             retryPreparation.focus();
             return;
         }
+        menuMusicActive = false;
+        menuMusic.stop();
         preparing = false;
         preparation.removeAttribute('aria-busy');
         preparation.close();
@@ -136,7 +166,9 @@ export function createGameApplication(): () => void {
         backButton.hidden = false;
         document.body.classList.add('playing');
         survivalButton.blur();
+        combatAudio.setActive(true);
         if (document.hidden || !document.hasFocus()) pauseGame();
+        else battleMusic.play();
     }
     survivalButton.addEventListener('click', () => {
         menu.hidden = true;
@@ -146,6 +178,7 @@ export function createGameApplication(): () => void {
     }, { signal });
     backButton.addEventListener('click', pauseGame, { signal });
     window.addEventListener('keydown', (event) => {
+        if (musicSettings.isOpen) return;
         if (!session.playing) return;
         if (event.key === 'Escape') {
             event.preventDefault();
@@ -191,14 +224,26 @@ export function createGameApplication(): () => void {
         event.preventDefault();
         session.world!.getPlayerController().cycleWeapon(event.deltaY > 0 ? 1 : -1);
     }, { passive: false, signal });
-    window.addEventListener('blur', pauseGame, { signal });
-    document.addEventListener('visibilitychange', () => { if (document.hidden) pauseGame(); }, { signal });
+    window.addEventListener('blur', () => { pauseGame(); menuMusic.pause(); }, { signal });
+    window.addEventListener('focus', playMenuMusic, { signal });
+    // Browsers may require a click/key press before allowing either soundtrack.
+    const retryMusic = () => {
+        if (session.active) battleMusic.play();
+        else playMenuMusic();
+    };
+    window.addEventListener('pointerdown', retryMusic, { signal });
+    window.addEventListener('keydown', retryMusic, { signal });
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { pauseGame(); menuMusic.pause(); }
+        else playMenuMusic();
+    }, { signal });
 
     document.querySelector('#achievements')!.addEventListener('click', () => {
         menu.hidden = true;
         rewards.showAchievements(progressStore.totals, progressStore.storageAvailable);
     }, { signal });
     canvas.hidden = true;
+    playMenuMusic();
 
     const stopLoop = startGameLoop(ctx, [{
         update(deltaMs) {
@@ -209,6 +254,8 @@ export function createGameApplication(): () => void {
                 const run = gameWorld.getRunStats();
                 const { before, after } = progressStore.record(run);
                 session.dispose();
+                combatAudio.setActive(false);
+                battleMusic.stop();
                 backButton.hidden = true;
                 document.body.classList.remove('playing');
                 rewards.showResults(run, before, after, progressStore.storageAvailable, gameWorld.isVictory);
@@ -230,6 +277,10 @@ export function createGameApplication(): () => void {
         preparation.remove();
         stopLoop();
         applicationEvents.abort();
+        combatAudio.dispose();
+        battleMusic.dispose();
+        menuMusic.dispose();
+        musicSettings.dispose();
         session.dispose();
         characters?.dispose();
         rewards.dispose();

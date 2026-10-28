@@ -7,6 +7,8 @@ export interface IWeapon {
     readonly name: string;
     readonly state: WeaponState;
     readonly chargeProgress: number;
+    readonly chargeDurationMs: number;
+    readonly isCharging: boolean;
     setPickupModifiers(damage: number, attackSpeed: number, now: number): void;
     setDualWeaponsActive(active: boolean): void;
     cursorProgress(now: number): number | null;

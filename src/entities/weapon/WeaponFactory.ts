@@ -13,6 +13,8 @@ class ConfiguredWeapon implements IWeapon {
     readonly id: WeaponId;
     readonly name: string;
     chargeProgress = 0;
+    get chargeDurationMs(): number { return (this.definition.chargeMs ?? 0) / (this.attackSpeed * this.pickupSpeed); }
+    get isCharging(): boolean { return this.chargeDurationMs > 0 && this.started !== null && this.state.hasAmmo; }
     private started: number | null = null;
     private secondShot = false;
     private laser: Beam | null = null;
@@ -85,7 +87,7 @@ class ConfiguredWeapon implements IWeapon {
             if (this.chargeProgress < 1) return null;
         }
         if (!this.state.canShoot(now)) return null;
-        const charge = (d.chargeMs ?? 0) / (this.attackSpeed * this.pickupSpeed);
+        const charge = this.chargeDurationMs;
         if (charge && triggerHeld) {
             this.started ??= now;
             this.chargeProgress = Math.min(1, (now - this.started) / charge);
