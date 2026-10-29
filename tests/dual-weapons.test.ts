@@ -5,7 +5,19 @@ import { WEAPON_DEFINITIONS } from '../src/gameplay/weapons';
 import { PlayerWeaponController } from '../src/systems/Player/PlayerWeaponController';
 import { Beam } from '../src/entities/bullet/Beam';
 import { Disc } from '../src/entities/bullet/SpecialProjectiles';
-import { DUAL_WEAPON_OFFSET, muzzlePosition } from '../src/rendering/WeaponGeometry';
+import { dualCharacterPose, muzzlePosition } from '../src/rendering/WeaponGeometry';
+
+test('fused clone stays behind the player and faces away at every rotation and preview scale', () => {
+    for (const angle of [0, Math.PI / 2, Math.PI, -Math.PI / 3]) {
+        for (const scale of [1, 2.5]) {
+            const pose = dualCharacterPose(200, 300, angle, scale);
+            const dx = pose.x - 200, dy = pose.y - 300;
+            assert.ok(Math.abs(dx * Math.cos(angle) + dy * Math.sin(angle) + 12 * scale) < 1e-8);
+            assert.ok(Math.abs(-dx * Math.sin(angle) + dy * Math.cos(angle)) < 1e-8);
+            assert.ok(Math.abs(Math.cos(pose.angle - angle) + 1) < 1e-8);
+        }
+    }
+});
 
 test('dual weapons double every projectile family with modifiers and only one ammo payment', () => {
     for (const definition of Object.values(WEAPON_DEFINITIONS)) {
@@ -25,6 +37,29 @@ test('dual weapons double every projectile family with modifiers and only one am
             assert.equal(paired[i + baseline.length].damage, baseline[i].damage);
             assert.equal(paired[i + baseline.length].constructor, baseline[i].constructor);
             assert.notEqual(paired[i], paired[i + baseline.length]);
+            assert.ok(Math.abs(paired[i].dx + paired[i + baseline.length].dx) < 1e-8, definition.id + ' opposite X direction');
+            assert.ok(Math.abs(paired[i].dy + paired[i + baseline.length].dy) < 1e-8, definition.id + ' opposite Y direction');
+        }
+    }
+});
+
+test('rear projectiles and muzzle flashes originate at the rotated clone weapon', () => {
+    for (const angle of [0, Math.PI / 2, -Math.PI / 3]) {
+        const weapon = createWeapon('rifle', 1, 1, 'mercenary');
+        weapon.setDualWeaponsActive(true);
+        const flashes: { x: number; y: number; angle: number }[] = [];
+        const [primary, rear] = weapon.tryFire(0, 300, 300, angle,
+            (x, y, flashAngle) => flashes.push({ x, y, angle: flashAngle }))!;
+        const expected = muzzlePosition('rifle', 300 - Math.cos(angle) * 12, 300 - Math.sin(angle) * 12,
+            angle + Math.PI, 'mercenary');
+        assert.ok(Math.abs(rear.x - expected.x) < 1e-8);
+        assert.ok(Math.abs(rear.y - expected.y) < 1e-8);
+        assert.equal(flashes.length, 2);
+        for (const [i, projectile] of [primary, rear].entries()) {
+            assert.equal(flashes[i].x, projectile.x);
+            assert.equal(flashes[i].y, projectile.y);
+            assert.ok(Math.abs(Math.cos(flashes[i].angle) - projectile.dx) < 1e-8);
+            assert.ok(Math.abs(Math.sin(flashes[i].angle) - projectile.dy) < 1e-8);
         }
     }
 });
@@ -51,9 +86,12 @@ test('dual laser tracks both muzzles and keeps independent hits, expiry kills on
     const [primary, copy] = laser.tryFire(0, 200, 200, 0)! as Beam[];
     primary.touched.add({}); assert.equal(copy.touched.size, 0);
     assert.equal(laser.tryFire(1, 300, 300, Math.PI / 2), null);
-    const expected = muzzlePosition('laser', 300 - DUAL_WEAPON_OFFSET, 300, Math.PI / 2, 'mercenary');
+    const expected = muzzlePosition('laser', 300, 288, Math.PI * 1.5, 'mercenary');
     assert.ok(Math.abs(copy.previousX - expected.x) < 1e-8);
     assert.ok(Math.abs(copy.previousY - expected.y) < 1e-8);
+    assert.ok(Math.abs(copy.dx + primary.dx) < 1e-8);
+    assert.ok(Math.abs(copy.dy + primary.dy) < 1e-8);
+    assert.ok(copy.y < copy.previousY, 'rear laser points upward when player aims downward');
     laser.setDualWeaponsActive(false);
     assert.equal(copy.isDead, true); assert.equal(primary.isDead, false);
     laser.resetTrigger(2); assert.equal(primary.isDead, true);

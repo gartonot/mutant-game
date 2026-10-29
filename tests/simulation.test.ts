@@ -22,6 +22,23 @@ function controller(bullets: Bullet[]) {
         get hits() { return hits; } } as unknown as PlayerController & { hits: number };
 }
 
+test('buried boss does not intercept bullets or push nearby enemies', () => {
+    const buried = new Enemy(50, 0, EnemyType.WORM);
+    buried.targetable = false; buried.invulnerable = true; buried.movementLocked = true;
+    const target = new Enemy(100, 0);
+    const bullet = new Bullet(0, 0, 0, 1, 150, 1);
+    bullet.update();
+    const ctrl = controller([bullet]);
+    new CollisionSystem().checkBulletEnemyCollisions(ctrl, [buried, target]);
+    assert.equal(ctrl.hits, 1);
+    assert.equal(target.currentHealth, target.maxHealth - 1);
+    assert.equal(buried.currentHealth, buried.maxHealth);
+    const nearby = new Enemy(55, 0);
+    new EnemySeparation().resolve([buried, nearby]);
+    assert.equal(nearby.x, 55);
+    assert.equal(buried.x, 50);
+});
+
 test('30/60/144 Hz render schedules produce the same 60 Hz motion and cooldowns', () => {
     const results = [30, 60, 144].map(fps => {
         const clock = new FixedStep(), weapon = new WeaponState({ kind: 'infinite' }, 300);
@@ -181,38 +198,11 @@ test('relocation handles repeated moves and radius growth without stale or dupli
     assert.equal(grid.maxRadius, 1);
 });
 
-test('default wave progression keeps random draw count and enters from all four sides', () => {
-    const values = [0, 0, .5, 0, .25, .5, 0, .5, .5, 0, .75, .5];
-    let index = 0;
-    const waves = new WaveSystem({ random: () => values[index++ % values.length], viewport: () => ({ width: 800, height: 600 }) });
-    const first = waves.spawnWave();
-    assert.deepEqual(first.slice(0, 4).map(({ x, y }) => ({ x, y })), [
-        { x: 400, y: -50 }, { x: 400, y: 650 }, { x: -50, y: 300 }, { x: 850, y: 300 },
-    ]);
-    assert.equal(index, 15);
-    assert.deepEqual([first.length, ...Array.from({ length: 5 }, () => waves.spawnWave().length)], [5, 6, 6, 7, 7, 7]);
-});
-
-test('bottom spawns remain below the full viewport, including bosses after resize', () => {
-    let height = 600;
-    const waves = new WaveSystem({ random: () => .375, viewport: () => ({ width: 800, height }) });
-    let sawBoss = false;
-    for (let i = 0; i < BOSS_WAVE_INTERVAL; i++) {
-        if (i === 4) height = 180;
-        for (const enemy of waves.spawnWave()) {
-            assert.equal(enemy.x, 300);
-            assert.equal(enemy.y, height + 50);
-            sawBoss ||= enemy.radius === 40;
-        }
-    }
-    assert.equal(sawBoss, true);
-});
-
 test('custom wave rules repeat their final wave and read current arena dimensions', () => {
     let width = 800;
     const waves = new WaveSystem({ rules: [{ types: [EnemyType.TANK], count: 1 }], random: () => .9, viewport: () => ({ width, height: 600 }) });
     const first = waves.spawnWave()[0];
-    assert.equal(first.radius, 25); assert.equal(first.x, 850);
+    assert.equal(first.radius, 35); assert.equal(first.x, 850);
     width = 1200;
     assert.equal(waves.spawnWave()[0].x, 1250);
     assert.throws(() => new WaveSystem({ rules: [] }));

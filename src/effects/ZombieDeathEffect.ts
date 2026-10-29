@@ -95,7 +95,7 @@ export class ZombieDeathEffect {
     ) {
         const scale = Math.max(8, radius);
         const trailLengthScale = .7;
-        const colors = palette.length ? palette : ['#781014', '#a0181c', '#b71b21'];
+        const colors = palette.length ? palette : ['#8b2928', '#ad3430', '#ba4038'];
         this.bloodColor = colors[Math.min(1, colors.length - 1)];
         this.greenBlood = parseInt(this.bloodColor.slice(3, 5), 16) > parseInt(this.bloodColor.slice(1, 3), 16);
         const color = () => colors[Math.min(colors.length - 1, Math.floor(random() * colors.length))];
@@ -220,7 +220,7 @@ export class ZombieDeathEffect {
     private drawRemains(ctx: CanvasRenderingContext2D, particle: BloodParticle,
         x: number, y: number, rotation: number): void {
         ctx.save();
-        ctx.globalAlpha *= .42;
+        ctx.globalAlpha *= .22;
         drawShape(ctx, particle, x + .3, y + .55, rotation, '#211a17');
         ctx.restore();
         if (!this.atlasAttempted) this.createRemainsAtlas();
@@ -229,8 +229,7 @@ export class ZombieDeathEffect {
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(rotation);
-            // The original per-primitive opacity is baked into this unique fragment.
-            ctx.globalAlpha = 1;
+            // Respect ground/air opacity when compositing the cached fragment.
             ctx.drawImage(this.remainsAtlas, tile.sx, 0, tile.width, tile.height,
                 tile.left, tile.top, tile.width / tile.resolution, tile.height / tile.resolution);
             ctx.restore();
@@ -258,7 +257,7 @@ export class ZombieDeathEffect {
         // Stamped once on the persistent arena canvas; independent of effect age.
         ctx.save();
         ctx.translate(this.x, this.y);
-        ctx.globalAlpha = .98;
+        ctx.globalAlpha *= .58;
         if (!prepared && !this.groundDecal) this.createGroundDecal();
         const decal = prepared ?? this.groundDecal;
         if (decal) ctx.drawImage(decal.canvas, decal.x, decal.y);
@@ -281,7 +280,7 @@ export class ZombieDeathEffect {
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.lineCap = 'round';
-        ctx.globalAlpha = .98;
+        ctx.globalAlpha *= .8;
         for (const particle of this.particles) {
             if (seconds >= particle.duration) continue;
             const progress = seconds / particle.duration;
@@ -302,7 +301,7 @@ export class ZombieDeathEffect {
                 ctx.save();
                 ctx.translate(x + particle.size * .12, y + particle.size * .18);
                 ctx.scale(.65, .65);
-                drawShape(ctx, particle, 0, 0, particle.rotation, this.greenBlood ? '#283c1c' : '#650e17');
+                drawShape(ctx, particle, 0, 0, particle.rotation, this.greenBlood ? '#283c1c' : '#8b2928');
                 ctx.restore();
             }
         }

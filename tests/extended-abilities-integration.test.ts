@@ -5,9 +5,34 @@ import { Enemy } from '../src/entities/enemy/Enemy';
 import { EnemyType } from '../src/entities/enemy/EnemyType';
 import { CHARACTER_ABILITIES } from '../src/gameplay/CharacterAbilities';
 import type { CharacterId } from '../src/gameplay/ids';
-import type { GameWorld } from '../src/systems/GameWorld';
+import { GameWorld } from '../src/systems/GameWorld';
 import { planPlasmaTraps } from '../src/gameplay/PlasmaTraps';
 import { Pickup } from '../src/gameplay/Pickups';
+import type { WaveSystem } from '../src/systems/WaveSystem/WaveSystem';
+
+test('survival opening pack starts at three seconds without shifting the first minute boss', () => withWorld('mercenary', world => {
+    const internal = world as unknown as { waveSystem: WaveSystem };
+    const spawn = internal.waveSystem.spawnWave.bind(internal.waveSystem);
+    const appearances: { at: number; types: EnemyType[] }[] = [];
+    internal.waveSystem.spawnWave = occupied => {
+        appearances.push({ at: GameWorld.DURATION_MS - world.remainingMs, types: spawn(occupied).map(enemy => enemy.type) });
+        return []; // Observe the real wave roster without combat changing the timing fixture.
+    };
+    world.update(2999);
+    assert.equal(appearances.length, 0);
+    world.update(1);
+    assert.equal(appearances.length, 1);
+    assert.equal(appearances[0].at, 3000);
+    world.update(2000);
+    assert.equal(appearances.length, 1, 'no duplicate opening pack at five seconds');
+    world.update(4999);
+    assert.equal(appearances.length, 1);
+    world.update(1);
+    assert.equal(appearances[1].at, 10000);
+    for (let at = 15000; at <= 60000; at += 5000) world.update(5000);
+    assert.equal(appearances.length, 12);
+    assert.deepEqual(appearances.filter(wave => wave.types.includes(EnemyType.BOSS)).map(wave => wave.at), [60000]);
+}));
 
 test('telepath hover sends a health bonus through the normal world collection path', () => withWorld('telepath', world => {
     const controller = world.getPlayerController(), player = controller.getPlayer();

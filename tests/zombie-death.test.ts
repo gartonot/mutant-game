@@ -5,7 +5,7 @@ import { EnemyType } from '../src/entities/enemy/EnemyType';
 import { ZombieDeathEffect } from '../src/effects/ZombieDeathEffect';
 
 test('airborne death particles expire while the ground imprint stays unchanged', () => {
-    const effect = new ZombieDeathEffect(100, 100, 25, 0, ['#630c13', '#a3131d', '#c51d26'], () => .5);
+    const effect = new ZombieDeathEffect(100, 100, 25, 0, ['#8b2928', '#ad3430', '#ba4038'], () => .5);
     const calls: unknown[][] = [];
     const ctx = new Proxy({}, { get: (_target, key) => (...args: unknown[]) => calls.push([key, ...args]),
         set: () => true }) as CanvasRenderingContext2D;
@@ -28,7 +28,7 @@ test('death burst preserves lethal shot direction and impact origin, and cannot 
     assert.deepEqual(enemy.deathBurst, burst);
 });
 
-test('burn death remembers the flame direction; reinforced zombies use green blood', () => {
+test('burn death remembers flame direction; fat zombies reserve their body for feeding', () => {
     const enemy = new Enemy(100, 80);
     enemy.receiveDamage(0, -Math.PI / 2, 0);
     enemy.applyEffect({ burnDps: 10, burnMs: 1000 });
@@ -36,9 +36,9 @@ test('burn death remembers the flame direction; reinforced zombies use green blo
     assert.equal(enemy.deathBurst!.angle, -Math.PI / 2);
     const tank = new Enemy(0, 0, EnemyType.TANK);
     tank.receiveDamage(99, 0);
-    assert.deepEqual(enemy.deathBurst!.palette, ['#630c13', '#a3131d', '#c51d26']);
-    assert.deepEqual(tank.deathBurst!.palette, ['#243b17', '#4d702b', '#79a044']);
+    assert.deepEqual(enemy.deathBurst!.palette, ['#8b2928', '#ad3430', '#ba4038']);
+    assert.equal(tank.deathBurst, undefined);
     const boss = new Enemy(0, 0, EnemyType.BOSS);
     boss.receiveDamage(99, 0);
-    assert.deepEqual(boss.deathBurst!.palette, ['#630c13', '#a3131d', '#c51d26']);
+    assert.deepEqual(boss.deathBurst!.palette, ['#8b2928', '#ad3430', '#ba4038']);
 });

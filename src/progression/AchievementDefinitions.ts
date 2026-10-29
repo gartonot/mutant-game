@@ -4,6 +4,12 @@ import type { Achievement } from './AchievementTypes';
 // Pending counters are intentionally not substituted with unrelated gameplay stats.
 export const achievements: Achievement[] = [
     {
+        id: 'sharpshooter', name: 'Стрелок', metric: 'sharpshooterWins', thresholds: [1],
+        requirement: 'Выживи и убей всех боссов с показателем меткости 70% и выше в режиме «Выживание».',
+        bonus: '+1% урона оружием', effect: 'damage', perLevel: .01,
+        icon: 'sharpshooter', tracking: 'active',
+    },
+    {
         id: 'lucky', name: 'Удачливый', metric: 'offscreenKills', goal: 1000,
         requirement: '1000 мутантов погибнут из-за твоей интуиции, даже не появившись в обзоре.',
         bonus: '+1 к очкам жизни за уровень', effect: 'health', perLevel: 1,

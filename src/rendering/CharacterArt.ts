@@ -5,7 +5,7 @@ import { drawAssassin, assassinArtReady } from './AssassinArt';
 import { drawDestroyer, destroyerArtReady } from './DestroyerArt';
 import { drawAdditionalCharacter, drawAdditionalStormCharacter, ensureAdditionalCharacterArt } from './AdditionalCharacterArt';
 export { drawAdditionalGoliathSlam as drawGoliathSlam } from './AdditionalCharacterArt';
-import { DUAL_WEAPON_OFFSET, weaponMount } from './WeaponGeometry';
+import { dualCharacterPose, weaponMount } from './WeaponGeometry';
 import { CHARACTER_RIGS } from './CharacterRig';
 
 import type { CharacterId } from '@/gameplay/ids';
@@ -33,15 +33,15 @@ export function drawStormCharacter(ctx: CanvasRenderingContext2D, x: number, y: 
     if (!drawn) drawSingleCharacter(ctx, 'fanatic', weapon, x, y, angle, 1, recoil);
 }
 
-/** Extra weapon shares the same geometry as its free projectile muzzle. */
+/** The rear-facing twin overlaps the torso, with its own arms, head and weapon. */
 export function drawCharacter(ctx: CanvasRenderingContext2D, character: CharacterId, weapon: WeaponId,
     x: number, y: number, angle = 0, scale = 1, recoil = 0, dualWeapons = false) {
+    if (dualWeapons) {
+        const twin = dualCharacterPose(x, y, angle, scale);
+        // Draw behind the original so their overlapping backs form one silhouette.
+        drawSingleCharacter(ctx, character, weapon, twin.x, twin.y, twin.angle, scale, recoil);
+    }
     drawSingleCharacter(ctx, character, weapon, x, y, angle, scale, recoil);
-    if (!dualWeapons) return;
-    const mount = weaponMount(character, weapon);
-    ctx.save(); ctx.translate(x, y); ctx.rotate(angle); ctx.scale(scale, scale);
-    ctx.translate(mount.x - recoil, mount.y + DUAL_WEAPON_OFFSET); ctx.rotate(mount.angle);
-    drawWeapon(ctx, weapon); ctx.restore();
 }
 
 /** Fixed top-down pose. Body, arms, weapon and head are independent layers. */

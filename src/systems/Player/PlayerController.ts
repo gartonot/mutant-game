@@ -1,5 +1,5 @@
 import { drawPlasmaCharge } from '@/rendering/PlasmaEffects';
-import { DUAL_WEAPON_OFFSET, muzzlePosition } from '@/rendering/WeaponGeometry';
+import { dualCharacterPose, muzzlePosition } from '@/rendering/WeaponGeometry';
 import { InputSystem } from '@/systems/InputSystem.ts';
 import { PlayerInputController } from '@/systems/Player/PlayerInputController.ts';
 import { PlayerMovementController } from '@/systems/Player/PlayerMovementController.ts';
@@ -46,6 +46,7 @@ export class PlayerController implements IGameEntity {
 
     update(deltaMs = 1000 / 60) {
         this.simulationTime += deltaMs;
+        this.player.updateEnemyEffects(deltaMs);
         this.player.updatePickupHealing(deltaMs);
         this.player.updateRegeneration(deltaMs);
         this.player.updateBonuses(deltaMs);
@@ -88,12 +89,23 @@ export class PlayerController implements IGameEntity {
         else if (!p.abilityForm) drawCharacter(ctx, p.character, p.weapon, p.x, p.y, p.angle, 1, p.recoil, this.weaponController.hasDualWeapons);
         ctx.restore();
         this.drawBonuses(ctx);
+        if (p.enemyMoveFactor < 1) {
+            ctx.save();
+            ctx.strokeStyle = p.isEnemyRooted ? '#bdca82' : '#94b83a';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath(); ctx.ellipse(p.x, p.y + 8, p.radius + 8, p.radius * .6, 0, 0, Math.PI * 2); ctx.stroke();
+            ctx.restore();
+        }
         const charging = this.weaponController.selectedWeapon;
         if (charging.id === 'plasma-cannon' && charging.chargeProgress > 0) {
             const m = muzzlePosition(charging.id, p.x, p.y, p.angle, p.character), progress = charging.chargeProgress;
             drawPlasmaCharge(ctx, m.x, m.y, progress);
-            if (this.weaponController.hasDualWeapons) drawPlasmaCharge(ctx,
-                m.x - Math.sin(p.angle) * DUAL_WEAPON_OFFSET, m.y + Math.cos(p.angle) * DUAL_WEAPON_OFFSET, progress);
+            if (this.weaponController.hasDualWeapons) {
+                const second = dualCharacterPose(p.x, p.y, p.angle);
+                const rearMuzzle = muzzlePosition(charging.id, second.x, second.y, second.angle, p.character);
+                drawPlasmaCharge(ctx, rearMuzzle.x, rearMuzzle.y, progress);
+            }
         }
     }
 

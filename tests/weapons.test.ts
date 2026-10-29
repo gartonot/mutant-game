@@ -72,8 +72,8 @@ test('burn damages over time without multiplying on reapplication', () => {
     const e = new Enemy(0, 0); e.setTarget(100, 0);
     const effect = { burnDps: 1.5, burnMs: 1500 };
     e.applyEffect(effect); e.applyEffect(effect);
-    e.update(500); assert.equal(e.isDead, false); assert.equal(e.x, 1.35);
-    e.update(500); assert.equal(e.isDead, false); assert.equal(e.x, 2.7);
+    e.update(500); assert.equal(e.isDead, false); assert.equal(e.x, e.speed * 1.35);
+    e.update(500); assert.equal(e.isDead, false); assert.equal(e.x, e.speed * 2.7);
     e.update(500); assert.equal(e.isDead, true);
 });
 
@@ -95,7 +95,7 @@ test('burn boosts each enemy own speed by thirty-five percent without stacking a
 
 test('slow expires and restores normal movement', () => {
     const survivor = new Enemy(0, 0); survivor.setTarget(100, 0); survivor.applyEffect({ slowMs: 100, slowFactor: .5 });
-    survivor.update(100); survivor.update(100); assert.equal(survivor.x, 1.5);
+    survivor.update(100); survivor.update(100); assert.equal(survivor.x, survivor.speed * 1.5);
 });
 
 test('ignition cancels ice immediately and expired fire does not restore the old slow', () => {
@@ -128,11 +128,11 @@ test('ice extinguishes fire immediately and the old burn never resumes', () => {
     enemy.applyEffect({ slowMs: 200, slowFactor: .5 });
     enemy.update(100);
     assert.equal(enemy.isDead, false, 'cooling must stop burn damage on the next update');
-    assert.ok(Math.abs(enemy.x - 1.85) < 1e-8, 'ice immediately removes the burn speed boost');
+    assert.ok(Math.abs(enemy.x - enemy.speed * 1.85) < 1e-8, 'ice immediately removes the burn speed boost');
     enemy.update(100);
     enemy.update(100);
     assert.equal(enemy.isDead, false, 'the replaced burn must not return after ice expires');
-    assert.ok(Math.abs(enemy.x - 3.35) < 1e-8, 'the replaced speed boost must not return after ice expires');
+    assert.ok(Math.abs(enemy.x - enemy.speed * 3.35) < 1e-8, 'the replaced speed boost must not return after ice expires');
 
     enemy.applyEffect({ burnMs: 100, burnDps: 1 });
     enemy.update(100);
@@ -200,7 +200,7 @@ test('skull explosion creates eight damaging fragments once; plasma blast slows 
     const enemy = new Enemy(plasma.x, plasma.y, EnemyType.BOSS);
     collisions.checkBulletEnemyCollisions(fixture([plasma]).controller, [enemy]);
     const oldX = enemy.x; enemy.setTarget(oldX + 100, enemy.y); enemy.update();
-    assert.ok(Math.abs(enemy.x - oldX - .5) < 1e-8);
+    assert.ok(Math.abs(enemy.x - oldX - enemy.speed * .5) < 1e-8);
 });
 
 test('skull detonation notifies its variant exactly once when fragments are released', () => {

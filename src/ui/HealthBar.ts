@@ -8,7 +8,7 @@ export class HealthBar {
     private animatedHpTarget: number;
     private lastUpdateTime: number = 0;
     private displayedHp: number;
-    private remainingMs = 240_000;
+    private remainingMs = 360_000;
 
     constructor(maxHp: number) {
         this.maxHp = maxHp;

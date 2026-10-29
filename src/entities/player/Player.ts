@@ -19,6 +19,25 @@ export class Player {
     abilityForm: 'mutant' | 'storm' | null = null;
     abilityPoseProgress: number | null = null;
     abilityPoseAngle = 0;
+    private enemySlowMs = 0;
+    private enemySlowFactor = 1;
+    private enemyRootMs = 0;
+    get enemyMoveFactor(): number { return this.enemyRootMs > 0 ? 0 : this.enemySlowMs > 0 ? this.enemySlowFactor : 1; }
+    get isEnemyRooted(): boolean { return this.enemyRootMs > 0; }
+    applyEnemySlow(durationMs: number, factor = .6): void {
+        if (!Number.isFinite(durationMs) || durationMs <= 0 || !Number.isFinite(factor)) return;
+        this.enemySlowMs = Math.max(this.enemySlowMs, durationMs);
+        this.enemySlowFactor = Math.min(this.enemySlowFactor, Math.max(.2, Math.min(1, factor)));
+    }
+    applyEnemyRoot(durationMs: number): void {
+        if (Number.isFinite(durationMs) && durationMs > 0) this.enemyRootMs = Math.max(this.enemyRootMs, durationMs);
+    }
+    updateEnemyEffects(deltaMs: number): void {
+        if (!Number.isFinite(deltaMs) || deltaMs <= 0) return;
+        this.enemySlowMs = Math.max(0, this.enemySlowMs - deltaMs);
+        this.enemyRootMs = Math.max(0, this.enemyRootMs - deltaMs);
+        if (this.enemySlowMs === 0) this.enemySlowFactor = 1;
+    }
 
     // Здоровье игрока
     maxHp = 100;

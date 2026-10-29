@@ -8,6 +8,7 @@ export const metricDefaults = {
     bonusKills: 0,
     zombieKills: 0,
     equipment: 0,
+    sharpshooterWins: 0,
 };
 export type Metrics = typeof metricDefaults;
 export type Totals = Metrics & { games: number; bestSeconds: number };

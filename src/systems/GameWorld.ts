@@ -21,6 +21,12 @@ import { ArtilleryGroundMark } from '@/effects/ArtilleryGroundMark';
 import { ZombieDeathEffect } from '@/effects/ZombieDeathEffect';
 import { MuzzleFlashEffect } from '@/effects/MuzzleFlashEffect.ts';
 import { Enemy } from '@/entities/enemy/Enemy';
+import { isBossType } from '@/entities/enemy/EnemyType';
+import { BOSS_SEQUENCE } from '@/systems/WaveSystem/WaveConfig';
+import { OrdinaryEnemyMechanics } from '@/gameplay/OrdinaryEnemyMechanics';
+import { EnemyArrivalQueue } from '@/gameplay/EnemyArrivalQueue';
+import { BossEncounter } from '@/gameplay/BossEncounter';
+import { constrainPlayerToArena } from '@/systems/spatial/playerBounds';
 import { CollisionSystem } from '@/systems/CollisionSystem';
 import type { PlayerController } from '@/systems/Player/PlayerController';
 import { EnemySeparation } from '@/systems/spatial/EnemySeparation';
@@ -37,11 +43,14 @@ import type { WeaponId } from '@/gameplay/ids';
 import { DEFAULT_UNLOCKED_GOLD_PICKUPS, type GoldPickupKind } from '@/gameplay/PickupVariants';
 
 export class GameWorld implements IGameEntity {
-    public static readonly DURATION_MS = 4 * 60 * 1000;
+    public static readonly DURATION_MS = 6 * 60 * 1000;
     public get remainingMs() { return Math.max(0, GameWorld.DURATION_MS - this.elapsed); }
     public get isVictory() { return this.remainingMs === 0 && this.controller.getPlayer().currentHp > 0; }
     private waveSystem: WaveSystem;
+    private readonly enemyArrivals: EnemyArrivalQueue;
     private enemies: Enemy[] = [];
+    private readonly ordinaryEnemies = new OrdinaryEnemyMechanics();
+    private readonly bossEncounter: BossEncounter;
     private controller: PlayerController;
     private uiRenderer: UIRenderer;
     private collisionSystem = new CollisionSystem();
@@ -98,10 +107,10 @@ export class GameWorld implements IGameEntity {
         }
         draw(this.bloodLayer.getContext('2d')!);
     }
-    private waveElapsed = 0;
     private separation = new EnemySeparation();
     private elapsed = 0;
     private wavesStarted = 0;
+    private bossesKilled = 0;
     private lastVisiblePlayer = { x: 0, y: 0 };
 
     constructor(controller: PlayerController, private readonly random = Math.random,
@@ -110,6 +119,8 @@ export class GameWorld implements IGameEntity {
         consumables: readonly ConsumableSelection[] = [], consumableSlotsUnlocked?: number,
         waveRandom: () => number = random) {
         this.waveSystem = new WaveSystem({ random: waveRandom });
+        this.enemyArrivals = new EnemyArrivalQueue(waveRandom);
+        this.bossEncounter = new BossEncounter(waveRandom);
         this.controller = controller;
         this.lastVisiblePlayer = { x: controller.getPlayer().x, y: controller.getPlayer().y };
         warmBloodDecalWorkers();
@@ -135,17 +146,24 @@ export class GameWorld implements IGameEntity {
             this.spawnArtilleryImpact(burst.x, burst.y);
             return false;
         });
-        this.waveElapsed += deltaMs;
         this.elapsed += deltaMs;
         if (this.remainingMs === 0) {
             this.uiRenderer.update(0);
             return;
         }
-        if (this.waveElapsed >= 5000) {
-            this.enemies.push(...this.waveSystem.spawnWave());
+        // Bring only the opening pack forward; later packs and minute bosses keep their schedule.
+        const nextWaveAt = this.wavesStarted === 0 ? 3000 : (this.wavesStarted + 1) * 5000;
+        if (this.elapsed >= nextWaveAt) {
+            const spawned = this.waveSystem.spawnWave(this.bossEncounter.occupied);
+            for (const enemy of spawned) if (isBossType(enemy.type)) {
+                this.bossEncounter.registerBoss(enemy);
+                this.enemies.push(enemy);
+            }
+            this.enemyArrivals.schedule(spawned.filter(enemy => !isBossType(enemy.type)),
+                this.elapsed, this.wavesStarted === 0 ? 6000 : 4500);
             this.wavesStarted++;
-            this.waveElapsed -= 5000;
         }
+        this.enemies.push(...this.enemyArrivals.release(this.elapsed));
         // Input and projectile motion precede collision detection in the same tick.
         this.controller.update(deltaMs);
         this.extendedAbilities.update(deltaMs);
@@ -155,11 +173,21 @@ export class GameWorld implements IGameEntity {
         const player = this.controller.getPlayer();
         const arena = getArenaSize();
         if (!player.abilityInvisible) this.lastVisiblePlayer = { x: player.x, y: player.y };
+        for (const enemy of this.enemies) enemy.setTarget(this.lastVisiblePlayer.x, this.lastVisiblePlayer.y);
+        this.ordinaryEnemies.update(deltaMs, this.enemies, player, {
+            applySlow: (duration, factor) => player.applyEnemySlow(duration, factor),
+        });
+        this.bossEncounter.update(deltaMs, player, arena, {
+            damagePlayer: amount => player.takeDamage(amount),
+            pullPlayer: (x, y, lockMs) => {
+                player.x = x; player.y = y; player.applyEnemyRoot(lockMs);
+                constrainPlayerToArena(player, arena.width, arena.height);
+            },
+        });
         for (const enemy of this.enemies) {
-            enemy.setTarget(this.lastVisiblePlayer.x, this.lastVisiblePlayer.y);
             enemy.update(deltaMs);
             if (enemy.isDead) continue;
-            if (!enemy.isFeared && !player.abilityInvisible) resolvePlayerContact(player, enemy, this.controller.isMoving, this.elapsed, window.innerWidth, window.innerHeight);
+            if (!enemy.contactDisabled && !enemy.isFeared && !player.abilityInvisible) resolvePlayerContact(player, enemy, this.controller.isMoving, this.elapsed, window.innerWidth, window.innerHeight);
         }
         this.collisionSystem.checkBulletEnemyCollisions(this.controller, this.enemies,
             (x, y, radius, plasma, variant) => {
@@ -290,7 +318,8 @@ export class GameWorld implements IGameEntity {
         const player = this.controller.getPlayer();
         compact(this.enemies, enemy => {
             if (!enemy.isDead) return true;
-            const burst = enemy.deathBurst;
+            this.ordinaryEnemies.onDeath(enemy);
+            const burst = isBossType(enemy.type) ? undefined : enemy.deathBurst;
             if (burst) {
                 // Only airborne particles are capped; every stain persists in the map layer.
                 if (this.deathEffects.length >= 100) this.deathEffects.shift()?.dispose();
@@ -299,6 +328,7 @@ export class GameWorld implements IGameEntity {
                 this.deathEffects.push(effect);
             }
             this.controller.registerKill();
+            if (isBossType(enemy.type)) this.bossesKilled++;
             const drop = rollPickupDrop(this.random, this.unlockedGoldPickups, this.controller.acquiredAmmoCategories);
             const weaponId = rollWeaponDrop(this.random, this.unlockedWeapons, this.controller.acquiredAmmoCategories);
             const origin = enemy.deathBurst ?? enemy;
@@ -322,6 +352,8 @@ export class GameWorld implements IGameEntity {
         if (this.bloodLayer) ctx.drawImage(this.bloodLayer, 0, 0);
         this.artilleryMarks.forEach(mark => mark.draw(ctx));
         this.extendedAbilities.drawGroundEffects(ctx);
+        this.ordinaryEnemies.drawGround(ctx);
+        this.bossEncounter.drawGround(ctx);
         const acquiredCategories = this.controller.acquiredAmmoCategories;
         this.pickups.forEach(pickup => {
             // Read current inventory: another drop in this category may have been
@@ -334,6 +366,8 @@ export class GameWorld implements IGameEntity {
         this.fearWaves.forEach(effect => effect.draw(ctx));
         // Отрисовываем врагов
         this.enemies.forEach(enemy => enemy.draw(ctx));
+        this.ordinaryEnemies.draw(ctx);
+        this.bossEncounter.drawWorld(ctx);
         this.deathEffects.forEach(effect => effect.draw(ctx));
         this.explosions.forEach(effect => effect.draw(ctx));
         this.pickupWaves.forEach(effect => effect.draw(ctx));
@@ -350,6 +384,7 @@ export class GameWorld implements IGameEntity {
         this.controller.drawHUD(ctx);
         drawConsumableHUD(ctx, this.consumables.slots, this.consumables.unlockedSlots);
         drawAbilityHUD(ctx, this.abilityState);
+        this.bossEncounter.drawHUD(ctx, window.innerWidth);
     }
 
     public addMuzzleFlash(x: number, y: number, angle: number) {
@@ -366,6 +401,8 @@ export class GameWorld implements IGameEntity {
         this.artilleryMarks = [];
         this.fearWaves = [];
         this.extendedAbilities.dispose();
+        this.ordinaryEnemies.clear();
+        this.bossEncounter.reset();
         this.groundStamps.dispose();
         for (const effect of this.deathEffects) effect.dispose();
         this.deathEffects = [];
@@ -374,8 +411,11 @@ export class GameWorld implements IGameEntity {
     public resume() { /* Simulation clocks advance only during update. */ }
 
     public getRunStats() {
+        const stats = this.controller.getStats();
         return {
-            ...this.controller.getStats(),
+            ...stats,
+            sharpshooterWins: this.isVictory && stats.shots > 0 && stats.preciseAccuracy >= 70
+                && this.bossesKilled >= BOSS_SEQUENCE.length ? 1 : 0,
             seconds: this.elapsed / 1000,
             waves: Math.max(0, this.wavesStarted - 1),
             damage: this.controller.getPlayer().damageTaken,

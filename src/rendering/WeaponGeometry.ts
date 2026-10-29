@@ -81,5 +81,7 @@ export function muzzlePosition(id: WeaponId, x: number, y: number, angle: number
         y: y + sin * forward + cos * lateral };
 }
 
-/** Lateral separation for the temporary second weapon, in character coordinates. */
-export const DUAL_WEAPON_OFFSET = -26;
+/** The temporary clone overlaps the character's back and faces away from their aim. */
+export function dualCharacterPose(x: number, y: number, angle: number, scale = 1) {
+    return { x: x - Math.cos(angle) * 12 * scale, y: y - Math.sin(angle) * 12 * scale, angle: angle + Math.PI };
+}

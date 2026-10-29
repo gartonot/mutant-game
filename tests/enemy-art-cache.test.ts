@@ -57,17 +57,20 @@ test('enemy tint preparation retries failures, shares work and keeps allocation 
             assert.equal(canvases.length, 0);
             const first = enemyArtReady();
             assert.equal(enemyArtReady(), first);
-            assert.deepEqual(await first, [false, true, true, true, true, true]);
-            assert.equal(imageCount, 6);
-            assert.equal(decodeCount, 6);
-            assert.deepEqual(await enemyArtReady(), [true, true, true, true, true, true]);
-            assert.equal(imageCount, 6, 'retry reuses decoded source images');
-            assert.equal(canvases.length, 22, 'twelve masks, nine fallback variants and one failed allocation');
+            const result = await first;
+            assert.equal(result.length, 18, '15 enemy types, second fat color and two headless corpses');
+            assert.deepEqual(result, [false, ...Array(17).fill(true)]);
+            assert.equal(imageCount, 18);
+            assert.equal(decodeCount, 18);
+            assert.deepEqual(await enemyArtReady(), Array(18).fill(true));
+            assert.equal(imageCount, 18, 'retry reuses decoded source images');
+            assert.equal(canvases.length, 40, '36 status masks, three palettes and one failed allocation');
         });
-        await t.test('all twelve masks retain native crop pixels and filter padding before the first draw', () => {
-            const masks = canvases.filter(canvas => canvas.context && canvas.width !== 128);
-            assert.deepEqual(masks.map(c => [c.width, c.height]).sort(),
-                [[738, 695], [738, 695], [823, 782], [823, 782], [836, 786], [836, 786], [1214, 984], [1214, 984], [1221, 825], [1221, 825], [1167, 1124], [1167, 1124]].sort());
+        await t.test('all masks retain native crop pixels and filter padding before the first draw', () => {
+            const masks = canvases.filter(canvas => canvas.context?.fills.length);
+            assert.equal(masks.length, 36);
+            assert.equal(masks.filter(c => c.width === 738 && c.height === 695).length, 8, 'four zombie palettes share the original crop');
+            assert.equal(masks.filter(c => c.width === 412).length, 28, 'other sprites use 384px occupied width with padding');
             for (const canvas of masks) {
                 const ctx = canvas.context!;
                 assert.equal(ctx.draws.length, 1);
@@ -75,8 +78,8 @@ test('enemy tint preparation retries failures, shares work and keeps allocation 
                 assert.equal(ctx.globalCompositeOperation, 'source-atop');
                 assert.deepEqual(ctx.fills, [[0, 0, canvas.width, canvas.height]]);
             }
-            assert.equal(masks.filter(c => c.context!.fillStyle === 'rgba(100, 205, 255, 0.52)').length, 6);
-            assert.equal(masks.filter(c => c.context!.fillStyle === 'rgba(160, 20, 48, 0.52)').length, 6);
+            assert.equal(masks.filter(c => c.context!.fillStyle === 'rgba(100, 205, 255, 0.52)').length, 18);
+            assert.equal(masks.filter(c => c.context!.fillStyle === 'rgba(160, 20, 48, 0.52)').length, 18);
         });
         await t.test('repeated preparation and 600 effect draws reuse masks without canvas allocation', async () => {
             const count = canvases.length;
@@ -98,14 +101,26 @@ test('enemy tint preparation retries failures, shares work and keeps allocation 
             const count = canvases.length;
             const context = makeContext();
             for (let repeat = 0; repeat < 20; repeat++) {
-                for (const type of [EnemyType.BUG, EnemyType.RUNNER, EnemyType.ARMORED]) {
+                for (const type of [EnemyType.GRUNT, EnemyType.TANK, EnemyType.BUG, EnemyType.RUNNER, EnemyType.ARMORED,
+                    EnemyType.SLOWER, EnemyType.CYAN, EnemyType.LEECH, EnemyType.BEETLE, EnemyType.SPITTER, EnemyType.JUMPER,
+                    EnemyType.BOSS, EnemyType.STEROID, EnemyType.TENTACLE, EnemyType.WORM]) {
                     for (const tint of [undefined, 'ice', 'fire']) {
                         assert.equal(drawEnemyArt(context, type, 10, 20, 25, 0, 0, tint), true);
                     }
                 }
             }
             assert.equal(canvases.length, count);
-            assert.equal(new Set(context.draws.map(draw => draw[0])).size, 9);
+            assert.equal(new Set(context.draws.map(draw => draw[0])).size, 45);
+        });
+        await t.test('fat color is selected by a stable cosmetic variant, independent of movement', () => {
+            const context = makeContext();
+            const count = canvases.length;
+            drawEnemyArt(context, EnemyType.TANK, 10, 20, 25, 0, 0, undefined, 1);
+            drawEnemyArt(context, EnemyType.TANK, 110, 220, 25, 1, 2, undefined, 1);
+            drawEnemyArt(context, EnemyType.TANK, 10, 20, 25, 0, 0, undefined, 0);
+            assert.equal(context.draws[0][0], context.draws[1][0]);
+            assert.notEqual(context.draws[0][0], context.draws[2][0]);
+            assert.equal(canvases.length, count);
         });
     } finally {
         for (const [key, descriptor] of originals) {

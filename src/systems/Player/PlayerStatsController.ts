@@ -71,6 +71,7 @@ export class PlayerStatsController {
     }
 
     public snapshot() {
-        return { kills: this.killCount, shots: this.totalShotsFired, accuracy: this.getAccuracy() };
+        return { kills: this.killCount, shots: this.totalShotsFired, accuracy: this.getAccuracy(),
+            preciseAccuracy: this.totalResolvedShots > 0 ? this.totalHits / this.totalResolvedShots * 100 : 0 };
     }
 }

@@ -70,6 +70,7 @@ progress::-moz-progress-bar { background: linear-gradient(90deg, #739400, #c6cf1
 .award-icon[data-award-icon="zombie"] { --award-icon: 5; }
 .award-icon[data-award-icon="hunter"] { --award-icon: 6; }
 .award-icon[data-award-icon="collector"] { --award-icon: 7; }
+.award-icon[data-award-icon="sharpshooter"]::before { background-image: url('../assets/award-sharpshooter.svg'); background-size: 100% 100%; background-position: center; }
 
 
 .award-tile .award-icon { transition: filter 240ms ease, transform 240ms ease, box-shadow 240ms ease; }

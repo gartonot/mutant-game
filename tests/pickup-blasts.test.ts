@@ -25,8 +25,8 @@ test('ice blast damages once and slows living enemies within its smaller radius'
     assert.equal(enemy.isDead, false);
     enemy.setTarget(1000, 0); outside.setTarget(1000, 0);
     enemy.update(4000); outside.update(4000);
-    assert.equal(enemy.x, 210.5); assert.equal(outside.x, 211.01);
-    enemy.update(1); assert.equal(enemy.x, 211.5, 'slow expires on active simulation time');
+    assert.equal(enemy.x, 210 + enemy.speed * .5); assert.equal(outside.x, 210.01 + outside.speed);
+    enemy.update(1); assert.ok(Math.abs(enemy.x - (210 + enemy.speed * 1.5)) < 1e-8, 'slow expires on active simulation time');
     enemy.receiveDamage(1); assert.equal(enemy.isDead, true, 'ice initially removed exactly 1 HP');
 });
 
@@ -35,9 +35,9 @@ test('gold blast tiers increase power but retain the requested fixed radii', () 
     assert.deepEqual(getPickupBlast('fireBlast', 'gold'), { radius: 315, damage: 12, slowFactor: 1, slowMs: 0 });
     const iceBoss = new Enemy(0, 0, EnemyType.BOSS);
     applyPickupBlast('iceBlast', 'gold', 0, 0, [iceBoss]);
-    iceBoss.setTarget(1000, 0); iceBoss.update(7999); assert.equal(iceBoss.x, .25);
-    iceBoss.update(1); assert.equal(iceBoss.x, .5);
-    iceBoss.update(1); assert.equal(iceBoss.x, 1.5);
+    iceBoss.setTarget(1000, 0); iceBoss.update(7999); assert.equal(iceBoss.x, iceBoss.speed * .25);
+    iceBoss.update(1); assert.equal(iceBoss.x, iceBoss.speed * .5);
+    iceBoss.update(1); assert.equal(iceBoss.x, iceBoss.speed * 1.5);
     iceBoss.receiveDamage(18); assert.equal(iceBoss.isDead, true);
     for (const [tier, remainder] of [['silver', 14], ['gold', 8]] as const) {
         const boss = new Enemy(0, 0, EnemyType.BOSS);

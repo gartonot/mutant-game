@@ -30,7 +30,7 @@ export class CollisionSystem {
                     (segmentHit(bullet.previousX, bullet.previousY, bullet.x, bullet.y, a.x, a.y, a.radius + bullet.radius) ?? Infinity) -
                     (segmentHit(bullet.previousX, bullet.previousY, bullet.x, bullet.y, b.x, b.y, b.radius + bullet.radius) ?? Infinity));
                 for (const enemy of this.candidates) {
-                    if (enemy.isDead || ((bullet instanceof Flame || bullet instanceof Beam || bullet instanceof Disc) && bullet.touched.has(enemy))) continue;
+                    if (enemy.isDead || enemy.targetable === false || ((bullet instanceof Flame || bullet instanceof Beam || bullet instanceof Disc) && bullet.touched.has(enemy))) continue;
                     this.checks++;
                     const hit = pulse ? pulse.intersects(enemy.x, enemy.y, enemy.radius) : beam ? beam.intersects(enemy.x, enemy.y, enemy.radius + bullet.radius) :
                         segmentHit(bullet.previousX, bullet.previousY, bullet.x, bullet.y, enemy.x, enemy.y, enemy.radius + bullet.radius) !== null;
@@ -47,7 +47,7 @@ export class CollisionSystem {
             let target: Enemy | undefined;
             let first = Infinity;
             for (const enemy of this.candidates) {
-                if (enemy.isDead) continue;
+                if (enemy.isDead || enemy.targetable === false) continue;
                 this.checks++;
                 const t = segmentHit(bullet.previousX, bullet.previousY, bullet.x, bullet.y, enemy.x, enemy.y, enemy.radius + bullet.radius);
                 if (t !== null && t < first) { first = t; target = enemy; }
@@ -63,7 +63,7 @@ export class CollisionSystem {
                 this.grid.query(bullet.x - radius, bullet.y - radius, bullet.x + radius, bullet.y + radius, this.candidates);
                 let hit = false;
                 for (const enemy of this.candidates) {
-                    if (enemy.isDead) continue;
+                    if (enemy.isDead || enemy.targetable === false) continue;
                     this.checks++;
                     const x = enemy.x - bullet.x, y = enemy.y - bullet.y;
                     const squared = x * x + y * y;
@@ -96,7 +96,7 @@ export class CollisionSystem {
                         this.grid.query(origin.x - range, origin.y - range, origin.x + range, origin.y + range, this.candidates);
                         let next: Enemy | undefined, distance = range * range;
                         for (const enemy of this.candidates) {
-                            if (enemy.isDead || touched.has(enemy)) continue;
+                            if (enemy.isDead || enemy.targetable === false || touched.has(enemy)) continue;
                             this.checks++;
                             const squared = (enemy.x - origin.x) ** 2 + (enemy.y - origin.y) ** 2;
                             if (squared <= distance) { next = enemy; distance = squared; }

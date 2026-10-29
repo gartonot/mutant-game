@@ -2,7 +2,7 @@ import type { Enemy } from '@/entities/enemy/Enemy';
 
 import { SpatialGrid } from './SpatialGrid';
 
-interface Body { x: number; y: number; radius: number; index: number; fixed: boolean; startX: number; startY: number }
+interface Body { x: number; y: number; radius: number; index: number; fixed: boolean; hidden: boolean; startX: number; startY: number }
 /** Relax contacts from snapshots, averaging pressure instead of summing crowd impulses. */
 export class EnemySeparation {
     private grid = new SpatialGrid<Body>(40);
@@ -12,6 +12,7 @@ export class EnemySeparation {
     private contacts = new Uint32Array(0);
     checks = 0;
     private visit = (a: Body, b: Body): void => {
+        if (a.hidden || b.hidden) return;
         this.checks++;
         const x = b.x - a.x, y = b.y - a.y, radius = a.radius + b.radius;
         const squared = x * x + y * y;
@@ -44,9 +45,10 @@ export class EnemySeparation {
             this.contacts.fill(0, 0, enemies.length);
             for (let i = 0; i < enemies.length; i++) {
                 const enemy = enemies[i];
-                const body = this.bodies[i] ?? (this.bodies[i] = { x: 0, y: 0, radius: 0, index: i, fixed: false, startX: 0, startY: 0 });
-                body.x = enemy.x; body.y = enemy.y; body.radius = enemy.radius;
-                body.fixed = enemy.speed === 0;
+                const body = this.bodies[i] ?? (this.bodies[i] = { x: 0, y: 0, radius: 0, index: i, fixed: false, hidden: false, startX: 0, startY: 0 });
+                body.x = enemy.x; body.y = enemy.y; body.radius = enemy.targetable === false ? 0 : enemy.radius;
+                body.fixed = enemy.targetable === false || enemy.speed === 0 || enemy.movementLocked;
+                body.hidden = enemy.targetable === false;
                 if (iteration === 0) { body.startX = enemy.x; body.startY = enemy.y; }
             }
             this.bodies.length = enemies.length;

@@ -10,6 +10,21 @@ export class Enemy implements IGameEntity {
     radius = 15;
     speed = 1;
     color = '';
+    movementLocked = false;
+    contactDisabled = false;
+    invulnerable = false;
+    targetable = true;
+    renderScale = 1;
+    visualLift = 0;
+    readonly visualVariant: number;
+    get currentHealth(): number { return Math.max(0, this.health); }
+    private maxHealthValue = 0;
+    get maxHealth(): number { return this.maxHealthValue; }
+    setMaxHealth(value: number): void {
+        if (!Number.isFinite(value) || value <= 0 || this.isDead) return;
+        this.maxHealthValue = value;
+        this.health = value;
+    }
     private targetX = 0;
     private targetY = 0;
     private config: IEnemyConfig;
@@ -18,15 +33,17 @@ export class Enemy implements IGameEntity {
     private facing = 0;
     private gait = 0;
     private zigzagPhase = 0;
+    private readonly bugRoute: number;
+    private readonly bugWeavePeriod: number;
     private statusAngle = 0;
     private lastHitAngle?: number;
     private deathOrigin?: { x: number; y: number; angle: number };
 
     get deathBurst() {
-        if (!this.deathOrigin) return undefined;
+        if (!this.deathOrigin || [EnemyType.BUG, EnemyType.TANK, EnemyType.LEECH, EnemyType.BEETLE, EnemyType.JUMPER].includes(this.type)) return undefined;
         const palette = this.type === EnemyType.TANK || this.type === EnemyType.BUG
             ? ['#243b17', '#4d702b', '#79a044']
-            : ['#630c13', '#a3131d', '#c51d26'];
+            : ['#8b2928', '#ad3430', '#ba4038'];
         return { ...this.deathOrigin, radius: this.radius, palette };
     }
 
@@ -35,14 +52,20 @@ export class Enemy implements IGameEntity {
     private lastHitTime: number = -Infinity; // время последнего удара
     private hitCooldown: number = 500; // задержка между ударами вргов
 
-    constructor(x: number, y: number, private readonly type: EnemyType = EnemyType.GRUNT) {
+    constructor(x: number, y: number, public readonly type: EnemyType = EnemyType.GRUNT) {
         this.x = x;
         this.y = y;
+        // Stable appearance without consuming gameplay RNG or changing during motion.
+        this.visualVariant = Math.sin(x * 12.9898 + y * 78.233) >= 0 ? 0 : 1;
         this.gait = (x * .31 + y * .17) % (Math.PI * 2);
         this.zigzagPhase = this.gait;
+        const routeSeed = Math.sin(x * 41.73 + y * 19.37) * 43758.5453;
+        const route = routeSeed - Math.floor(routeSeed);
+        this.bugRoute = route < 1 / 3 ? 0 : route < 2 / 3 ? -1 : 1;
+        this.bugWeavePeriod = 1600 + route * 500;
 
         this.config = ENEMY_CONFIGS[type];
-        this.health = this.config.maxHealth;
+        this.health = this.maxHealthValue = this.config.maxHealth;
 
         this.radius = this.config.radius;
         this.speed = this.config.speed;
@@ -69,6 +92,7 @@ export class Enemy implements IGameEntity {
     private fearRecoveryMs = 0;
     get isFeared(): boolean { return this.fearMs > 0; }
     applyFear(durationMs: number, sourceX = this.targetX, sourceY = this.targetY): void {
+        if (!this.targetable) return;
         if (!Number.isFinite(durationMs) || durationMs <= 0) return;
         if (!this.isFeared) {
             this.fearElapsed = 0;
@@ -127,6 +151,7 @@ export class Enemy implements IGameEntity {
             ? Math.max(margin, Math.min(height - margin, nextY)) : nextY;
     }
     applyEffect(effect?: HitEffect): void {
+        if (!this.targetable) return;
         if (!effect) return;
         if (effect.acidMs) { this.acidMs = Math.max(this.acidMs, effect.acidMs); this.acidDps = Math.max(this.acidDps, effect.acidDps ?? 0); }
         if (effect.burnMs) {
@@ -156,17 +181,35 @@ export class Enemy implements IGameEntity {
         this.slowMs = Math.max(0, this.slowMs - deltaMs);
         if (!this.slowMs) this.slowFactor = 1;
         if (this.isDead) return;
+        if (this.movementLocked) return;
         if (feared) { this.flee(deltaMs, movement); return; }
         const dx = this.targetX - this.x, dy = this.targetY - this.y;
         const length = Math.hypot(dx, dy);
         if (length > 0) {
             // Individual, simulation-timed weaving; ease out near the target to avoid orbiting it.
-            if (this.type === EnemyType.BUG) {
-                this.zigzagPhase = (this.zigzagPhase + deltaMs * Math.PI * 2 / 700) % (Math.PI * 2);
+            if ((this.type === EnemyType.BUG || this.type === EnemyType.LEECH)) {
+                // Longer legs widen the bug's weave without changing movement speed.
+                const weavePeriodMs = this.type === EnemyType.BUG ? this.bugWeavePeriod : 700;
+                this.zigzagPhase = (this.zigzagPhase + deltaMs * Math.PI * 2 / weavePeriodMs) % (Math.PI * 2);
             }
-            const weave = this.type === EnemyType.BUG
-                ? Math.sin(this.zigzagPhase) * .65 * Math.min(1, length / 60) : 0;
-            const direction = Math.atan2(dy, dx) + weave;
+            const weave = (this.type === EnemyType.BUG || this.type === EnemyType.LEECH)
+                ? Math.sin(this.zigzagPhase) * (this.type === EnemyType.BUG ? 1.05 : .65) * Math.min(1, length / 100) : 0;
+            // Some bugs rush; others sweep around either flank. Collapse the offset
+            // near contact so they attack instead of circling the player forever.
+            const flank = this.type === EnemyType.BUG
+                ? this.bugRoute * .8 * Math.max(0, Math.min(1, (length - 80) / 180)) : 0;
+            let direction = Math.atan2(dy, dx) + Math.max(-1.4, Math.min(1.4, weave + flank));
+            if (this.type === EnemyType.BUG && typeof window !== 'undefined') {
+                const width = window.innerWidth, height = window.innerHeight;
+                const margin = this.radius + 8;
+                // Bend back into the arena, without clamping offscreen arrivals.
+                if (this.x >= margin && this.x <= width - margin && this.y >= margin && this.y <= height - margin) {
+                    const pressure = (d: number) => Math.max(0, 1 - d / 90);
+                    const wallX = pressure(this.x - margin) - pressure(width - margin - this.x);
+                    const wallY = pressure(this.y - margin) - pressure(height - margin - this.y);
+                    direction = Math.atan2(Math.sin(direction) + wallY * 2, Math.cos(direction) + wallX * 2);
+                }
+            }
             this.facing = this.fearRecoveryMs > 0
                 ? this.turnTowards(this.facing, direction, deltaMs * .012) : direction;
             this.fearRecoveryMs = Math.max(0, this.fearRecoveryMs - deltaMs);
@@ -178,8 +221,13 @@ export class Enemy implements IGameEntity {
 
     draw(ctx: CanvasRenderingContext2D) {
         ctx.save();
+        if (this.renderScale !== 1 || this.visualLift !== 0) {
+            ctx.translate(this.x, this.y);
+            ctx.scale(this.renderScale, this.renderScale);
+            ctx.translate(-this.x, -this.y - this.visualLift);
+        }
         const tint = this.burnMs > 0 ? 'fire' : this.slowMs > 0 ? 'ice' : undefined;
-        if (!drawEnemyArt(ctx, this.type, this.x, this.y, this.radius, this.facing, this.gait, tint)) {
+        if (!drawEnemyArt(ctx, this.type, this.x, this.y, this.radius, this.facing, this.gait, tint, this.visualVariant)) {
             ctx.fillStyle = this.color;
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
@@ -234,6 +282,10 @@ export class Enemy implements IGameEntity {
         ctx.restore();
     }
 
+    faceTarget(): void {
+        if (this.targetX !== this.x || this.targetY !== this.y) this.facing = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+    }
+
     setTarget(x: number, y: number) {
         this.targetX = x;
         this.targetY = y;
@@ -248,7 +300,7 @@ export class Enemy implements IGameEntity {
 
     // Получение урона
     public receiveDamage(amount: number, hitAngle?: number, pushBackDistance: number = 10) {
-        if (this.isDead || !Number.isFinite(amount) || amount < 0) return;
+        if (this.isDead || this.invulnerable || !Number.isFinite(amount) || amount < 0) return;
         if (hitAngle !== undefined && Number.isFinite(hitAngle)) this.lastHitAngle = hitAngle;
         const configuredReduction = this.config.damageReduction ?? 0;
         const reduction = Number.isFinite(configuredReduction) ? Math.max(0, Math.min(.8, configuredReduction)) : 0;
@@ -258,9 +310,15 @@ export class Enemy implements IGameEntity {
         }
 
         // Отталкивание при попадании, если передан угол
-        if (hitAngle !== undefined) {
-            this.x += Math.cos(hitAngle) * pushBackDistance;
-            this.y += Math.sin(hitAngle) * pushBackDistance;
+        if (hitAngle !== undefined && Number.isFinite(hitAngle)) {
+            const force = Number.isFinite(pushBackDistance) ? Math.max(0, pushBackDistance) : 0;
+            // Heavy bodies ignore ordinary bullets. Shotgun pellets and stronger
+            // impulses produce only a tiny nudge (five shotgun pellets total .5 px).
+            const distance = this.type === EnemyType.TANK
+                ? force >= 30 ? Math.min(.3, force / 350) : 0
+                : force;
+            this.x += Math.cos(hitAngle) * distance;
+            this.y += Math.sin(hitAngle) * distance;
         }
 
         if (this.health <= 0) {
@@ -273,7 +331,7 @@ export class Enemy implements IGameEntity {
     }
 
     canDamage(now: number): boolean {
-        if (!this.isDead && !this.isFeared && now - this.lastHitTime > this.hitCooldown) {
+        if (!this.isDead && !this.isFeared && !this.contactDisabled && now - this.lastHitTime > this.hitCooldown) {
             this.lastHitTime = now;
             return true;
         }

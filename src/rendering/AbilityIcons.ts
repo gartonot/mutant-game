@@ -1,32 +1,35 @@
 import type { CharacterId } from '@/gameplay/ids';
+import { createLazyImageAsset } from './ImageAsset';
 
 const urls = typeof Image === 'undefined' ? {} : import.meta.glob<string>('../assets/abilities/v1/*.png', {
     eager: true, query: '?url', import: 'default',
 });
-const images = new Map<CharacterId, HTMLImageElement>();
-let ready: Promise<void> | undefined;
+const images = new Map<CharacterId, ReturnType<typeof createLazyImageAsset>>();
 
 /** The unknown costumes deliberately have no invented ability artwork. */
 export function abilityIconUrl(character: CharacterId | undefined): string | undefined {
     return character ? urls[`../assets/abilities/v1/${character}.png`] : undefined;
 }
 
-/** Load once before combat; drawing never initiates image requests. */
-export function ensureAbilityIcons(): Promise<void> {
+/** Prepare the selected hero; no argument prepares the complete sandbox catalog. */
+export function ensureAbilityIcons(character?: CharacterId): Promise<void> {
     if (typeof Image === 'undefined') return Promise.resolve();
-    return ready ??= Promise.all(Object.entries(urls).map(([path, url]) => new Promise<void>(resolve => {
-        const character = path.split('/').pop()!.replace('.png', '') as CharacterId;
-        const image = new Image();
-        image.onload = () => { images.set(character, image); resolve(); };
-        image.onerror = () => resolve();
-        image.src = url;
-    }))).then(() => undefined);
+    const characters = character ? [character] : Object.keys(urls).map(path =>
+        path.split('/').pop()!.replace('.png', '') as CharacterId);
+    return Promise.all(characters.map(id => {
+        const url = abilityIconUrl(id);
+        if (!url) return Promise.resolve(false);
+        let source = images.get(id);
+        if (!source) { source = createLazyImageAsset(url); images.set(id, source); }
+        return source.ensure();
+    })).then(() => undefined);
 }
 
 export function drawAbilityIcon(ctx: CanvasRenderingContext2D, character: CharacterId | undefined,
     x: number, y: number, size: number, radius = 6): boolean {
-    const image = character ? images.get(character) : undefined;
-    if (!image) return false;
+    const asset = character ? images.get(character)?.asset : undefined;
+    if (!asset?.loaded) return false;
+    const image = asset.image;
     ctx.save();
     ctx.beginPath(); ctx.roundRect(x, y, size, size, radius); ctx.clip();
     const sourceSize = Math.min(image.naturalWidth, image.naturalHeight);

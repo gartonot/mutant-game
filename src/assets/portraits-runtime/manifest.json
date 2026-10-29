@@ -5,28 +5,37 @@
   "libvipsVersion": "8.18.7",
   "settings": {
     "full": {
-      "resize": null,
-      "webp": {
-        "lossless": true,
-        "effort": 6
-      }
-    },
-    "thumbnail": {
       "resize": {
-        "width": 512,
-        "height": 768,
+        "width": 768,
+        "height": 1152,
         "fit": "inside",
         "withoutEnlargement": true,
         "kernel": "lanczos3"
       },
       "webp": {
-        "lossless": true,
+        "quality": 88,
+        "alphaQuality": 100,
+        "effort": 6
+      }
+    },
+    "thumbnail": {
+      "resize": {
+        "width": 192,
+        "height": 288,
+        "fit": "inside",
+        "withoutEnlargement": true,
+        "kernel": "lanczos3"
+      },
+      "webp": {
+        "quality": 85,
+        "alphaQuality": 100,
         "effort": 6
       }
     }
   },
   "verification": {
-    "fullDecodedRgbaEqualsSource": true
+    "fullDecodedRgbaEqualsSource": false,
+    "originalsPreserved": true
   },
   "files": [
     {
@@ -41,17 +50,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/assassin.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1549960,
-          "sha256": "73fb6b237826d963c78e27e6984004c83b56714b0dcd026c3608599e8b1142fb"
+          "width": 768,
+          "height": 1152,
+          "bytes": 126920,
+          "sha256": "f6cdd387a1a226e4546e21fb84123867516f325dce921938e772fca90cd47bc2"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/assassin.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 441108,
-          "sha256": "f616a9bc94009c97722ccbc9f0874e207260f9c1fc8dc2d979147c2b4e20c3dd"
+          "width": 192,
+          "height": 288,
+          "bytes": 14736,
+          "sha256": "5b1e5561e8c112cb8de632bde73e14b4f37b01de549d2b8c12f44b5d240635a0"
         }
       }
     },
@@ -67,17 +76,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/destroyer.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1729690,
-          "sha256": "d22921df5b361a507104958d856b341badc195c0591c31ec31eebd54df727166"
+          "width": 768,
+          "height": 1152,
+          "bytes": 180784,
+          "sha256": "c7f2f1598f49d98b269bee37edf02a3df4b57a011f6180d6e70fab7fffab89ea"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/destroyer.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 477406,
-          "sha256": "b98344a1269e48cc3d3f2d52ccff0979cec02c7aaa4a2df151944265a46d07ea"
+          "width": 192,
+          "height": 288,
+          "bytes": 16482,
+          "sha256": "d6a4b17e8d21f373fd42dad331b55fc1cb5ade25fb6d2aa59f9f2778294f6777"
         }
       }
     },
@@ -93,17 +102,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/mercenary.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1833484,
-          "sha256": "527c26f3fd5b0ad2751c12f1c3bdd0431691eb27d70e47bf15ccb90a2e758445"
+          "width": 768,
+          "height": 1152,
+          "bytes": 206242,
+          "sha256": "442eb5052eb1facc48e1ef02eedd161a836d10661ade70fd9453df8b67d472eb"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/mercenary.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 506268,
-          "sha256": "a2f2a9ce3ed51e10db2b8343bc5f22e5ef2023f80f9b3343f7a6645a87b5f213"
+          "width": 192,
+          "height": 288,
+          "bytes": 18106,
+          "sha256": "f76bf6db52187b5ec00bf37f8a9d5225027052e45580b7927eea494e6b5decb4"
         }
       }
     },
@@ -119,17 +128,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/hunter.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1639374,
-          "sha256": "fedadac5dc0760a39b51239ee78fa96fba1d340cd133c4b2d721106682d2b985"
+          "width": 768,
+          "height": 1152,
+          "bytes": 165430,
+          "sha256": "8fdc90faa39c68f11066e3094bb42d8ff3024bebea845f5c22d02063f8ba5dce"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/hunter.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 459720,
-          "sha256": "710f00d4905fe89a3bcdc61a7c2a6d4bf5462c2ce5ab12b9d159357d83221e7b"
+          "width": 192,
+          "height": 288,
+          "bytes": 14606,
+          "sha256": "a98b71c2c4971e4bcd379f95d9579a69e71f10a3caea35a30f1a0b879a96e09f"
         }
       }
     },
@@ -145,17 +154,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/cyborg.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1766488,
-          "sha256": "c1654490c1ba559140d0214a1a744db50f5cdc035d55abca729a365bd5392dd0"
+          "width": 768,
+          "height": 1152,
+          "bytes": 157694,
+          "sha256": "6b12d3dcb823d0997474d694d2747b22f9ab48619fc3f07ea3e601b66ebfb88c"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/cyborg.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 448742,
-          "sha256": "06c28adce94289619585b68444d81ed1061c77dcc6741cb65ff18ea3b5dc36eb"
+          "width": 192,
+          "height": 288,
+          "bytes": 12216,
+          "sha256": "56a7cfec0c078693a62d42bef55ab0a2c9f274803ec5154dba2ffc482c20f7b9"
         }
       }
     },
@@ -171,17 +180,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/telepath.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1634662,
-          "sha256": "b74c1bb17e8d7df81eeaa5797579d48b676daf741d6e31d3b4ee184ea5d8267c"
+          "width": 768,
+          "height": 1152,
+          "bytes": 148852,
+          "sha256": "6081308d1650f2160647ccc8c9875f5bd6a395006e20fe560e3ee134738d195b"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/telepath.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 445434,
-          "sha256": "896a0fb866a0b37278960718cc05b390a5cb7c2fcb41d4c62646f4976baeedb7"
+          "width": 192,
+          "height": 288,
+          "bytes": 11422,
+          "sha256": "b03497b7007b82493226dab0bc736ffd4988534c6ccd629cd48c5f1943c87d78"
         }
       }
     },
@@ -197,17 +206,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/fanatic.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1667988,
-          "sha256": "8a7372a4fcfcd79ebf90e3a10940df2f8b99ea1c91cce0c72f3caeb3ba2beb74"
+          "width": 768,
+          "height": 1152,
+          "bytes": 142350,
+          "sha256": "373264b08fe3a0a0778df8a4158457e1a60ae04eeb3fa8688087d02bc43cf5ca"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/fanatic.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 436548,
-          "sha256": "3324d938c7a4b7f93d0c56ee094685d92fe6a3e19fc1a0f61c320a525d686f16"
+          "width": 192,
+          "height": 288,
+          "bytes": 11208,
+          "sha256": "7ae5bf56765813797ada032e4ed0e656c326f170b92395bb0f3edf05596bee87"
         }
       }
     },
@@ -223,17 +232,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/witcher.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1709668,
-          "sha256": "52cf24de49c1480c0d6d05d8dcc7d0aab52dc8414fcf2c44be2cce9fe9a5119e"
+          "width": 768,
+          "height": 1152,
+          "bytes": 171552,
+          "sha256": "d87793ebcb8e038f906a29ac67d437895e428c92234bd301beeaa4f91668e256"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/witcher.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 478514,
-          "sha256": "2c4b93a6d474518883ae846687032057bc0e21feda65012ec0f2943acd30991b"
+          "width": 192,
+          "height": 288,
+          "bytes": 14760,
+          "sha256": "01ed182cd7c3537e04692bb5f214aaf23e61795b0f467ecbc3466acee41cc8bf"
         }
       }
     },
@@ -249,17 +258,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/plasma-nuclear.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1731036,
-          "sha256": "f9999f08b9b141d1c9ca61de22b91d11f4093fd220bc32caf7abe93984183bb8"
+          "width": 768,
+          "height": 1152,
+          "bytes": 152746,
+          "sha256": "e1d012cf430dc4f5d89f6a9af35531ddd600b09bfc449529c5665a78db2608b9"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/plasma-nuclear.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 458654,
-          "sha256": "8e4e3b8118c2010b93bcd183eb52a3e73d024f6d9d72435be917d587de108909"
+          "width": 192,
+          "height": 288,
+          "bytes": 14370,
+          "sha256": "61d719f5f69d237a42810ded486f3e5ac0c53f8c48e71677a85c230a9c528535"
         }
       }
     },
@@ -275,17 +284,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/nuclear.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 2006502,
-          "sha256": "0e54df408b70d8bdb2d7ccc3ad3ef4ca09151a9f1f94d2b6cbbe5925a6d211f7"
+          "width": 768,
+          "height": 1152,
+          "bytes": 231964,
+          "sha256": "950a375b8611c5b269d8783822b1c13422c54b70bccbff2fffaefdbfed808d63"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/nuclear.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 571358,
-          "sha256": "705050b4153d4d02cec80df35a103152c4a0a8ec66f2b49874c22214fd762c41"
+          "width": 192,
+          "height": 288,
+          "bytes": 22144,
+          "sha256": "1e610f890318152cdfba7238240e9f4aa6de6b4b3ea6d6a4aa8fc4803b6b2fd9"
         }
       }
     },
@@ -301,17 +310,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/silver-hunter.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1777802,
-          "sha256": "3f0e5eff993291ff10d92f8dd4934f75c3001831ec71f9523168e2395f83d1c9"
+          "width": 768,
+          "height": 1152,
+          "bytes": 167270,
+          "sha256": "c6f1010ec3b6261298acc0f7dadb8cdc7df70c8b26a8c88490e7cf246e62048e"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/silver-hunter.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 493448,
-          "sha256": "494c172ad22fe32c75f9e1be944d645c8e59d2e348f29ceec1ed3df3b1d432db"
+          "width": 192,
+          "height": 288,
+          "bytes": 15288,
+          "sha256": "287263d2931b1cb6e7f73eb404971af2c022d41b17ae502a5b09298d8239bf5c"
         }
       }
     },
@@ -327,17 +336,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/goliath.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 2039718,
-          "sha256": "89616169271da91b500c3d2de45d2f03b6d14a869646a42924e4d0f8f4a7df21"
+          "width": 768,
+          "height": 1152,
+          "bytes": 228138,
+          "sha256": "83c5570e60debf9ffc94cf46098380eec351c1b4650932db823390782b7d701c"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/goliath.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 543094,
-          "sha256": "da7314cd9c538dae024666cdc491b9165869090f744ef7e818a63d8e083a8f45"
+          "width": 192,
+          "height": 288,
+          "bytes": 17292,
+          "sha256": "4ff038bc98389209132a83c02b9367063af9ef729cdd9435b8062b800fc3a71a"
         }
       }
     },
@@ -353,17 +362,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/half-mutant.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1780576,
-          "sha256": "0d826045bd741fea662b4c1ceab8a9a608f5b92dfceed4fb2abc1c19beeacd29"
+          "width": 768,
+          "height": 1152,
+          "bytes": 174728,
+          "sha256": "9b0bf195b11f5ffe3f1026c879da3d563d02ec9e401524ee51c2865d0d66a94a"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/half-mutant.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 505700,
-          "sha256": "5a261b6518493fd14282837ebe6b39a9bfe39e06fd905fe450ba844264436af6"
+          "width": 192,
+          "height": 288,
+          "bytes": 16804,
+          "sha256": "96e82ada28487492e8fbc030508fdbd244927789ea126721c789170f8d765866"
         }
       }
     },
@@ -379,17 +388,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/unknown-white-outfit-v1.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1528790,
-          "sha256": "c831421fb89869afc243eccd83c7d85c69a6fff09e4141b0f467551647cb1568"
+          "width": 768,
+          "height": 1152,
+          "bytes": 130494,
+          "sha256": "95591283762723f4c05875c2fe1707ba0dafd93955a99d3efc84be542312d414"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/unknown-white-outfit-v1.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 408742,
-          "sha256": "9747d7d304192bda111aefdcef6dbb6be5598de1fea7bca4eb580e139360f10a"
+          "width": 192,
+          "height": 288,
+          "bytes": 11976,
+          "sha256": "7b399f5024e3f35851c36cf2b6c25450162bc506faeb52faa2f4b9e7c2c70ee1"
         }
       }
     },
@@ -405,17 +414,17 @@
       "outputs": {
         "full": {
           "path": "src/assets/portraits-runtime/full/unknown-crossbow-v3.webp",
-          "width": 1024,
-          "height": 1536,
-          "bytes": 1664792,
-          "sha256": "1d8b98ad9c91fd44cec6a03fef0bdb2272c505b2a2b8e740a63bb4c339e1685c"
+          "width": 768,
+          "height": 1152,
+          "bytes": 165034,
+          "sha256": "486b29305f42e80e3f8771637a342c1cbb40143fcded35a03288915a486430ef"
         },
         "thumbnail": {
           "path": "src/assets/portraits-runtime/thumbnail/unknown-crossbow-v3.webp",
-          "width": 512,
-          "height": 768,
-          "bytes": 462892,
-          "sha256": "c08c66453b9191ef195c0b7dd0e8510efd0a334f77689073fce5ca5199bdf92b"
+          "width": 192,
+          "height": 288,
+          "bytes": 14394,
+          "sha256": "ce0a98ea8e688c8d9fcbf262ea9b9d4d24fc7151ac379d8b9cbb8fea82c67cf9"
         }
       }
     }

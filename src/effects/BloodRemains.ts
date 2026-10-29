@@ -57,12 +57,12 @@ export function drawRemainsFlesh(ctx: RemainsContext, particle: BloodRemainsPart
     ctx.scale(particle.size * particle.stretch * .98, particle.size * .92);
     const flesh = ctx.createLinearGradient(-.7, -.8, .7, .8);
     if (flesh && typeof flesh.addColorStop === 'function') {
-        flesh.addColorStop(0, greenBlood ? '#626046' : '#815044');
-        flesh.addColorStop(.3, greenBlood ? '#3e492a' : '#54201e');
-        flesh.addColorStop(.7, greenBlood ? '#242b17' : '#2c1113');
-        flesh.addColorStop(1, '#151412');
+        flesh.addColorStop(0, greenBlood ? '#626046' : '#91534a');
+        flesh.addColorStop(.3, greenBlood ? '#3e492a' : '#733a33');
+        flesh.addColorStop(.7, greenBlood ? '#242b17' : '#542c29');
+        flesh.addColorStop(1, greenBlood ? '#292c20' : '#412724');
         ctx.fillStyle = flesh;
-    } else ctx.fillStyle = greenBlood ? '#343b24' : '#491b1d';
+    } else ctx.fillStyle = greenBlood ? '#343b24' : '#733a33';
     fillContour(ctx, particle.contour);
     ctx.clip();
     // Fine torn fibres and mottled tissue break up the clean gradient surface.
@@ -70,15 +70,15 @@ export function drawRemainsFlesh(ctx: RemainsContext, particle: BloodRemainsPart
         const px = pigmentNoise(i * 13.7, particle.contour[0] * 91, 71) * 2 - 1;
         const py = pigmentNoise(i * 7.3, particle.contour[1] * 83, 97) * 2 - 1;
         ctx.strokeStyle = i % 3 === 0
-            ? (greenBlood ? '#64654a' : '#885049')
-            : (greenBlood ? '#29321e' : '#3b161b');
+            ? (greenBlood ? '#64654a' : '#95594e')
+            : (greenBlood ? '#29321e' : '#64332e');
         ctx.lineWidth = .025 + (i % 4) * .012;
         ctx.beginPath();
         ctx.moveTo(px, py);
         ctx.lineTo(px + .04 + (i % 3) * .035, py + .03);
         ctx.stroke();
     }
-    ctx.strokeStyle = greenBlood ? '#242719' : '#301214';
+    ctx.strokeStyle = greenBlood ? '#242719' : '#542d29';
     ctx.lineWidth = .045;
     for (let i = 0; i < 6; i++) {
         const px = particle.contour[i * 2] * .55, py = particle.contour[i * 2 + 1] * .55;
@@ -88,7 +88,7 @@ export function drawRemainsFlesh(ctx: RemainsContext, particle: BloodRemainsPart
         ctx.stroke();
     }
     if (particle.bone) {
-        ctx.strokeStyle = '#8f816c';
+        ctx.strokeStyle = '#8b7965';
         ctx.lineWidth = .11;
         ctx.lineCap = 'round';
         ctx.beginPath();
@@ -130,7 +130,7 @@ export function renderRemainsAtlas(input: BloodRemainsInput, canvas: HTMLCanvasE
         ctx.translate(tile.sx, 0);
         ctx.scale(resolution, resolution);
         ctx.translate(-tile.left, -tile.top);
-        ctx.globalAlpha = .98;
+        ctx.globalAlpha = 1;
         drawRemainsFlesh(ctx, particles[i], greenBlood, 0, 0, 0);
         ctx.restore();
     }

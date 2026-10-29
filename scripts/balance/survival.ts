@@ -53,7 +53,7 @@ function simulate(s: Scenario) {
     let ticks = 0, abilityUses = 0, pistolTicks = 0, fallbackTicks = 0, collected = 0;
     const collect = controller.collectDrop.bind(controller);
     controller.collectDrop = drop => { collected++; collect(drop); };
-    for (; ticks < 14401 && player.currentHp > 0 && !world.isVictory; ticks++) {
+    for (; ticks < Math.ceil(GameWorld.DURATION_MS / 1000 * 60) + 1 && player.currentHp > 0 && !world.isVictory; ticks++) {
         const enemies: Enemy[] = state.enemies;
         let nearest: Enemy | undefined, distance = Infinity;
         for (const e of enemies) { const d = Math.hypot(e.x - player.x, e.y - player.y); if (d < distance) { nearest = e; distance = d; } }
@@ -99,7 +99,7 @@ function simulate(s: Scenario) {
         if (s.ability && nearest && abilityReady && world.activateAbility()) abilityUses++;
         world.update(1000 / 60);
     }
-    const result = { ...s, victory: world.isVictory, seconds: round(Math.min(240, ticks / 60)), hp: round(player.currentHp), maxHp: player.maxHp,
+    const result = { ...s, victory: world.isVictory, seconds: round(Math.min(GameWorld.DURATION_MS / 1000, ticks / 60)), hp: round(player.currentHp), maxHp: player.maxHp,
         damageTaken: round(player.damageTaken), kills: controller.getStats().kills, projectileCount: controller.getStats().shots, accuracy: controller.getStats().accuracy, abilityUses, pistolSeconds: round(pistolTicks / 60), exhaustedSeconds: round(fallbackTicks / 60), equipmentPickups: collected,
         ammo: inventory.slots.filter(w => w).map(w => ({ weapon: w!.id, remaining: Number.isFinite(w!.state.ammoRemaining) ? w!.state.ammoRemaining : null })) };
     world.dispose(); controller.dispose(); return result;

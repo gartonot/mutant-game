@@ -63,10 +63,12 @@ export class EquipmentScreen {
         this.element.addEventListener('keydown', event => { if (event.key === 'Escape' && !this.tooltip.hidden) { event.stopPropagation(); this.hideTooltip(); } });
         window.addEventListener('resize', () => { this.hideTooltip(); this.flight.cancel(); }, { signal: this.events.signal });
         window.addEventListener('scroll', () => this.hideTooltip(), { capture: true, signal: this.events.signal });
-        this.render();
     }
-    prepareArtwork(): void { refreshWeaponIconsWhenReady(this.element); }
-    setCharacter(character: CharacterId): void { this.character = character; this.render(); }
+    prepareArtwork(): void { this.render(); refreshWeaponIconsWhenReady(this.element); }
+    setCharacter(character: CharacterId): void {
+        this.character = character;
+        if (!this.element.hidden) this.render();
+    }
     dispose(): void {
         this.flight.cancel();
         this.events.abort();

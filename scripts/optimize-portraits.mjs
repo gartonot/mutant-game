@@ -21,10 +21,13 @@ const names = [
   'goliath', 'half-mutant', 'unknown-white-outfit-v1', 'unknown-crossbow-v3',
 ];
 const settings = {
-  full: { resize: null, webp: { lossless: true, effort: 6 } },
+  full: {
+    resize: { width: 768, height: 1152, fit: 'inside', withoutEnlargement: true, kernel: 'lanczos3' },
+    webp: { quality: 88, alphaQuality: 100, effort: 6 },
+  },
   thumbnail: {
-    resize: { width: 512, height: 768, fit: 'inside', withoutEnlargement: true, kernel: 'lanczos3' },
-    webp: { lossless: true, effort: 6 },
+    resize: { width: 192, height: 288, fit: 'inside', withoutEnlargement: true, kernel: 'lanczos3' },
+    webp: { quality: 85, alphaQuality: 100, effort: 6 },
   },
 };
 const sha256 = (buffer) => createHash('sha256').update(buffer).digest('hex');
@@ -54,12 +57,8 @@ for (const name of names) {
     let pipeline = sharp(original);
     if (options.resize) pipeline = pipeline.resize(options.resize);
     const { data, info } = await pipeline.webp(options.webp).toBuffer({ resolveWithObject: true });
-    if (variant === 'full') {
-      const decodedPixels = await sharp(data).ensureAlpha().raw().toBuffer();
-      if (info.width !== sourceMetadata.width || info.height !== sourceMetadata.height
-          || !sourcePixels.equals(decodedPixels)) {
-        throw new Error(`${outputPath}: lossless RGBA verification failed.`);
-      }
+    if (info.width > options.resize.width || info.height > options.resize.height) {
+      throw new Error(`${outputPath}: runtime image exceeds display budget.`);
     }
     await saveOrCheck(outputPath, data);
     outputs[variant] = {
@@ -87,7 +86,7 @@ const manifest = Buffer.from(`${JSON.stringify({
   sharpVersion: sharp.versions.sharp,
   libvipsVersion: sharp.versions.vips,
   settings,
-  verification: { fullDecodedRgbaEqualsSource: true },
+  verification: { fullDecodedRgbaEqualsSource: false, originalsPreserved: true },
   files,
 }, null, 2)}\n`);
 await saveOrCheck(manifestPath, manifest);
@@ -97,6 +96,6 @@ const fullBytes = files.reduce((total, file) => total + file.outputs.full.bytes,
 const thumbnailBytes = files.reduce((total, file) => total + file.outputs.thumbnail.bytes, 0);
 const mib = (bytes) => (bytes / 1024 / 1024).toFixed(2);
 console.log(`${check ? 'Verified' : 'Generated'} ${files.length} full portraits and thumbnails; originals preserved.`);
-console.log(`Full decoded RGBA pixels match all originals exactly.`);
+console.log(`Display-sized WebP derivatives; original artwork remains unchanged.`);
 console.log(`Originals ${mib(sourceBytes)} MiB; full ${mib(fullBytes)} MiB; thumbnails ${mib(thumbnailBytes)} MiB.`);
 console.log(`Combined ${mib(fullBytes + thumbnailBytes)} MiB (${(100 * (1 - (fullBytes + thumbnailBytes) / sourceBytes)).toFixed(1)}% smaller).`);

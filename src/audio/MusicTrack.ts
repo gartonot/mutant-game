@@ -12,7 +12,7 @@ export class MusicTrack {
         this.audio = document.createElement('audio');
         this.audio.src = url;
         this.audio.loop = true;
-        this.audio.preload = 'auto';
+        this.audio.preload = kind === 'battle' ? 'none' : 'auto';
         this.audio.volume = getMusicVolume();
         this.unsubscribeVolume = subscribeMusicVolume((volume) => {
             this.audio.volume = volume;

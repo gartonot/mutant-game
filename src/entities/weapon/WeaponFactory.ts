@@ -4,7 +4,7 @@ import type { WeaponId, CharacterId } from '@/gameplay/ids';
 import { WEAPON_DEFINITIONS } from '@/gameplay/weapons';
 import type { WeaponDefinition } from '@/gameplay/weapons';
 import { WeaponState } from '@/gameplay/WeaponState';
-import { DUAL_WEAPON_OFFSET, muzzlePosition } from '@/rendering/WeaponGeometry';
+import { dualCharacterPose, muzzlePosition } from '@/rendering/WeaponGeometry';
 
 import type { IWeapon } from './IWeapon';
 import { createProjectile } from './ProjectileFactory';
@@ -63,16 +63,15 @@ class ConfiguredWeapon implements IWeapon {
         onVisualEffect?: (x: number, y: number, angle: number) => void, triggerHeld = true): Bullet[] | null {
         const d = this.definition;
         const previousLaser = this.laser, previousSecondLaser = this.secondLaser;
-        const secondX = x - Math.sin(angle) * DUAL_WEAPON_OFFSET;
-        const secondY = y + Math.cos(angle) * DUAL_WEAPON_OFFSET;
+        const second = dualCharacterPose(x, y, angle);
         if (d.projectile === 'laser') {
             if (!triggerHeld) { this.resetTrigger(now); return null; }
             if (this.laser && now + 1e-7 < this.state.nextShotAt && !this.laser.isDead) {
                 const muzzle = muzzlePosition(this.id, x, y, angle, this.character);
                 this.laser.aim(muzzle.x, muzzle.y, angle);
                 if (this.secondLaser) {
-                    const secondMuzzle = muzzlePosition(this.id, secondX, secondY, angle, this.character);
-                    this.secondLaser.aim(secondMuzzle.x, secondMuzzle.y, angle);
+                    const secondMuzzle = muzzlePosition(this.id, second.x, second.y, second.angle, this.character);
+                    this.secondLaser.aim(secondMuzzle.x, secondMuzzle.y, second.angle);
                 }
                 return null;
             }
@@ -99,10 +98,12 @@ class ConfiguredWeapon implements IWeapon {
             if (this.chargeProgress < 1) { this.state.resetCadence(); return null; }
         }
         const muzzle = muzzlePosition(this.id, x, y, angle, this.character);
-        const muzzles = [muzzle];
-        if (this.dualWeaponsActive) muzzles.push(muzzlePosition(this.id, secondX, secondY, angle, this.character));
+        const muzzles = [{ ...muzzle, angle }];
+        if (this.dualWeaponsActive) muzzles.push({
+            ...muzzlePosition(this.id, second.x, second.y, second.angle, this.character), angle: second.angle,
+        });
         // Construct every projectile independently: beams and special weapons own mutable hit/sweep state.
-        const bullets = muzzles.flatMap(origin => d.pellets.map(pellet => createProjectile(d, origin.x, origin.y, angle + pellet.angleOffset,
+        const bullets = muzzles.flatMap(origin => d.pellets.map(pellet => createProjectile(d, origin.x, origin.y, origin.angle + pellet.angleOffset,
             d.damage * pellet.damageMultiplier * this.damageMultiplier * this.pickupDamage, this.damageMultiplier * this.pickupDamage, this.explosionRadius)));
         if (d.projectile === 'laser') {
             this.laser = bullets[0] as Beam;
@@ -122,7 +123,7 @@ class ConfiguredWeapon implements IWeapon {
         this.secondShot = firstInPair && this.state.ammoRemaining > 0;
         if (d.chargeMs) { this.started = null; this.chargeProgress = 0; }
         if (d.projectile !== 'flame' && d.projectile !== 'laser' && d.projectile !== 'plasma')
-            for (const origin of muzzles) onVisualEffect?.(origin.x, origin.y, angle);
+            for (const origin of muzzles) onVisualEffect?.(origin.x, origin.y, origin.angle);
         return bullets;
     }
 }
