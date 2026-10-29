@@ -95,7 +95,7 @@ export class ZombieDeathEffect {
     ) {
         const scale = Math.max(8, radius);
         const trailLengthScale = .7;
-        const colors = palette.length ? palette : ['#8b2928', '#ad3430', '#ba4038'];
+        const colors = palette.length ? palette : ['#703733', '#87423b', '#964c42'];
         this.bloodColor = colors[Math.min(1, colors.length - 1)];
         this.greenBlood = parseInt(this.bloodColor.slice(3, 5), 16) > parseInt(this.bloodColor.slice(1, 3), 16);
         const color = () => colors[Math.min(colors.length - 1, Math.floor(random() * colors.length))];
@@ -257,7 +257,7 @@ export class ZombieDeathEffect {
         // Stamped once on the persistent arena canvas; independent of effect age.
         ctx.save();
         ctx.translate(this.x, this.y);
-        ctx.globalAlpha *= .58;
+        ctx.globalAlpha *= .4;
         if (!prepared && !this.groundDecal) this.createGroundDecal();
         const decal = prepared ?? this.groundDecal;
         if (decal) ctx.drawImage(decal.canvas, decal.x, decal.y);
@@ -280,7 +280,7 @@ export class ZombieDeathEffect {
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.lineCap = 'round';
-        ctx.globalAlpha *= .8;
+        ctx.globalAlpha *= .6;
         for (const particle of this.particles) {
             if (seconds >= particle.duration) continue;
             const progress = seconds / particle.duration;
@@ -301,7 +301,7 @@ export class ZombieDeathEffect {
                 ctx.save();
                 ctx.translate(x + particle.size * .12, y + particle.size * .18);
                 ctx.scale(.65, .65);
-                drawShape(ctx, particle, 0, 0, particle.rotation, this.greenBlood ? '#283c1c' : '#8b2928');
+                drawShape(ctx, particle, 0, 0, particle.rotation, this.greenBlood ? '#283c1c' : '#703733');
                 ctx.restore();
             }
         }

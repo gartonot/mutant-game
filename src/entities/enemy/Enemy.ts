@@ -43,7 +43,7 @@ export class Enemy implements IGameEntity {
         if (!this.deathOrigin || [EnemyType.BUG, EnemyType.TANK, EnemyType.LEECH, EnemyType.BEETLE, EnemyType.JUMPER].includes(this.type)) return undefined;
         const palette = this.type === EnemyType.TANK || this.type === EnemyType.BUG
             ? ['#243b17', '#4d702b', '#79a044']
-            : ['#8b2928', '#ad3430', '#ba4038'];
+            : ['#703733', '#87423b', '#964c42'];
         return { ...this.deathOrigin, radius: this.radius, palette };
     }
 

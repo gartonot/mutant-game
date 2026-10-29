@@ -139,10 +139,10 @@ export class OrdinaryEnemyMechanics {
     drawGround(ctx: CanvasRenderingContext2D): void {
         ctx.save();
         for (const mark of this.stains) {
-            ctx.globalAlpha = .6;
-            ctx.fillStyle = '#395e18';
+            ctx.globalAlpha = .4;
+            ctx.fillStyle = '#3d502d';
             ctx.beginPath(); ctx.ellipse(mark.x, mark.y, mark.radius, mark.radius * .68, mark.seed, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#71982c';
+            ctx.fillStyle = '#687b43';
             for (let i = 0; i < 6; i++) {
                 const a = i * 2.4 + mark.seed, r = mark.radius * (.4 + (i % 3) * .22);
                 ctx.beginPath(); ctx.arc(mark.x + Math.cos(a) * r, mark.y + Math.sin(a) * r * .7, 2 + i % 3, 0, Math.PI * 2); ctx.fill();

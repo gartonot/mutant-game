@@ -17,7 +17,7 @@ test('player can walk under HUD and stops only at the viewport edge', () => {
         const movement = new PlayerMovementController(player, input);
         for (let i = 0; i < 30; i++) movement.update();
         assert.equal(player.y + player.radius, 960);
-        assert.equal(player.x, 350);
+        assert.ok(Math.abs(player.x - (200 + 30 * player.speed * 1.5 / Math.SQRT2)) < 1e-8);
         // Resizing while idle keeps the player inside the viewport.
         keys.clear(); viewport.innerWidth = 700; viewport.innerHeight = 600;
         movement.update();

@@ -21,10 +21,13 @@ export class PlayerMovementController {
         this.isMoving = false;
         const speed = this.player.speed * this.player.pickupMoveSpeed * this.player.abilityMoveSpeed * this.player.enemyMoveFactor;
         if (speed === 0) return;
-        if (this.input.isPressed(InputKey.W)) { this.player.y -= speed; this.isMoving = true; }
-        if (this.input.isPressed(InputKey.S)) { this.player.y += speed; this.isMoving = true; }
-        if (this.input.isPressed(InputKey.A)) { this.player.x -= speed; this.isMoving = true; }
-        if (this.input.isPressed(InputKey.D)) { this.player.x += speed; this.isMoving = true; }
+        const dx = Number(this.input.isPressed(InputKey.D)) - Number(this.input.isPressed(InputKey.A));
+        const dy = Number(this.input.isPressed(InputKey.S)) - Number(this.input.isPressed(InputKey.W));
+        // Keep diagonal travel exactly 50% faster than cardinal movement.
+        const step = speed * (dx !== 0 && dy !== 0 ? 1.5 / Math.SQRT2 : 1);
+        this.player.x += dx * step;
+        this.player.y += dy * step;
+        this.isMoving = dx !== 0 || dy !== 0;
 
         constrainPlayerToArena(this.player, window.innerWidth, window.innerHeight);
     }
