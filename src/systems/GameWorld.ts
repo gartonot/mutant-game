@@ -32,6 +32,7 @@ import { Pickup } from '@/gameplay/Pickups';
 import { TelepathAttraction } from '@/gameplay/TelepathAttraction';
 import { rollPickupDrop, rollWeaponDrop } from '@/gameplay/PickupDrops';
 import { ALL_DROP_WEAPONS } from '@/gameplay/WeaponLoot';
+import { WEAPON_DEFINITIONS } from '@/gameplay/weapons';
 import type { WeaponId } from '@/gameplay/ids';
 import { DEFAULT_UNLOCKED_GOLD_PICKUPS, type GoldPickupKind } from '@/gameplay/PickupVariants';
 
@@ -321,7 +322,15 @@ export class GameWorld implements IGameEntity {
         if (this.bloodLayer) ctx.drawImage(this.bloodLayer, 0, 0);
         this.artilleryMarks.forEach(mark => mark.draw(ctx));
         this.extendedAbilities.drawGroundEffects(ctx);
-        this.pickups.forEach(pickup => pickup.draw(ctx));
+        const acquiredCategories = this.controller.acquiredAmmoCategories;
+        this.pickups.forEach(pickup => {
+            // Read current inventory: another drop in this category may have been
+            // collected since this weapon landed, turning it into an ammo refill.
+            const category = pickup.weaponId ? WEAPON_DEFINITIONS[pickup.weaponId].category : undefined;
+            const categoryOwned = category !== undefined && category !== 'sidearm'
+                && acquiredCategories.includes(category);
+            pickup.draw(ctx, categoryOwned);
+        });
         this.fearWaves.forEach(effect => effect.draw(ctx));
         // Отрисовываем врагов
         this.enemies.forEach(enemy => enemy.draw(ctx));

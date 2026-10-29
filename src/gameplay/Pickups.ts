@@ -5,10 +5,14 @@ import { drawWeapon, WEAPON_ART } from '@/rendering/WeaponArt';
 import type { AmmoCategory } from './WeaponLoot';
 import type { WeaponId } from './ids';
 import type { PickupTier } from './PickupVariants';
+import { drawPickupGlow } from '@/rendering/PickupGlow';
 
 export type PickupKind = 'ammo' | 'weapon' | 'health' | 'rapidFire' | 'moveSpeed' | 'doubleDamage' | 'shield' | 'iceBlast' | 'fireBlast';
 
 export interface PickupViewport { width: number; height: number }
+
+const WEAPON_PICKUP_SCALE = 0.7225;
+const BONUS_PICKUP_SCALE = 0.935;
 
 const COLORS: Record<PickupKind, string> = {
     ammo: '#ffd36c', weapon: '#99e6ff', health: '#ff6050', rapidFire: '#d3ef62',
@@ -102,8 +106,9 @@ export class Pickup {
         this.y = Math.max(insetY, Math.min(this.viewport.height - insetY, this.y));
     }
 
-    public draw(ctx: CanvasRenderingContext2D): void {
+    public draw(ctx: CanvasRenderingContext2D, weaponCategoryOwned = false): void {
         if (this.expired) return;
+        const pickupScale = this.kind === 'weapon' ? WEAPON_PICKUP_SCALE : BONUS_PICKUP_SCALE;
         const remaining = this.flightMs + this.lifetimeMs - this.ageMs;
         const arc = this.inFlight ? Math.sin(Math.PI * this.ageMs / this.flightMs) * 22 : 0;
         ctx.save();
@@ -118,20 +123,30 @@ export class Pickup {
         }
         ctx.fillStyle = 'rgba(0,0,0,0.35)';
         ctx.beginPath();
-        ctx.ellipse(0, 9, 13, 5, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 9 * pickupScale, 13 * pickupScale, 5 * pickupScale, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.translate(0, -arc);
-        ctx.shadowColor = COLORS[this.kind];
-        ctx.shadowBlur = 10 + Math.sin(this.ageMs / 200) * 2;
+        ctx.scale(pickupScale, pickupScale);
+        if (this.kind === 'weapon' || this.kind === 'ammo') {
+            const width = this.kind === 'ammo' ? 90 : this.weaponId === 'plasma-grenade' ? 100 : 120;
+            drawPickupGlow(ctx, this.kind === 'ammo' || weaponCategoryOwned, width,
+                this.ageMs, this.startX * .013 + this.startY * .019);
+        }
+        const visualScale = this.kind === 'weapon' ? 2.5 : 1.25;
+        ctx.scale(visualScale, visualScale);
+        ctx.shadowColor = this.kind === 'ammo' || (this.kind === 'weapon' && weaponCategoryOwned)
+            ? '#65cfff' : this.kind === 'weapon' ? '#ffd66b' : COLORS[this.kind];
+        ctx.shadowBlur = (10 + Math.sin(this.ageMs / 200) * 2) * pickupScale;
         if (this.kind === 'ammo' && this.ammoCategory && drawAmmoArt(ctx, this.ammoCategory, 0, 0, 38)) {
             ctx.restore();
             return;
         }
         if (this.kind === 'weapon' && this.weaponId) {
-            // Match the combat silhouette while fitting long guns and compact launchers equally.
+            // The round grenade needs less width than long guns to have comparable visual weight.
             const rear = this.weaponId === 'pistol' ? -2 : this.weaponId === 'plasma-grenade' ? 1 : -14;
             const muzzle = WEAPON_ART[this.weaponId].muzzle;
-            const scale = 48 / (muzzle - rear);
+            const displayWidth = this.weaponId === 'plasma-grenade' ? 24 : 48;
+            const scale = displayWidth / (muzzle - rear);
             ctx.rotate(-.25);
             ctx.scale(scale, scale);
             ctx.translate(-(rear + muzzle) / 2, 0);
