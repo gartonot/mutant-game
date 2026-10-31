@@ -7,10 +7,7 @@ type Layout = { x: number; y: number; width: number; height: number; axisY: numb
 const regions: Partial<Record<WeaponId, Layout>> = layouts;
 // Simulation-only consumers can import pickups without a browser image runtime.
 const combatUrls = typeof Image === 'undefined' ? {} : import.meta.glob<string>('../assets/weapons-combat/*.webp', { eager: true, query: '?url', import: 'default' });
-const inventoryUrls = typeof Image === 'undefined' ? {} : import.meta.glob<string>('../assets/weapons-runtime/*.webp', { eager: true, query: '?url', import: 'default' });
 const sprites = new Map<WeaponId, ReturnType<typeof createLazyImageAsset>>();
-const inventorySprites = new Map<WeaponId, ReturnType<typeof createLazyImageAsset>>();
-const inventoryIcons = new Map<WeaponId, string>();
 
 /** Failure leaves the Canvas fallback usable, including offline/missing-asset cases. */
 function prepareSprites(urls: Record<string, string>, directory: string,
@@ -26,11 +23,6 @@ function prepareSprites(urls: Record<string, string>, directory: string,
 
 export function weaponSpritesReady(): Promise<boolean[]> {
     return prepareSprites(combatUrls, 'weapons-combat', sprites);
-}
-
-/** Large artwork is requested only by inventory views; battle preparation stays compact. */
-export function inventoryWeaponSpritesReady(): Promise<boolean[]> {
-    return prepareSprites(inventoryUrls, 'weapons-runtime', inventorySprites);
 }
 
 // Sprite geometry depends only on authoring data, never on the current frame.
@@ -55,27 +47,6 @@ export function drawWeaponSprite(ctx: CanvasRenderingContext2D, id: WeaponId): b
     ctx.drawImage(asset.image, ...targets[id]);
     ctx.restore();
     return true;
-}
-
-/** Same illustration in a portrait card, generated once after its source has loaded. */
-export function weaponSpriteInventoryIcon(id: WeaponId): string | undefined {
-    const cached = inventoryIcons.get(id);
-    if (cached) return cached;
-    const asset = inventorySprites.get(id)?.asset, r = regions[id];
-    if (!asset?.loaded || !r) return undefined;
-    const canvas = document.createElement('canvas');
-    canvas.width = 240; canvas.height = 380;
-    const ctx = canvas.getContext('2d')!;
-    const angle = -Math.PI * .59;
-    const rotatedWidth = Math.abs(Math.cos(angle)) * r.width + Math.abs(Math.sin(angle)) * r.height;
-    const rotatedHeight = Math.abs(Math.sin(angle)) * r.width + Math.abs(Math.cos(angle)) * r.height;
-    const scale = Math.min(208 / rotatedWidth, 340 / rotatedHeight);
-    ctx.translate(120, 190); ctx.rotate(angle);
-    ctx.imageSmoothingQuality = 'high';
-    ctx.drawImage(asset.image, -r.width * scale / 2, -r.height * scale / 2, r.width * scale, r.height * scale);
-    const url = canvas.toDataURL();
-    inventoryIcons.set(id, url);
-    return url;
 }
 
 export function loadedWeaponSprites(): WeaponId[] {
