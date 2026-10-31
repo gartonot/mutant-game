@@ -58,11 +58,16 @@
 .equipment-tooltip { position: fixed; z-index: 1000; width: 340px; max-width: calc(100vw - 16px); box-sizing: border-box; padding: 9px; border: 3px solid #64777b; border-radius: 17px; background: linear-gradient(135deg,#a4b5bc,#536771 45%,#788f99); box-shadow: 0 5px 12px #000b, inset 0 1px 2px #dbe6ea; pointer-events: none; color: #e8eee7; font-family: Arial, sans-serif; }
 .equipment-tooltip[data-tier=gold] { border-color: #ba9f49; background: linear-gradient(135deg,#f1d985,#92702d 45%,#c2a34d); box-shadow: 0 5px 12px #000b, inset 0 1px 2px #fff0b0; }
 .equipment-tooltip[hidden] { display: none; }
+.equipment-tooltip { opacity: 0; visibility: hidden; translate: 0 18px; transition: opacity 420ms cubic-bezier(.25,.1,.25,1), translate 420ms cubic-bezier(.25,.1,.25,1), visibility 0s 420ms; }
+.equipment-tooltip.visible { opacity: 1; visibility: visible; translate: 0 0; transition-delay: 0s; }
+@media (prefers-reduced-motion: reduce) {
+    .equipment-tooltip { transition: none; translate: none; }
+}
 .equipment-tooltip-body { background: #101411; padding: 10px; border-radius: 9px; box-shadow: inset 0 2px 5px #000; }
-.equipment-tooltip strong { display: block; padding: 5px 7px; background: linear-gradient(90deg,#258318,#18571280,transparent); font-size: 16px; }
-.equipment-tooltip p { margin: 8px 6px 0; font-size: 12px; line-height: 1.4; }
+.equipment-tooltip strong { display: block; padding: 5px 7px; background: linear-gradient(90deg,#258318,#18571280,transparent); font-size: 18px; line-height: 1.4; }
+.equipment-tooltip p { margin: 8px 6px 0; font-size: 14px; line-height: 1.6; }
 .equipment-tooltip p:first-of-type { font-weight: bold; color: #d9e2d4; }
-.equipment-tooltip small { display: block; margin: 9px 6px 0; font-size: 11px; color: #9eaf96; }
+.equipment-tooltip small { display: block; margin: 9px 6px 0; font-size: 13px; line-height: 1.6; color: #9eaf96; }
 @media(max-width:760px) { .equipment-catalog { grid-template-columns: repeat(auto-fill,minmax(72px,1fr)); padding: 10px; gap: 8px; } }
 
 .equipment-item img, .equipment-slot img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); }

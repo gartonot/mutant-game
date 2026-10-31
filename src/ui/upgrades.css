@@ -1,8 +1,4 @@
 .upgrades-frame { padding: 24px 26px 18px; }
-.implant-tooltip { z-index: 1000; box-sizing: border-box; font-family: Arial, sans-serif; }
-.implant-tooltip .tooltip-heading img { width: 52px; height: 52px; border: 2px solid #9ba9ac; border-radius: 9px; }
-.implant-tooltip .tooltip-heading strong { font-size: 17px; color: #e2edcf; }
-.upgrade-icon:focus-visible { outline: 2px solid #c5ef67; outline-offset: 3px; }
 .upgrades-frame > * { position: relative; }
 .upgrades-frame::before { background: #232b2f; }
 .upgrade-points { display: flex; align-items: center; gap: 9px; width: min(460px, 100%); margin: 0 auto 18px; padding: 7px 20px; border-radius: 28px; background: linear-gradient(90deg,#101413 8%,#315a09 24%,#111714 49%,#111315 72%); box-shadow: inset 0 2px 5px #0008; }
@@ -31,7 +27,6 @@
 .upgrade-color-9 { background: linear-gradient(140deg,#b9eaf3,#5895cc 55%,#263c7e); }
 .upgrade-icon img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .upgrade-art { display: block; width: 100%; height: 100%; background-repeat: no-repeat; }
-.upgrade-tooltip-art { display: block; flex: 0 0 52px; width: 52px; height: 52px; border: 2px solid #9ba9ac; border-radius: 9px; overflow: hidden; }
 .upgrade-icon img[data-weapon-art] { object-fit: contain; transform: rotate(-45deg) scale(1.05); filter: drop-shadow(1px 2px 1px #000a); }
 .upgrade-value { font-size: 16px; font-weight: bold; color: #e2e5de; text-shadow: 0 2px 2px #0007; }
 .upgrade-controls { display: flex; gap: 7px; }

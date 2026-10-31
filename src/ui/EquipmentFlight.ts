@@ -20,14 +20,12 @@ export class EquipmentFlight {
         const end = destination.getBoundingClientRect(), start = source.rect;
         if (!start.width || !start.height || !end.width || !end.height) return;
         const bounds = root.getBoundingClientRect();
-        const catalog = slot.closest('.equipment-catalog')?.getBoundingClientRect();
+        const catalog = slot.closest('.equipment-catalog, .bonus-drawer-catalog')?.getBoundingClientRect();
         const hiddenTarget = !!catalog && (end.top < catalog.top || end.bottom > catalog.bottom
             || end.left < catalog.left || end.right > catalog.right);
         // A scrolled-away card has a misleading screen position. Return into the visible
         // inventory instead, without scrolling to it or flying back above the equipment slots.
-        const targetScale = hiddenTarget ? Math.min(1, 72 / Math.max(end.width, end.height)) : 1;
-        const targetWidth = end.width * targetScale;
-        const targetHeight = end.height * targetScale;
+        const targetWidth = start.width;
         const targetX = hiddenTarget ? Math.max(catalog!.left + targetWidth / 2 + 12,
             Math.min(catalog!.right - targetWidth / 2 - 12, end.left + end.width / 2)) : end.left + end.width / 2;
         const targetY = hiddenTarget ? catalog!.top + Math.min(catalog!.height / 2, 90) : end.top + end.height / 2;
@@ -45,19 +43,23 @@ export class EquipmentFlight {
             width: `${start.width}px`, height: `${start.height}px` });
         layer.append(ghost);
         document.body.append(layer);
-        destination.style.visibility = 'hidden';
+        // Catalog artwork stays visible while the equipped copy returns to it.
+        // Only an arriving loadout copy needs hiding to avoid a duplicate in its slot.
+        const hideDestination = !catalog;
+        const previousVisibility = destination.style.visibility;
+        if (hideDestination) destination.style.visibility = 'hidden';
         const dx = targetX - start.left - start.width / 2;
         const dy = targetY - start.top - start.height / 2;
-        const sx = targetWidth / start.width, sy = targetHeight / start.height;
         const animation = ghost.animate([
-            { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-            { transform: `translate(${dx * .48}px, ${dy * .48 + (catalog ? 18 : -45)}px) scale(${1 + (sx - 1) * .4}, ${1 + (sy - 1) * .4})`, opacity: 1, offset: .48 },
-            { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, opacity: hiddenTarget ? 0 : 1 },
+            { transform: 'translate(0, 0)', opacity: 1 },
+            { transform: `translate(${dx * .48}px, ${dy * .48 + (catalog ? 18 : -45)}px)`, opacity: 1, offset: .48 },
+            { transform: `translate(${dx}px, ${dy}px)`, opacity: hiddenTarget ? 0 : 1 },
         ], { duration: 460, easing: 'cubic-bezier(.22,.65,.25,1)', fill: 'forwards' });
         let frame = 0;
         const finish = () => {
             cancelAnimationFrame(frame);
-            animation.cancel(); layer.remove(); destination.style.visibility = '';
+            animation.cancel(); layer.remove();
+            if (hideDestination) destination.style.visibility = previousVisibility;
             this.flights.delete(finish);
         };
         this.flights.add(finish);

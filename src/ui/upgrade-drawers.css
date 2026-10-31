@@ -1,0 +1,215 @@
+/* Approved weapon and implant drawers. Shared panel/dimming geometry lives in arsenal-redesign.css. */
+.upgrade-drawer-layer .upgrade-drawer {
+    padding-top: calc(34 * var(--prep-unit));
+}
+.upgrade-drawer > h2 {
+    margin: 0 0 calc(31 * var(--prep-unit));
+    padding-right: calc(250 * var(--prep-unit));
+    font-size: calc(23 * var(--prep-unit));
+    line-height: calc(30 * var(--prep-unit));
+    font-weight: 700;
+}
+.upgrade-drawer-points {
+    position: absolute;
+    top: calc(27 * var(--prep-unit));
+    right: calc(26 * var(--prep-unit));
+    width: calc(240 * var(--prep-unit));
+    height: calc(54 * var(--prep-unit));
+    display: flex;
+    align-items: center;
+    gap: calc(12 * var(--prep-unit));
+    padding: 0 calc(30 * var(--prep-unit));
+    border: 0;
+    border-radius: 0;
+    background: linear-gradient(90deg, #233b0d00, #293f10cc 22%, #293f10cc 55%, #17251500);
+    box-shadow: none;
+    color: #d8eeb2;
+}
+.upgrade-drawer-points .upgrade-point-emblem {
+    flex: 0 0 calc(37 * var(--prep-unit));
+    width: calc(37 * var(--prep-unit));
+    height: calc(37 * var(--prep-unit));
+    margin: 0;
+    border: calc(1.5 * var(--prep-unit)) solid #b4d23d;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 25%, #d6fa43, #add515 55%, #718d04);
+    box-shadow: none;
+    color: #354506;
+    font-size: calc(25 * var(--prep-unit));
+    line-height: 1;
+    text-shadow: none;
+}
+.upgrade-drawer-points b {
+    color: #d8eeb2;
+    font-size: calc(25 * var(--prep-unit));
+    line-height: calc(32 * var(--prep-unit));
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+.upgrade-drawer-total {
+    flex: 0 0 auto;
+    margin: 0 0 calc(25 * var(--prep-unit));
+    color: #dce3d7;
+    font-size: calc(17 * var(--prep-unit));
+    line-height: calc(22 * var(--prep-unit));
+    font-weight: 600;
+}
+.upgrade-drawer-cards {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: calc(118 * var(--prep-unit));
+    align-content: start;
+    gap: calc(14 * var(--prep-unit));
+    padding: 0 0 calc(20 * var(--prep-unit));
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #718866 #17281f;
+}
+.upgrade-drawer .upgrade-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: calc(94 * var(--prep-unit)) minmax(0, 1fr) calc(128 * var(--prep-unit));
+    align-items: center;
+    gap: calc(10 * var(--prep-unit));
+    min-width: 0;
+    width: 100%;
+    height: calc(118 * var(--prep-unit));
+    grid-column: auto;
+    justify-self: stretch;
+    margin: 0;
+    padding: calc(12 * var(--prep-unit)) calc(26 * var(--prep-unit)) calc(12 * var(--prep-unit)) calc(12 * var(--prep-unit));
+    border: 0;
+    border-radius: calc(20 * var(--prep-unit));
+    background: linear-gradient(#4b4f4c, #3c403d);
+    box-shadow: none;
+}
+.upgrade-drawer .upgrade-icon {
+    display: block;
+    width: calc(94 * var(--prep-unit));
+    height: calc(94 * var(--prep-unit));
+    padding: 0;
+    border: calc(3 * var(--prep-unit)) solid #9baeb2;
+    border-radius: calc(10 * var(--prep-unit));
+    background: #121917;
+    box-shadow: 0 calc(3 * var(--prep-unit)) 0 calc(1 * var(--prep-unit)) #121917, inset 0 0 0 1px #c0ccce;
+    overflow: hidden;
+}
+.upgrade-drawer .upgrade-icon .upgrade-art { width: 100%; height: 100%; }
+.upgrade-card-info { align-self: start; min-width: 0; }
+.upgrade-card-name {
+    margin: calc(1 * var(--prep-unit)) 0 0;
+    color: #d9e1d7;
+    font-size: calc(19 * var(--prep-unit));
+    line-height: calc(25 * var(--prep-unit));
+    font-weight: 600;
+}
+.upgrade-card-summary {
+    margin: calc(4 * var(--prep-unit)) 0 0;
+    color: #aebfa5;
+    font-size: calc(17 * var(--prep-unit));
+    line-height: calc(24 * var(--prep-unit));
+    font-weight: 400;
+}
+.upgrade-card-summary p { margin: 0; }
+.upgrade-drawer-layer[data-section=implants] .upgrade-card-summary {
+    color: #bfd5a9;
+}
+.upgrade-drawer .upgrade-controls {
+    display: grid;
+    grid-template-columns: calc(41 * var(--prep-unit)) minmax(0, 1fr) calc(41 * var(--prep-unit));
+    align-items: center;
+    gap: calc(8 * var(--prep-unit));
+    width: calc(128 * var(--prep-unit));
+    margin: 0;
+}
+.upgrade-drawer .upgrade-value {
+    display: block;
+    min-width: 0;
+    margin: 0;
+    color: #dde5d7;
+    font-size: calc(23 * var(--prep-unit));
+    line-height: calc(30 * var(--prep-unit));
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    text-shadow: none;
+}
+.upgrade-drawer .upgrade-controls button {
+    display: grid;
+    place-items: center;
+    width: calc(41 * var(--prep-unit));
+    height: calc(41 * var(--prep-unit));
+    padding: 0;
+    border: 1px solid #617575;
+    border-radius: calc(5 * var(--prep-unit));
+    background: #29373b;
+    box-shadow: none;
+    color: #dce6dd;
+    font-size: calc(23 * var(--prep-unit));
+    line-height: 1;
+    font-weight: 400;
+    text-shadow: none;
+    opacity: 1;
+}
+.upgrade-drawer .upgrade-controls button:last-child {
+    border-color: #7e9e60;
+    background: #3a4e2e;
+    color: #d7e8c4;
+}
+.upgrade-drawer .upgrade-controls button:disabled { opacity: .48; cursor: default; }
+.upgrade-drawer .upgrade-controls button:not(:disabled):hover { filter: brightness(1.2); }
+.upgrade-segments {
+    position: absolute;
+    left: calc(116 * var(--prep-unit));
+    bottom: calc(16 * var(--prep-unit));
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    grid-auto-rows: calc(4 * var(--prep-unit));
+    gap: calc(5 * var(--prep-unit));
+    width: calc(216 * var(--prep-unit));
+}
+.upgrade-segments > span {
+    position: relative;
+    display: block;
+    min-width: 0;
+    border-radius: calc(2 * var(--prep-unit));
+    background: #455a53;
+    overflow: hidden;
+}
+.upgrade-segments > span::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: #abd877;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 320ms cubic-bezier(.25,.1,.25,1);
+}
+.upgrade-segments > span.active::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) {
+    .upgrade-segments > span::after { transition: none; }
+}
+.upgrade-drawer .arsenal-drawer-footer { flex-shrink: 0; }
+
+@media (max-width: 600px) {
+    .upgrade-drawer-layer .upgrade-drawer { padding: 20px 16px 0; }
+    .upgrade-drawer > h2 { padding-right: 110px; margin-bottom: 20px; font-size: 20px; line-height: 28px; }
+    .upgrade-drawer-points { top: 14px; right: 12px; width: 115px; height: 40px; padding: 0 12px; gap: 8px; }
+    .upgrade-drawer-points .upgrade-point-emblem { flex-basis: 28px; width: 28px; height: 28px; font-size: 18px; }
+    .upgrade-drawer-points b { font-size: 21px; line-height: 28px; }
+    .upgrade-drawer-total { margin-bottom: 16px; font-size: 14px; line-height: 20px; }
+    .upgrade-drawer-cards { grid-auto-rows: 116px; gap: 10px; padding-bottom: 16px; }
+    .upgrade-drawer .upgrade-card { height: 116px; grid-template-columns: 62px minmax(0, 1fr) 84px; gap: 8px; padding: 10px; border-radius: 14px; }
+    .upgrade-drawer .upgrade-icon { width: 62px; height: 62px; border-width: 2px; border-radius: 7px; }
+    .upgrade-card-name { margin-top: 0; font-size: 13px; line-height: 17px; }
+    .upgrade-card-summary { margin-top: 3px; font-size: 13px; line-height: 18px; }
+    .upgrade-drawer .upgrade-controls { width: 84px; grid-template-columns: 27px minmax(0, 1fr) 27px; gap: 4px; }
+    .upgrade-drawer .upgrade-controls button { width: 27px; height: 29px; font-size: 18px; border-radius: 4px; }
+    .upgrade-drawer .upgrade-value { font-size: 17px; line-height: 24px; }
+    .upgrade-segments { left: 80px; bottom: 12px; width: min(140px, calc(100% - 96px)); grid-auto-rows: 3px; gap: 3px; }
+    .upgrade-drawer .arsenal-drawer-footer { min-height: 56px; }
+    .upgrade-drawer .arsenal-drawer-save { max-width: 100%; }
+}
