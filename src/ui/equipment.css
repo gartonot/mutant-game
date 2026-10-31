@@ -8,7 +8,6 @@
 .equipment-slot[aria-pressed=true] { border-color: #a1ec53; box-shadow: 0 0 0 2px #3e7524, inset 0 0 18px #5f982e30; }
 .equipment-slot img { width: 100%; height: 43px; object-fit: contain; }
 .slot-number { position: absolute; top: 3px; left: 7px; color: #a3b59a; font-size: 11px; }
-.slot-name { display: block; font-size: 10px; overflow-wrap: anywhere; }
 .empty-slot { display: block; height: 43px; font-size: 30px; color: #66716d; }
 .bonus-slots { grid-template-columns: repeat(6,1fr); align-items: center; height: 94px; }
 .bonus-placeholder { aspect-ratio: 1; border-radius: 50%; border: 3px solid #717d69; background: #252c2a; color: #65735f; display: grid; place-items: center; }
@@ -19,26 +18,15 @@
 .equipment-currency b { margin-left: 12px; font-size: 20px; }
 .equipment-currency button { color: #9da798; border: 1px solid #596662; border-radius: 7px; background: linear-gradient(#737e80,#3c4446); padding: 6px 22px; font-weight: bold; }
 .equipment-currency small { color: #809079; font-size: 11px; }
-.equipment-selection { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 5px 12px; }
-.equipment-selection h2 { margin: 0 0 4px; color: #e9eddf; font-size: 18px; }
-.equipment-selection p, .equipment-note { margin: 0; color: #a5b29e; font-size: 12px; line-height: 1.5; }
-.equipment-clear { border: 1px solid #657467; border-radius: 6px; color: #d4dfcc; background: #26372b; padding: 8px 12px; }
-.equipment-clear:disabled { opacity: .4; }
 .equipment-catalog { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 12px; padding: 14px; border: 2px solid #424e48; border-radius: 15px; background: #101710; max-height: 350px; overflow-y: auto; scrollbar-color: #94a194 #19231b; }
 .equipment-item { display: flex; flex-direction: column; align-items: center; min-width: 0; padding: 10px; border: 2px solid #829080; border-radius: 13px; background: linear-gradient(140deg,#a7ac92,#737d68); color: #152016; box-shadow: inset 0 1px 2px #fff5,0 3px 5px #0008; }
 .equipment-item img { width: 100%; height: 100px; object-fit: contain; filter: drop-shadow(2px 4px 2px #0006); }
-.equipment-category { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
 .equipment-item strong { font-size: 15px; }
 .equipment-ammo { font-size: 12px; margin: 7px 0; }
-.equipment-equipped { font-size: 11px; background: #344e2d; color: #e2f2d0; border-radius: 12px; padding: 4px 12px; }
 .equipment-item[aria-pressed=true] { border-color: #c2ff78; box-shadow: 0 0 0 2px #5c9b39,inset 0 0 18px #e2ff8140; }
 .equipment-item:not(:disabled):hover { filter: brightness(1.12); }
-.equipment-status { color: #c7ddaf; font-size: 13px; margin: 12px 5px 6px; }
-.equipment-note { padding: 0 5px 5px; }
 .preparation-play:disabled { filter: grayscale(1); opacity: .5; cursor: not-allowed; }
-@media(max-width:760px) { .equipment-top { grid-template-columns: 1fr; } .equipment-catalog { grid-template-columns: repeat(2,minmax(0,1fr)); max-height: 360px; } .bonus-slots { height: auto; max-width: 360px; margin: auto; } .equipment-currency { flex-wrap: wrap; gap: 8px; } .equipment-currency small { width: 100%; } .equipment-selection h2 { font-size: 16px; } }
-
-.equipment-description { font-size: 11px; line-height: 1.4; margin-bottom: 10px; flex: 1; }
+@media(max-width:760px) { .equipment-top { grid-template-columns: 1fr; } .equipment-catalog { grid-template-columns: repeat(2,minmax(0,1fr)); max-height: 360px; } .bonus-slots { height: auto; max-width: 360px; margin: auto; } .equipment-currency { flex-wrap: wrap; gap: 8px; } .equipment-currency small { width: 100%; } }
 .equipment-top { grid-template-columns: 1.2fr 1fr; }
 @media(max-width:760px) { .equipment-top { grid-template-columns: 1fr; } }
 
@@ -82,7 +70,6 @@
 .bonus-slot-number { position: absolute; z-index: 1; top: -9px; left: -3px; display: grid; place-items: center; min-width: 18px; height: 18px; border: 1px solid #83917c; border-radius: 50%; color: #eff6e8; background: #18221b; font-size: 10px; font-weight: bold; }
 .bonus-slot:focus-visible { outline: 2px solid #dbff99; outline-offset: 3px; }
 .bonus-slot:not(:disabled):hover { border-color: #c3f17c; }
-.equipment-bonus-hint { margin: 5px 0 0; color: #afbea6; font-size: 10px; text-align: center; }
 .equipment-catalog-heading { grid-column: 1 / -1; margin: 0; color: #dce6d4; font-size: 14px; }
 .equipment-catalog-heading small { display: block; margin-top: 4px; color: #9fad96; font-size: 11px; font-weight: normal; }
 
