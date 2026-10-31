@@ -1,5 +1,4 @@
-import type { CharacterId } from '@/gameplay/ids';
-import type { WeaponId } from '@/gameplay/ids';
+import type { CharacterId, WeaponId } from '@/gameplay/ids';
 import type { PickupTier } from '@/gameplay/PickupVariants';
 
 export type TemporaryBonus = 'rapidFire' | 'moveSpeed' | 'doubleDamage' | 'shield';

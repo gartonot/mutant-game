@@ -7,7 +7,6 @@ import { ExtendedCharacterAbilities } from '@/gameplay/ExtendedCharacterAbilitie
 import { drawAbilityHUD } from '@/ui/AbilityHUD';
 import { ConsumableInventory } from '@/gameplay/ConsumableInventory';
 import type { ConsumableSelection } from '@/gameplay/Consumables';
-import type { PickupTier } from '@/gameplay/PickupVariants';
 import { drawConsumableHUD } from '@/ui/ConsumableHUD';
 import { getArenaSize } from '@/gameplay/Arena';
 import { applyPickupBlast, getPickupBlast } from '@/gameplay/PickupBlasts';
@@ -40,7 +39,7 @@ import { rollPickupDrop, rollWeaponDrop } from '@/gameplay/PickupDrops';
 import { ALL_DROP_WEAPONS } from '@/gameplay/WeaponLoot';
 import { WEAPON_DEFINITIONS } from '@/gameplay/weapons';
 import type { WeaponId } from '@/gameplay/ids';
-import { DEFAULT_UNLOCKED_GOLD_PICKUPS, type GoldPickupKind } from '@/gameplay/PickupVariants';
+import { DEFAULT_UNLOCKED_GOLD_PICKUPS, type GoldPickupKind, type PickupTier } from '@/gameplay/PickupVariants';
 
 export class GameWorld implements IGameEntity {
     public static readonly DURATION_MS = 6 * 60 * 1000;

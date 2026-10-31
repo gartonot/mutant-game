@@ -1,2 +1,5 @@
 dist
 node_modules
+# Historical QA snapshots and generated asset metadata are not hand-written source.
+output
+src/assets
