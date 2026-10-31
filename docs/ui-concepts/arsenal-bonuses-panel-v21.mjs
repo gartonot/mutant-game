@@ -1,0 +1,60 @@
+import sharp from 'sharp';import fs from 'node:fs/promises';
+const available=4,selectedCount=2;
+const out='docs/ui-concepts';const original=await fs.readFile(`${out}/character-select-final.svg`,'utf8');
+let base=original.slice(0,original.indexOf('<text x="778"'));
+base=base.replace('M178 0H490L465 86H153Z" fill="url(#silverActive)','M178 0H490L465 86H153Z" fill="url(#silverNav)').replace('M490 0H776L751 86H465Z" fill="url(#silverNav)','M490 0H776L751 86H465Z" fill="url(#silverActive)').replace('M153 86H465','M465 86H751');
+const footer=original.slice(original.indexOf('<rect x="0" y="916"'),original.indexOf('<rect x="0" y="989"'))+'<rect x="0" y="989" width="1920" height="211" fill="#0c1416"/></svg>';
+function fullHeight(svg){const start=svg.indexOf('<g transform="translate(0 95) scale');const end=svg.indexOf('<rect x="0" y="916"');let body=svg.slice(start,end);body=body.replace(/<g data-natural="true"[\s\S]*?<\/g>|<(text|image|circle)\b[^>]*>/g,(tag,type)=>{if(!type)return tag;const attr=n=>Number(tag.match(new RegExp(`\\b${n}="([^"]+)"`))?.[1]??0);const center=type==='circle'?attr('cy'):type==='image'?attr('y')+attr('height')/2:attr('y');return tag.replace(/(\/?\>)$/,` transform="translate(0 ${center}) scale(1 ${1/1.257}) translate(0 ${-center})"$1`);});return (svg.slice(0,start)+body+svg.slice(end)).replace('<rect x="0" y="916"','</g><g transform="translate(0 211)"><rect x="0" y="916"').replace('<rect x="0" y="989" width="1920" height="211" fill="#0c1416"/></svg>','</g></svg>');}
+let s=[];const rect=(x,y,w,h,c='#192621',r=5,stroke='none')=>s.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}" rx="${r}" stroke="${stroke}"/>`);
+const t=(x,y,v,size=20,c='#cbd7cb',weight=400)=>s.push(`<text x="${x}" y="${y}" font-family="Segoe UI,Arial" font-size="${size}" fill="${c}" font-weight="${weight}">${v}</text>`);
+const img=async(p,x,y,w,h)=>{const b=await sharp(p).resize(w,h,{fit:'contain',background:'#00000000'}).png().toBuffer();s.push(`<image x="${x}" y="${y}" width="${w}" height="${h}" href="data:image/png;base64,${b.toString('base64')}"/>`)};
+s.push('<g transform="translate(0 95) scale(1 1.257) translate(0 -95)">');rect(0,95,460,821,'#15211e',0);rect(460,95,1460,821,'#101b1a',0);
+s.push('<g data-natural="true" transform="translate(0 95) scale(1 '+(1/1.257)+') translate(0 -95)">');
+t(32,158,'РАЗРУШИТЕЛЬ',31,'#edf0dd',700);t(32,198,'Тяжёлая поддержка',19,'#a1b893');
+s.push('<defs><linearGradient id="storyHeader"><stop stop-color="#24883b" stop-opacity=".85"/><stop offset="1" stop-color="#182d22" stop-opacity="0"/></linearGradient></defs>');
+rect(24,236,410,38,'url(#storyHeader)');t(40,263,'ОСОБЕННОСТИ',18,'#e4efd8',700);
+t(40,303,'Базука · 5 стартовых патронов',18);t(40,343,'+50% к радиусу взрывов',19,'#b9d995');t(40,385,'−10% к скорости бега',19,'#d5a190');
+await img('src/assets/abilities-runtime/destroyer.webp',40,409,56,56);t(111,435,'Удар артиллерии',21,'#dbe4cf',600);t(111,464,'Активация: F   ·   60 сек.',17,'#9eaf99');
+rect(24,510,410,38,'url(#storyHeader)');t(40,537,'ХАРАКТЕРИСТИКИ',18,'#e4efd8',700);
+for(const[i,[k,v]]of [['Здоровье','100 ХП'],['Скорость бега','×0,9'],['Скорость стрельбы','×1'],['Урон оружием','×1'],['Снижение урона','0%'],['Радиус взрывов','×1,5'],['Регенерация','0 ХП/с'],['Время бонусов на земле','×1'],['Длительность бонусов','×1']].entries()){t(40,574+i*29,k,18,'#a8b9aa');t(355,574+i*29,v,19,'#d6e4cb',600);}
+s.push('</g>');
+t(494,141,'ТВОЁ ОРУЖИЕ',20,'#e4ecd9',700);t(1510,141,'БОНУСЫ',20,'#e4ecd9',700);
+s.push('<defs><radialGradient id="selectedWeaponSurface" cx="50%" cy="48%" r="75%"><stop stop-color="#354044"/><stop offset=".65" stop-color="#252e31"/><stop offset="1" stop-color="#192123"/></radialGradient></defs>');
+const equipped=['shotgun','rifle'];for(let i=0;i<4;i++){const x=494+i*176;s.push(`<rect x="${x}" y="159" width="160" height="83" rx="15" fill="url(#selectedWeaponSurface)" stroke="#8a9698" stroke-width="2"/><rect x="${x+3}" y="162" width="154" height="77" rx="12" fill="none" stroke="#d0d9d7" stroke-opacity=".05"/>`);if(equipped[i])await img(`src/assets/weapons-runtime/${equipped[i]}.webp`,x+9,172,142,57);else t(x+70,212,'+',32,'#75837e');}
+const bonusIds=['health','rapid-fire','move-speed','double-damage','shield','ice-blast','fire-blast'];const bonusNames=['Аптечка','Скорострельность','Скорость','Урон','Щит','Ледяная волна','Огненная волна'];
+for(let i=0;i<available;i++){const cx=1544+i*51,cy=204;s.push(`<circle cx="${cx}" cy="${cy}" r="33" fill="#101b1a" stroke="#101b1a" stroke-width="7"/><circle cx="${cx}" cy="${cy}" r="32.25" fill="#202d27" stroke="#76896a" stroke-width="2.5"/>`);if(i>=selectedCount){s.push(`<path d="M${cx-7.5} ${cy}H${cx+7.5}M${cx} ${cy-7.5}V${cy+7.5}" stroke="#a6bd8f" stroke-width="2.5" stroke-linecap="round"/>`);}else{await img(`src/assets/bonuses/v1/${bonusIds[i]}.png`,cx-28.5,cy-28.5,57,57);}}
+rect(494,282,1398,43,'#182520',5);t(510,310,'⚙  Очки снаряжения  —',17,'#8c9e8d');t(1500,310,'Обменять',17,'#647466');t(1628,310,'Обмен пока недоступен',16,'#647466');
+t(494,360,'ОРУЖИЕ',18,'#dfe8d7',700);
+const weaponSource=await fs.readFile('src/gameplay/weapons.ts','utf8');const names=Object.fromEntries([...weaponSource.matchAll(/(?:'([^']+)'|(\w+)):\s*\{\s*id:\s*'[^']+'[^\n]*?name:\s*'([^']+)'/g)].map(m=>[m[1]||m[2],m[3]]));
+const order=['rifle','shotgun','flamethrower','plasma-cannon','m16','machine-gun','ak47','plasma-auto','laser','skull-launcher','plasma-grenade','double-barrel','grenade-launcher','tesla','impulse','acid-gun','crossbow','disc-launcher'];
+s.push('<defs><linearGradient id="weaponSteel" x2="0" y2="1"><stop stop-color="#aeb0ad"/><stop offset="1" stop-color="#626865"/></linearGradient><linearGradient id="weaponOlive" x2="0" y2="1"><stop stop-color="#c0c798"/><stop offset="1" stop-color="#7c845b"/></linearGradient><linearGradient id="weaponBlue" x2="0" y2="1"><stop stop-color="#557687"/><stop offset="1" stop-color="#2b4655"/></linearGradient><linearGradient id="weaponDisabled" x2="0" y2="1"><stop stop-color="#505654"/><stop offset="1" stop-color="#303735"/></linearGradient><filter id="weaponGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter></defs>');
+const category=id=>['rifle','m16','machine-gun','ak47','plasma-auto'].includes(id)?'automatic':['shotgun','double-barrel','crossbow'].includes(id)?'shotgun':['plasma-cannon','plasma-grenade','tesla','impulse'].includes(id)?'scientific':'special';
+for(let i=0;i<order.length;i++){const id=order[i],x=494+i%6*235,y=377+Math.floor(i/6)*171,chosen=equipped.includes(id),disabled=!chosen&&equipped.some(w=>category(w)===category(id)),finish=['rifle','shotgun'].includes(id)?'weaponSteel':category(id)==='scientific'?'weaponBlue':'weaponOlive';s.push('<g>');if(disabled)s.push('<title>Оружие данного типа уже выбрано</title>');if(chosen)s.push(`<rect x="${x}" y="${y}" width="222" height="155" rx="17" fill="none" stroke="#a5e764" stroke-width="4" filter="url(#weaponGlow)"/>`);s.push(`<rect x="${x}" y="${y}" width="222" height="155" rx="17" fill="url(#${disabled?'weaponDisabled':finish})" stroke="${chosen?'#aff169':disabled?'#58605c':'#b1baa5'}" stroke-width="${chosen?2:1.5}"/>`);if(disabled)s.push('<g opacity=".33">');await img(`src/assets/weapons-runtime/${id}.webp`,x+12,y+16,198,91);if(disabled)s.push('</g>');t(x+48,y+133.5,names[id]||id,16,disabled?'#929b93':finish==='weaponBlue'?'#e3eae2':'#19221b',chosen?600:400);s.push('<g transform='+String.fromCharCode(34)+'translate(0 '+(y+129.5)+') scale(1 '+(1/1.257)+') translate(0 '+(-(y+129.5))+')'+String.fromCharCode(34)+'>');rect(x+10,y+115,29,29,'#26362b',0,'#a4aea8');rect(x+13,y+118,23,23,'#15251c',0,'#647463');s.push('</g>');await img('src/assets/icons-runtime/ammo/'+category(id)+'.png',x+14,y+119,21,21);s.push('</g>');}
+
+s.push('<rect x="460" y="95" width="1460" height="821" fill="#040708" opacity=".35"/>');
+s.push('<defs><linearGradient id="drawerNeutral"><stop stop-color="#141c20" stop-opacity="0"/><stop offset=".27" stop-color="#11191d" stop-opacity=".96"/><stop offset=".35" stop-color="#11191d"/><stop offset="1" stop-color="#0b1114"/></linearGradient><linearGradient id="bonusSilver" x2="0" y2="1"><stop stop-color="#697674"/><stop offset=".12" stop-color="#53615e"/><stop offset="1" stop-color="#293831"/></linearGradient><linearGradient id="bonusGold" x2="0" y2="1"><stop stop-color="#8e7d40"/><stop offset=".12" stop-color="#786934"/><stop offset="1" stop-color="#3d371e"/></linearGradient></defs>');
+rect(880,95,1040,821,'url(#drawerNeutral)',0);
+s.push('<g data-natural="true" transform="translate(0 95) scale(1 '+(1/1.257)+') translate(0 -95)">');
+t(1254,147,'БОНУСЫ',23,'#edf0ef',700);
+t(1254,199,'ТВОЙ НАБОР',15,'#aab6ba',600);t(1759,199,'Выбрано 2 / 4',17,'#d1d8d8');
+for(let i=0;i<6;i++){const cx=1292+i*103,cy=253,locked=i>=available;
+s.push('<circle cx="'+cx+'" cy="'+cy+'" r="36" fill="#202a29" stroke="'+(locked?'#655d32':i===1?'#b59b48':'#82917c')+'" stroke-width="3"/>');
+if(i<selectedCount){await img('src/assets/bonuses/'+(i===0?'v1/health':'gold-v1/double-damage')+'.png',cx-33,cy-33,66,66);}else if(locked){s.push('<path d="M'+(cx-4)+' '+(cy-2)+' v-5 a4 4 0 0 1 8 0 v5" fill="none" stroke="#b39b53" stroke-width="2"/><rect x="'+(cx-6)+'" y="'+(cy-2)+'" width="12" height="11" rx="1.5" fill="#aa8742"/><path d="M'+cx+' '+(cy+1)+'v4" stroke="#343125" stroke-width="2"/>');}else{t(cx-6,cy+6,'+',20,'#81917d');}
+s.push('<circle cx="'+(cx-26)+'" cy="'+(cy-32)+'" r="10" fill="#15201d" stroke="'+(locked?'#535849':'#81917d')+'"/>');t(cx-29,cy-28,String(i+1),12,locked?'#737a6b':'#dae3cf',600);}
+s.push('<path d="M1254 315H1872" stroke="#a5b3b8" stroke-opacity=".16"/>');t(1254,350,'Доступные бонусы',19,'#c7d0d1',600);
+
+const effects=[['50 ХП','100 ХП'],['×2 · 10 сек.','×4 · 10 сек.'],['×1,5 · 10 сек.','×3 · 10 сек.'],['×2 · 10 сек.','×4 · 10 сек.'],['−50% урона · 10 сек.','−75% урона · 10 сек.'],['Урон и замедление','Усиленная волна'],['Урон по площади','Усиленный взрыв']];
+const centered=(x,y,label,size,color,weight=400)=>s.push('<text x="'+x+'" y="'+y+'" text-anchor="middle" font-family="Segoe UI,Arial" font-size="'+size+'" fill="'+color+'" font-weight="'+weight+'">'+label+'</text>');
+for(let n=0;n<14;n++){const tier=n<7?0:1,i=n%7,x=1254+n%4*158,y=370+Math.floor(n/4)*178,chosen=(tier===0&&i===0)||(tier===1&&i===3),disabled=(tier===1&&i===0)||(tier===0&&i===3);
+rect(x,y,144,162,disabled?'#242a29':tier===0?'url(#bonusSilver)':'url(#bonusGold)',17,chosen?'#a7d966':disabled?'#3b4340':tier===0?'#85948b':'#ae9954');
+if(chosen)s.push('<rect x="'+(x+1)+'" y="'+(y+1)+'" width="142" height="160" rx="16" fill="none" stroke="#a7d966" stroke-width="2"/>');
+s.push('<rect x="'+(x+2)+'" y="'+(y+2)+'" width="140" height="158" rx="15" fill="none" stroke="#e1e5d4" stroke-opacity=".1"/>');
+const iconPath='src/assets/bonuses/'+(tier===0?'v1':'gold-v1')+'/'+bonusIds[i]+'.png';
+if(disabled){const icon=await sharp(iconPath).resize(80,80,{fit:'contain',background:'#00000000'}).grayscale().png().toBuffer();s.push('<image x="'+(x+32)+'" y="'+(y+10)+'" width="80" height="80" opacity=".26" href="data:image/png;base64,'+icon.toString('base64')+'"/>');}else await img(iconPath,x+32,y+10,80,80);
+centered(x+72,y+108,bonusNames[i],i===1?13:14,disabled?'#626965':'#f0f1e6',600);
+if(chosen)centered(x+72,y+128,'Выбрано',12,'#e4efcf',600);
+centered(x+72,y+149,effects[i][tier],12,disabled?'#545d58':tier===0?'#b3c0b9':'#ccbf94');}
+
+s.push('</g>');
+const panelFooter='<rect x="880" y="1127" width="1040" height="73" fill="url(#drawerNeutral)"/><path d="M1238 1127H1902" stroke="#435157"/><rect x="1534" y="1141" width="338" height="47" rx="5" fill="#759b50" stroke="#a5cc7c"/><text x="1703" y="1172" text-anchor="middle" font-family="Segoe UI,Arial" font-size="23" font-weight="700" fill="#11200f">СОХРАНИТЬ</text>';
+const opened=fullHeight(base+s.join('')+footer).replace('</svg>',panelFooter+'</svg>');await fs.writeFile(out+'/arsenal-bonuses-panel-v21.svg',opened);await sharp(Buffer.from(opened)).png().toFile(out+'/arsenal-bonuses-panel-v21.png');
