@@ -1,10 +1,11 @@
 import { CHARACTER_RIGS } from './CharacterRig';
 import type { ImageAsset } from './ImageAsset';
+import { drawCharacterTextureInAuthorSpace } from './CharacterTextureCoordinates';
 
 const ease = (t: number) => t * t * (3 - 2 * t);
 
 /** A short articulated, unarmed pose made from the existing character texture.
- * Coordinates below describe masks in the authored 1280px Goliath image.
+ * Coordinates below describe masks in the original authored Goliath image.
  * The arms overlap the torso at their shoulder pivots, and the crown is restored last.
  */
 export function drawGoliathSlamRaster(ctx: CanvasRenderingContext2D, asset: ImageAsset | undefined,
@@ -46,21 +47,21 @@ export function drawGoliathSlamRaster(ctx: CanvasRenderingContext2D, asset: Imag
             ctx.moveTo(610, 280); ctx.lineTo(950, 280); ctx.lineTo(950, 710);
             ctx.lineTo(735, 710); ctx.lineTo(735, 540); ctx.lineTo(625, 490); ctx.closePath();
         } else ctx.rect(615, 710, 430, 310);
-        ctx.clip(); ctx.drawImage(image, 0, 0); ctx.restore();
+        ctx.clip(); drawCharacterTextureInAuthorSpace(ctx, 'goliath', image); ctx.restore();
         if (!upper) {
             // Replace the weapon-supporting open palm with the same hero's closed fist.
             ctx.save(); ctx.translate(1040, 762); ctx.rotate(-.75 * (1 - recovery));
             ctx.scale(1.05, 1.05); ctx.translate(-823, -607);
             ctx.beginPath(); ctx.ellipse(823, 607, 82, 80, -.35, 0, Math.PI * 2); ctx.clip();
-            ctx.drawImage(image, 0, 0); ctx.restore();
+            drawCharacterTextureInAuthorSpace(ctx, 'goliath', image); ctx.restore();
         }
         ctx.restore();
     };
     arm(true); arm(false);
     // Keep the spine and shoulder mass solid throughout the swing.
-    ctx.save(); ctx.beginPath(); ctx.rect(60, 245, 595, 775); ctx.clip(); ctx.drawImage(image, 0, 0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(60, 245, 595, 775); ctx.clip(); drawCharacterTextureInAuthorSpace(ctx, 'goliath', image); ctx.restore();
     ctx.save(); ctx.translate(impact * 26 - lift * 16, 0);
     ctx.beginPath(); ctx.ellipse(584, 612, 104, 101, 0, 0, Math.PI * 2); ctx.clip();
-    ctx.drawImage(image, 0, 0); ctx.restore();
+    drawCharacterTextureInAuthorSpace(ctx, 'goliath', image); ctx.restore();
     ctx.restore();
 }

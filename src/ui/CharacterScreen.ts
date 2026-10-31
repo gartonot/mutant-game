@@ -6,7 +6,10 @@ import { BASE_STATS, resolveStats } from '@/gameplay/stats';
 import { applyImplants } from '@/gameplay/implants';
 import type { CharacterId } from '@/gameplay/ids';
 import type { Loadout } from '@/gameplay/loadout';
-import { abilityIconUrl } from '@/rendering/AbilityIcons';
+import { abilityIconStyle, ensureAbilityIcons, abilityArtworkReady } from '@/rendering/AbilityIcons';
+import { PortraitPreloader } from './PortraitPreloader';
+import { rosterArtwork, rosterArtworkReady } from './RosterArtwork';
+import { PORTRAIT_PREVIEWS } from '@/assets/selection-preview-data';
 import './characters.css';
 
 const lock = '<svg viewBox="0 0 24 28" aria-hidden="true"><path d="M6 11V7a6 6 0 0 1 12 0v4" fill="none" stroke="currentColor" stroke-width="3"/><rect x="2" y="10" width="20" height="17" rx="3" fill="currentColor"/><path d="M12 16v6" stroke="#153044" stroke-width="3"/></svg>';
@@ -16,6 +19,10 @@ export class CharacterScreen {
     private root = document.createElement('main');
     private selected = 2;
     private previewLocked = false;
+    private readonly portraits = new PortraitPreloader([...characters, ...lockedCharacters].map(c => c.image));
+    private rosterReady: Promise<boolean> = Promise.resolve(false);
+    private preparation?: Promise<boolean>;
+    private portraitRevision = 0;
     private equipment: EquipmentScreen;
     private upgrades = new UpgradesScreen(() => {
         if (!this.previewLocked) this.renderPortrait(characters[this.selected]);
@@ -24,7 +31,9 @@ export class CharacterScreen {
     get selectedLoadout() { return { ...this.equipment.draft.get(this.selectedCharacter), implants: this.upgrades.implants, arsenal: this.upgrades.arsenal }; }
     get selectedCharacter() { return characters[this.selected].id; }
 
-    constructor(private onClose: () => void, private onPlay: () => void, private playLabel: (loadout: Loadout) => string = () => 'Играть') {
+    constructor(private onClose: () => void, private onPlay: () => void, private playLabel: (loadout: Loadout) => string = () => 'Играть', private onArtworkReady: (character: CharacterId) => void = () => {}) {
+        // Start the selected portrait before inserting the roster's image requests.
+        this.portraits.prime(characters[this.selected].image);
         this.root.className = 'character-screen';
         this.root.hidden = true;
         document.body.append(this.root);
@@ -37,7 +46,7 @@ export class CharacterScreen {
                 </nav>
                 <div class="character-frame">
                     <div class="character-dossier">
-                        <div class="character-portrait"><img class="hero-portrait" alt=""/><span class="portrait-role"></span></div>
+                        <div class="character-portrait"><img class="hero-portrait-preview" fetchpriority="high" decoding="async" alt=""/><img class="hero-portrait" fetchpriority="high" decoding="async" alt=""/><span class="portrait-role"></span></div>
                         <section class="character-details" aria-labelledby="character-name">
                             <h1 id="character-name"></h1>
                             <div class="character-info" tabindex="0" role="region" aria-label="Характеристики и история персонажа">
@@ -49,12 +58,13 @@ export class CharacterScreen {
                         </section>
                     </div>
                     <div class="roster" role="group" aria-label="Выбор персонажа">
-                        ${characters.map((c, i) => `<button class="character-card" data-character="${i}" aria-label="${c.name}" aria-pressed="false"><img src="${c.thumbnail ?? c.image}" alt=""/><span>${c.name}</span></button>`).join('')}
-                        ${lockedCharacters.map((c, i) => `<button class="character-card character-preview" data-preview="${i}" aria-label="${c.name}, закрыт — посмотреть описание" aria-pressed="false"><img src="${c.thumbnail ?? c.image}" alt=""/><span>${c.name}</span><span class="character-lock">${lock}</span></button>`).join('')}
+                        ${characters.map((c, i) => `<button class="character-card" data-character="${i}" aria-label="${c.name}" aria-pressed="false">${rosterArtwork(c.id)}<span>${c.name}</span></button>`).join('')}
+                        ${lockedCharacters.map((c, i) => `<button class="character-card character-preview" data-preview="${i}" aria-label="${c.name}, закрыт — посмотреть описание" aria-pressed="false">${rosterArtwork(c.id)}<span>${c.name}</span><span class="character-lock">${lock}</span></button>`).join('')}
                     </div>
                 </div>
                 <footer class="preparation-footer"><button class="preparation-back">Главное меню</button><button class="preparation-play">Играть</button><span class="preparation-mode">Выживание</span></footer>
             </section>`;
+        this.rosterReady = rosterArtworkReady();
         this.equipment = new EquipmentScreen(() => this.updatePlay());
         this.root.querySelector('.preparation-footer')!.before(this.equipment.element);
         this.root.querySelector('.preparation-footer')!.before(this.upgrades.element);
@@ -73,7 +83,31 @@ export class CharacterScreen {
             if (event.key === 'Escape' && !event.defaultPrevented && !this.root.hidden && !document.querySelector('dialog[open]')) { this.hide(); this.onClose(); }
         }, { signal: this.events.signal });
         this.select(this.selected);
+        // Card artwork is small enough to prepare alongside the main menu, before either tab is opened.
+        this.equipment.prepareArtwork();
+        void this.upgrades.prepareArtwork();
     }
+
+    prepare(): Promise<boolean> {
+        if (this.preparation) return this.preparation;
+        this.rosterReady = rosterArtworkReady();
+        // Other full portraits are optional; leave connections for the selected hero and equipment.
+        this.preparation = Promise.all([this.portraits.prepareAll(1), this.rosterReady, abilityArtworkReady()])
+            .then(results => {
+                const ready = results.every(Boolean);
+                if (!ready) this.preparation = undefined;
+                return ready;
+            }).catch(() => { this.preparation = undefined; return false; });
+        return this.preparation;
+    }
+
+    prepareCurrent(): Promise<boolean> {
+        this.rosterReady = rosterArtworkReady();
+        return Promise.all([this.portraits.select(characters[this.selected].image, Promise.resolve(), false),
+            this.rosterReady, abilityArtworkReady()]).then(results => results.every(Boolean));
+    }
+
+    prepareEquipment(): Promise<boolean> { return this.equipment.prepareArtwork(); }
 
     show() {
         this.root.hidden = false;
@@ -82,10 +116,12 @@ export class CharacterScreen {
         this.root.querySelector<HTMLButtonElement>(`[data-character="${this.selected}"]`)!.focus();
     }
 
-    hide() { this.upgrades.hideTooltip(); this.root.hidden = true; }
+    hide() { this.upgrades.hideTooltip(); this.root.hidden = true; this.portraits.pause(); ++this.portraitRevision; }
 
     dispose(): void {
         this.events.abort();
+        ++this.portraitRevision;
+        this.portraits.dispose();
         this.equipment.dispose();
         this.upgrades.dispose();
         this.root.remove();
@@ -97,6 +133,7 @@ export class CharacterScreen {
         this.equipment.element.hidden = tab !== 'equipment';
         if (tab === 'equipment') this.equipment.prepareArtwork();
         this.upgrades.element.hidden = tab !== 'upgrades';
+        if (tab === 'upgrades') this.upgrades.prepareArtwork();
         this.root.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach(button => {
             const active = button.dataset.tab === tab;
             button.classList.toggle('active', active);
@@ -123,7 +160,21 @@ export class CharacterScreen {
 
     private renderPortrait(c: Omit<typeof characters[number], 'id'> & { id?: CharacterId; abilityDescription?: string; previewNote?: string }) {
         const portrait = this.root.querySelector<HTMLImageElement>('.hero-portrait')!;
-        portrait.src = c.image;
+        const preview = this.root.querySelector<HTMLImageElement>('.hero-portrait-preview')!;
+        const cached = this.portraits.isReady(c.image);
+        if (!cached) preview.src = c.id ? PORTRAIT_PREVIEWS[c.id] : c.thumbnail ?? c.image;
+        portrait.style.opacity = cached ? '1' : '0';
+        if (portrait.getAttribute('src') !== c.image) portrait.src = c.image;
+        const revision = ++this.portraitRevision;
+        const abilityReady = ensureAbilityIcons();
+        const interfaceReady = Promise.all([this.rosterReady, abilityReady]);
+        const selectedReady = this.portraits.select(c.image, interfaceReady, false);
+        void selectedReady.then(ready => {
+            if (ready && revision === this.portraitRevision) portrait.style.opacity = '1';
+        });
+        void Promise.all([selectedReady, interfaceReady]).then(([ready]) => {
+            if (ready && revision === this.portraitRevision && !this.root.hidden && !this.previewLocked && c.id) this.onArtworkReady(c.id);
+        });
         portrait.alt = c.name;
         this.root.querySelector('.portrait-role')!.textContent = c.role;
         this.root.querySelector('#character-name')!.textContent = c.name;
@@ -150,8 +201,8 @@ export class CharacterScreen {
         }).join('');
         this.root.querySelector('.character-stats')!.innerHTML = `${traits || c.penalty ? '<h2>Особенности</h2>' : ''}${traits}${c.penalty ? `<p class="negative">${c.penalty}</p>` : ''}`;
         this.root.querySelector('.character-stats-disclosure')!.innerHTML = stats ? `<details class="character-stats-details"><summary>Характеристики</summary><div class="character-stats-content"><p class="character-stats-note">С учётом особенностей героя и имплантов, без достижений и снаряжения. ×1 — базовая скорость бега или исходный параметр оружия и бонуса.</p><dl class="character-resolved-stats">${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join('')}</dl><p class="character-stats-note">* Время предметов на земле — 15 секунд, временных эффектов — 10 секунд, с учётом указанных множителей.</p></div></details>` : '';
-        const icon = abilityIconUrl(c.id);
-        this.root.querySelector('.character-ability')!.innerHTML = `${c.ability ? `<div class="character-ability-heading">${icon ? `<img class="character-ability-icon" src="${icon}" alt="" width="76" height="76"/>` : ''}<div><span class="character-ability-eyebrow">Активная способность</span><div class="character-ability-name">${c.ability} <kbd>F</kbd></div>${definition?.ability.status === 'active' ? '<p class="character-preview-note">Нажми F в бою. Перезарядка начинается при активации.</p>' : '<p class="character-preview-note">Способность пока не действует.</p>'}</div></div>` : ''}${c.abilityDescription ? `<p class="character-ability-description">${c.abilityDescription}</p>` : ''}<p class="character-preview-note">${definition?.startingAmmo ? 'Стартовое оружие героя добавлено к пистолету в снаряжении. Его можно заменить перед боем.' : 'Стартовое оружие — пистолет.'}</p>${c.previewNote ? `<p class="character-preview-note">${c.previewNote}</p>` : this.previewLocked ? '<p class="character-preview-note">Персонаж закрыт. Характеристики и способность показаны для ознакомления.</p>' : ''}`;
+        const icon = abilityIconStyle(c.id);
+        this.root.querySelector('.character-ability')!.innerHTML = `${c.ability ? `<div class="character-ability-heading">${icon ? `<span class="character-ability-icon" aria-hidden="true" style="${icon}"></span>` : ''}<div><span class="character-ability-eyebrow">Активная способность</span><div class="character-ability-name">${c.ability} <kbd>F</kbd></div>${definition?.ability.status === 'active' ? '<p class="character-preview-note">Нажми F в бою. Перезарядка начинается при активации.</p>' : '<p class="character-preview-note">Способность пока не действует.</p>'}</div></div>` : ''}${c.abilityDescription ? `<p class="character-ability-description">${c.abilityDescription}</p>` : ''}<p class="character-preview-note">${definition?.startingAmmo ? 'Стартовое оружие героя добавлено к пистолету в снаряжении. Его можно заменить перед боем.' : 'Стартовое оружие — пистолет.'}</p>${c.previewNote ? `<p class="character-preview-note">${c.previewNote}</p>` : this.previewLocked ? '<p class="character-preview-note">Персонаж закрыт. Характеристики и способность показаны для ознакомления.</p>' : ''}`;
         this.root.querySelector<HTMLElement>('.character-story-title')!.hidden = c.story.length === 0;
         this.root.querySelector('.character-story')!.innerHTML = c.story.map(p => `<p>${p}</p>`).join('');
         this.root.querySelector('.character-info')!.scrollTop = 0;

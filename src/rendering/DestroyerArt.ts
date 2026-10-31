@@ -1,5 +1,5 @@
 import type { WeaponId } from '@/gameplay/ids';
-import atlasUrl from '@/assets/combat-runtime/characters/destroyer.png';
+import atlasUrl from '@/assets/combat-scaled/characters/destroyer.png';
 import { createLazyImageAsset } from './ImageAsset';
 import { drawRasterCharacter } from './RasterCharacterArt';
 import type { RasterCharacterStyle } from './RasterCharacterArt';

@@ -1,0 +1,261 @@
+{
+  "generator": "scripts/generate-selection-previews.mjs",
+  "schemaVersion": 1,
+  "sharpVersion": "0.35.5",
+  "libvipsVersion": "8.18.7",
+  "settings": {
+    "portrait": {
+      "width": 96,
+      "height": 144,
+      "quality": 65
+    },
+    "roster": {
+      "width": 64,
+      "height": 96,
+      "quality": 65
+    },
+    "ability": {
+      "width": 48,
+      "height": 48,
+      "quality": 70
+    },
+    "kernel": "lanczos3",
+    "alphaQuality": 100,
+    "effort": 6
+  },
+  "originalsPreserved": true,
+  "sources": [
+    {
+      "path": "src/assets/characters/assassin.png",
+      "bytes": 2352244,
+      "sha256": "94ba804fe6d01a9dfcd02e741f5f6fd3cf29d1495b1750ccca7791eae06f4850"
+    },
+    {
+      "path": "src/assets/characters/destroyer.png",
+      "bytes": 2701051,
+      "sha256": "0c84dd073a0b641273b44c68fda1bfd5592d2c24e6bef0b246f4e3db82bdc864"
+    },
+    {
+      "path": "src/assets/characters/mercenary.png",
+      "bytes": 2908297,
+      "sha256": "ca666f932c39b09413236eb15676394ca3765b4f9684aa95df80d00ac33570f4"
+    },
+    {
+      "path": "src/assets/characters/hunter.png",
+      "bytes": 2608565,
+      "sha256": "749dd20c7367add733d51f1da65f7d0fcb0408ebe998a0dac949e24ef8079277"
+    },
+    {
+      "path": "src/assets/characters/cyborg.png",
+      "bytes": 2721504,
+      "sha256": "8c087f14d72e52bbf50acb415829007c66b296ae9b7c4837e00369309f4e4523"
+    },
+    {
+      "path": "src/assets/characters/telepath.png",
+      "bytes": 2356225,
+      "sha256": "cde74ed9127d3fd2dbcfb4b9363c6d7a4b96e847ad441f5ae066a2c17fe0612e"
+    },
+    {
+      "path": "src/assets/characters/fanatic.png",
+      "bytes": 2462332,
+      "sha256": "b6d000b526d5081eb6c1fad7bbc225cb57524f0eff032d4c9df97f0e516ec55b"
+    },
+    {
+      "path": "src/assets/characters/witcher.png",
+      "bytes": 2605787,
+      "sha256": "55ba7819100724879bd54ac925f669b025eba8c056bdffd65869aaf336f5ed3c"
+    },
+    {
+      "path": "src/assets/characters/plasma-nuclear.png",
+      "bytes": 2540842,
+      "sha256": "bd9cb0777d66a44a87374722632608f8005b939372f97d74ed36c40852f6c4a7"
+    },
+    {
+      "path": "src/assets/characters/nuclear.png",
+      "bytes": 2779071,
+      "sha256": "d939f9cd0943b9f3c7be1151c7ae50ab98a3ed0b7aa887f8139b5df852cf9007"
+    },
+    {
+      "path": "src/assets/characters/silver-hunter.png",
+      "bytes": 2535519,
+      "sha256": "0fabe4ef9c55fa4201ec639fe1a6b032225dc6390bf5836159001ce7b8995847"
+    },
+    {
+      "path": "src/assets/characters/goliath.png",
+      "bytes": 2955054,
+      "sha256": "a5b1c152c98db03347854865115b3fcedcde7a530d19b060d79f13ea659ae881"
+    },
+    {
+      "path": "src/assets/characters/half-mutant.png",
+      "bytes": 2489684,
+      "sha256": "833805178f5c76a80ce6c4a063c989144615add64a05185536483d4a0a03c6ec"
+    },
+    {
+      "path": "src/assets/characters/unknown-white-outfit-v1.png",
+      "bytes": 2476916,
+      "sha256": "a8e61339c0c44a12b8d079e0e8f4a75ef28f18c2ecc5e82db71e181fe113ad40"
+    },
+    {
+      "path": "src/assets/characters/unknown-crossbow-v3.png",
+      "bytes": 2529163,
+      "sha256": "5a4ac1b9c5840103e26b0663b7e7232faebfcc6685b7975186c7daa4b5e4e89a"
+    },
+    {
+      "path": "src/assets/abilities/v1/assassin.png",
+      "bytes": 153700,
+      "sha256": "9157d9ada4a5ae5cfe696d425c28bacdc0f1ccfdc9dea7d1cbacadaab088960b"
+    },
+    {
+      "path": "src/assets/abilities/v1/cyborg.png",
+      "bytes": 171058,
+      "sha256": "d162f04059fc2b7fc57a66835ba82a5963fefab0a34511d930b505965851a332"
+    },
+    {
+      "path": "src/assets/abilities/v1/destroyer.png",
+      "bytes": 163054,
+      "sha256": "a6d3696151027ab681a2fe392975b163d9131ea451a6637cfb49ff35ce556ff6"
+    },
+    {
+      "path": "src/assets/abilities/v1/fanatic.png",
+      "bytes": 173408,
+      "sha256": "19cea7ecb33df71548ef222331b14ddbc7863a0397df72b995aeaf159dd27d75"
+    },
+    {
+      "path": "src/assets/abilities/v1/goliath.png",
+      "bytes": 175365,
+      "sha256": "22c433a4811de0bdc18a11d38e6a705080cbd67c6d2b48104a927fcd8d0d0dfb"
+    },
+    {
+      "path": "src/assets/abilities/v1/half-mutant.png",
+      "bytes": 144868,
+      "sha256": "68fe41fd8d51523cc666ef07ffe6db6dbf75c86a4b44c9ead663c3e7acfb6208"
+    },
+    {
+      "path": "src/assets/abilities/v1/hunter.png",
+      "bytes": 144144,
+      "sha256": "fbf430216b0f11b7f9a095026c407690bc0b948e547e6dd4ce7ebc9aad79d156"
+    },
+    {
+      "path": "src/assets/abilities/v1/mercenary.png",
+      "bytes": 148846,
+      "sha256": "906997bac7b896c805d9d2d78bd477e0fab327c7e9248cdd7106a77a3f6e6bbe"
+    },
+    {
+      "path": "src/assets/abilities/v1/nuclear.png",
+      "bytes": 155176,
+      "sha256": "fc9c20c1ac3e8b1cb630c52da3bd610126ecc45f1e0ffdf9a86deecb0420df94"
+    },
+    {
+      "path": "src/assets/abilities/v1/plasma-nuclear.png",
+      "bytes": 173393,
+      "sha256": "f94c48316e1c425322ece7321faba21fe8fcd8bfb66dfff290aa18fd40d79e19"
+    },
+    {
+      "path": "src/assets/abilities/v1/silver-hunter.png",
+      "bytes": 159707,
+      "sha256": "2d530d5324f60696c9aa93fa254aeb76af05f522c9e878f8b2c16eb946f8809b"
+    },
+    {
+      "path": "src/assets/abilities/v1/telepath.png",
+      "bytes": 141231,
+      "sha256": "37512f9128e6d0451a50afa899ac4b4b9db4e58a962a3c204743cad925c962b7"
+    },
+    {
+      "path": "src/assets/abilities/v1/witcher.png",
+      "bytes": 162612,
+      "sha256": "33dc531d76fbf70d71d7c112c40f087be850a611a4d307c6865f74966f973ea3"
+    }
+  ],
+  "portraits": [
+    {
+      "id": "assassin",
+      "bytes": 2830,
+      "sha256": "88687bed16c407c9ccbed0df7d707d1e7abe39b98f2e9e92410ed321ec1e5550"
+    },
+    {
+      "id": "destroyer",
+      "bytes": 2878,
+      "sha256": "b261e687abc6a0fad284e06cc88e5c8b4a46928be925bb566b5d20af139c2f47"
+    },
+    {
+      "id": "mercenary",
+      "bytes": 2984,
+      "sha256": "17f46d8e10964ebe5bc6dd43cb5fe2735f9d662957d4caf2c9395589222d3a58"
+    },
+    {
+      "id": "hunter",
+      "bytes": 2348,
+      "sha256": "dc13fdac1ce7c8f5d093f6c153692beee455059fed34bb8c86f680e3a9999731"
+    },
+    {
+      "id": "cyborg",
+      "bytes": 2280,
+      "sha256": "6111ea93e4e5d789aac77c57b68bba5fc6f41330e9865799682c90261abaf9a5"
+    },
+    {
+      "id": "telepath",
+      "bytes": 1964,
+      "sha256": "054966749601f84d59e39757df29231cb96c237b06eaff506e051f329c8f0163"
+    },
+    {
+      "id": "fanatic",
+      "bytes": 2040,
+      "sha256": "218be8fd3a91fd01303cca4482d0c6915aea826ccd9bfd568055fa5754ee0793"
+    },
+    {
+      "id": "witcher",
+      "bytes": 2518,
+      "sha256": "bcecf2631a570bd1b1a03a5484469c5776810dc4603f2ebbbd0f0f907220bb0a"
+    },
+    {
+      "id": "plasma-nuclear",
+      "bytes": 2834,
+      "sha256": "0786ea7bab805d6b22f714ad61b7764675445b837d4e9e3420a6f28b0b104230"
+    },
+    {
+      "id": "nuclear",
+      "bytes": 4550,
+      "sha256": "d90ac1581b32e8db80e8b22161889bee3396568689ae7ea135e70a7528b3630e"
+    },
+    {
+      "id": "silver-hunter",
+      "bytes": 2656,
+      "sha256": "7dbbb8c0c10802b4a26d08ff41f563b9b5cd4e9ae1847cda5016e03001c8a4bf"
+    },
+    {
+      "id": "goliath",
+      "bytes": 3032,
+      "sha256": "5d15d33694bea208af4329bc5137ab09f6c8ea85c5b540fb2b14954c588519e2"
+    },
+    {
+      "id": "half-mutant",
+      "bytes": 3242,
+      "sha256": "c52ffcec341c5d377d0a938b14daa3076eafc3bee1f62e28dbe7f484e0e46855"
+    },
+    {
+      "id": "unknown-white-outfit",
+      "bytes": 2260,
+      "sha256": "6f42fa0b72ea8acd829ac66c79ca4228fac67e7e9f391af54cd84f191d049911"
+    },
+    {
+      "id": "unknown-crossbow",
+      "bytes": 2546,
+      "sha256": "cc936d7c97a255afc5a5b8000212ac266bb9f142b9d6b8053806f925b5834255"
+    }
+  ],
+  "roster": {
+    "columns": 5,
+    "rows": 3,
+    "bytes": 20368,
+    "sha256": "599032d62646722ee2f307b0d2fd985fe25202282a965bd3c851e3c2c63314c9"
+  },
+  "abilities": {
+    "columns": 4,
+    "rows": 4,
+    "bytes": 10042,
+    "sha256": "f49e86a1ba53e30c76223c68d9aba4853ff94a1821c2c8b9dafb894d96e4995f"
+  },
+  "totalBinaryBytes": 71372,
+  "moduleBytes": 96199,
+  "moduleSha256": "b523553021af737995f08862b0aaf9a65d4355f22639f84196c8eec88d999cfc"
+}

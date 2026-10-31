@@ -1,0 +1,208 @@
+{
+  "generator": "scripts/optimize-equipment-art.mjs",
+  "sharpVersion": "0.35.5",
+  "libvipsVersion": "8.18.7",
+  "layoutSource": {
+    "path": "src/assets/weapons/v2/layout.ts",
+    "sha256": "ef2157409fcd9580517ebbad8b4e48f7e67e4ce29ff7cc9232a4819b8b94b9b9"
+  },
+  "settings": {
+    "webp": {
+      "quality": 90,
+      "alphaQuality": 100,
+      "effort": 6
+    },
+    "previewSettings": {
+      "quality": 55,
+      "alphaQuality": 100,
+      "effort": 6
+    },
+    "weaponCard": {
+      "width": 240,
+      "height": 380,
+      "angle": -1.853539665617978,
+      "fitWidth": 208,
+      "fitHeight": 340
+    },
+    "bonusSize": 192
+  },
+  "outputs": {
+    "weapons": {
+      "bytes": 239872,
+      "sha256": "8deba08129191ea91956113c7ceda7103ff61442903bd3d2c04b57b2d10b997b"
+    },
+    "bonuses": {
+      "bytes": 229974,
+      "sha256": "f05af2fe4432ad36059d65cdf43dc5cf905e08a53b1c8b34915ba7be8e94ddfa"
+    },
+    "embeddedPreviewBytes": 79976
+  },
+  "originalsPreserved": true,
+  "sources": [
+    {
+      "path": "src/assets/weapons/v2/ak47.png",
+      "bytes": 584415,
+      "sha256": "993ba472eac6fa98a357c3deb3b42d4271e6a4a3f528dce759ff5b24bc03ce6d"
+    },
+    {
+      "path": "src/assets/weapons/v2/double-barrel.png",
+      "bytes": 699557,
+      "sha256": "5a7f0f1e2228a1951ea9747201aed5e440616656cb9a83baa2a2f2a89db3d65e"
+    },
+    {
+      "path": "src/assets/weapons/v2/flamethrower.png",
+      "bytes": 894063,
+      "sha256": "06d985e97c1757e29649f759b8fb1ebca464410c4b04c22c545b1b1d5cfd9b01"
+    },
+    {
+      "path": "src/assets/weapons/v2/grenade-launcher.png",
+      "bytes": 1018169,
+      "sha256": "39cc4421a70fa490563eb75ee650f8e39c50d7a1006760ca70107d1cc1ba4437"
+    },
+    {
+      "path": "src/assets/weapons/v2/laser.png",
+      "bytes": 787725,
+      "sha256": "b63489f120b7431d254d965df8adc305ea1a844ea0fa2b313f15f08287352f1d"
+    },
+    {
+      "path": "src/assets/weapons/v2/m16.png",
+      "bytes": 633298,
+      "sha256": "86a023ed8b57859c2e12e649fd70dcd78a61b230d3ff45f2e7c04c72012b32c2"
+    },
+    {
+      "path": "src/assets/weapons/v2/machine-gun.png",
+      "bytes": 1030805,
+      "sha256": "819451bb5fe7fcf0a787a7b15b5d23e69c999d62f21e817e1a78cfda833e5c44"
+    },
+    {
+      "path": "src/assets/weapons/v2/pistol.png",
+      "bytes": 1046075,
+      "sha256": "2103bd388efddb319056ade2bfbbeddb812c0af5a1f54e0df3bfc35d1b0d7411"
+    },
+    {
+      "path": "src/assets/weapons/v2/plasma-auto.png",
+      "bytes": 726869,
+      "sha256": "c2c5d3632d076f58c17f8dfb20f14ee1411cd8c5a007ea7d09883745f751e3b1"
+    },
+    {
+      "path": "src/assets/weapons/v2/plasma-cannon.png",
+      "bytes": 1158946,
+      "sha256": "26cf05206b5fd9d1b9be389ce55a97030faf78c3753c1e88890741083cf67292"
+    },
+    {
+      "path": "src/assets/weapons/v2/plasma-grenade.png",
+      "bytes": 1163020,
+      "sha256": "a5404b1a84c96f3627ece91af6ab081abde96ce60342d8024ebc7de824d83e21"
+    },
+    {
+      "path": "src/assets/weapons/v2/rifle.png",
+      "bytes": 780374,
+      "sha256": "f1f27060f78a0c09817bb1747674470331e319e1c94674d73c42159f48c00bb6"
+    },
+    {
+      "path": "src/assets/weapons/v2/shotgun.png",
+      "bytes": 559664,
+      "sha256": "b75c29123aa8e18c9952d4f2415e9c889e795d08804dd454ef35465ef2b088cb"
+    },
+    {
+      "path": "src/assets/weapons/v2/skull-launcher.png",
+      "bytes": 1217012,
+      "sha256": "f4c571b1447ffd14f10e0d5cfc247663948671f0ba49638b8b911bb75d09d720"
+    },
+    {
+      "path": "src/assets/weapons/v2/tesla.png",
+      "bytes": 1105999,
+      "sha256": "a3ff725778ac37499631d11c8e55ad77e0c2a3084abb5299a32fdc96f424fe7e"
+    },
+    {
+      "path": "src/assets/weapons/v2/impulse.png",
+      "bytes": 1744938,
+      "sha256": "e81de92f15add9e27f1ee9d09bf086d01631f81fc6ff9c63a833f9127c07e83b"
+    },
+    {
+      "path": "src/assets/weapons/v2/acid-gun.png",
+      "bytes": 1568804,
+      "sha256": "f12ab373955114676c6f15b6387236b7a9c84ba5bd83ad2564a57168c909f053"
+    },
+    {
+      "path": "src/assets/weapons/v2/crossbow.png",
+      "bytes": 917313,
+      "sha256": "25ae991a60c7affbf19f0d54b7640eade98b60f9ddc9552477e35984671073d0"
+    },
+    {
+      "path": "src/assets/weapons/v2/disc-launcher.png",
+      "bytes": 1954011,
+      "sha256": "cfb124c29dbfcc8059f0feb790c90c7990fa5616180b3d22768452f3870267fa"
+    },
+    {
+      "path": "src/assets/bonuses/v1/health.png",
+      "bytes": 1857127,
+      "sha256": "4482e20fb1661e183f5414216124af7aa4a91cf5de8da6075fb79d42a038309e"
+    },
+    {
+      "path": "src/assets/bonuses/v1/rapid-fire.png",
+      "bytes": 1975881,
+      "sha256": "fcd5b44356b40bed0008ea158a3f06f5f4dfe6b20ab73e02ec5d06c04878ac6d"
+    },
+    {
+      "path": "src/assets/bonuses/v1/move-speed.png",
+      "bytes": 1940587,
+      "sha256": "2bcfd8e68d47c82658f3bd19a8f1d6aa12a585c66bc95c7ea4d29c398bf03702"
+    },
+    {
+      "path": "src/assets/bonuses/v1/double-damage.png",
+      "bytes": 1834441,
+      "sha256": "d26823ec58830d2db83882c4c5aa5bd924dd47a390693716e54b0a4e3ead609e"
+    },
+    {
+      "path": "src/assets/bonuses/v1/shield.png",
+      "bytes": 2194161,
+      "sha256": "e6bd6da5f51b80e9bdf6c71f032f66f3679fb28154ab8be32c27612ddcae1d9d"
+    },
+    {
+      "path": "src/assets/bonuses/v1/ice-blast.png",
+      "bytes": 2085580,
+      "sha256": "81f71639de4ccb5beda3ac0084b0a37f12b4d3d459b3c5dbb06ea7fc5b151d44"
+    },
+    {
+      "path": "src/assets/bonuses/v1/fire-blast.png",
+      "bytes": 1831982,
+      "sha256": "9214a6410a5180828733c6f35b5b650c7eb2a0a82089f3e5b0dead7abcf398ba"
+    },
+    {
+      "path": "src/assets/bonuses/gold-v1/health.png",
+      "bytes": 1800612,
+      "sha256": "5491847d053d458c4a2fbda61e1873018b7b02f32aff9265646146f1671c9825"
+    },
+    {
+      "path": "src/assets/bonuses/gold-v1/rapid-fire.png",
+      "bytes": 1875546,
+      "sha256": "919980e9839296aa441c8df520abb5ccb31b073e448724ae95c5498c291d58ab"
+    },
+    {
+      "path": "src/assets/bonuses/gold-v1/move-speed.png",
+      "bytes": 1862776,
+      "sha256": "6188540e2b768bc71f59c233a43bb76deeeca361ebd291da7284eedd413cfe9e"
+    },
+    {
+      "path": "src/assets/bonuses/gold-v1/double-damage.png",
+      "bytes": 1756840,
+      "sha256": "6bc595c6de541ab393a9673ab940936a46e472fdacae72110aea4c5a43388fb9"
+    },
+    {
+      "path": "src/assets/bonuses/gold-v1/shield.png",
+      "bytes": 2137069,
+      "sha256": "d0b970c2443e1b5caa990dbdb0c34758cbf4567a09d387c35cc565236bc1c368"
+    },
+    {
+      "path": "src/assets/bonuses/gold-v1/ice-blast.png",
+      "bytes": 1890728,
+      "sha256": "298792c7101958e52a9b32228cf58e480e6a4b1cdafb98b5171e4e013f933dd1"
+    },
+    {
+      "path": "src/assets/bonuses/gold-v1/fire-blast.png",
+      "bytes": 1630834,
+      "sha256": "cb32e36d73507ba3a11ba5e876a6bf514481dd25c25d0569c2d688c0fbfbe803"
+    }
+  ]
+}

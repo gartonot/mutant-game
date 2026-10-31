@@ -1,5 +1,6 @@
 import type { CharacterId, WeaponId } from '@/gameplay/ids';
-import { CHARACTER_RIGS, drawRigBody } from './CharacterRig';
+import { drawRigBody } from './CharacterRig';
+import { CHARACTER_TEXTURE_RIGS, characterTextureRect } from './CharacterTextureCoordinates';
 import type { RigRect } from './CharacterRig';
 import { drawHandOverlay } from './HandOverlay';
 import { drawWeapon } from './WeaponArt';
@@ -21,7 +22,7 @@ export function drawRasterCharacter(ctx: CanvasRenderingContext2D, character: Ch
     asset: ImageAsset, weapon: WeaponId, recoil: number, style = DEFAULT_CHARACTER_STYLE,
     imageOverride?: CanvasImageSource): boolean {
     if (!asset.loaded) return false;
-    const body = CHARACTER_RIGS[character], image = imageOverride ?? asset.image;
+    const body = CHARACTER_TEXTURE_RIGS[character], image = imageOverride ?? asset.image;
     ctx.save();
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
@@ -41,7 +42,7 @@ export function drawRasterCharacter(ctx: CanvasRenderingContext2D, character: Ch
         ctx.translate(...head.translate);
         ctx.scale(head.scale, head.scale);
         ctx.translate(...head.offset);
-        ctx.drawImage(image, ...head.source, ...head.target);
+        ctx.drawImage(image, ...characterTextureRect(character, head.source), ...head.target);
         ctx.restore();
     }
     ctx.restore();

@@ -11,6 +11,8 @@ import { ensureCharacterArt } from '@/rendering/CharacterArt';
 import { ensureAbilityIcons } from '@/rendering/AbilityIcons';
 import { weaponSpritesReady } from '@/rendering/WeaponSprites';
 import { enemyArtReady } from '@/rendering/EnemyArt';
+import { createBattleArtwork } from './BattleArtwork';
+import type { CharacterId } from '@/gameplay/ids';
 import { MusicTrack } from '@/audio/MusicTrack';
 import { MusicSettings } from '@/ui/MusicSettings';
 import { CombatAudio } from '@/audio/CombatAudio';
@@ -20,6 +22,8 @@ import './battle-preparation.css';
 
 
 export function createGameApplication(): () => void {
+    // The small ability catalog is shared by every hero and starts in the menu.
+    void ensureAbilityIcons();
     const applicationEvents = new AbortController();
     const { signal } = applicationEvents;
     const combatAudio = new CombatAudio();
@@ -33,8 +37,9 @@ export function createGameApplication(): () => void {
         document.getElementById(id)!.addEventListener('click', () => musicSettings.show(), { signal });
     }
     let menuMusicActive = true;
+    let menuArtworkReady = false;
     function playMenuMusic() {
-        if (menuMusicActive && !document.hidden && document.hasFocus()) menuMusic.play();
+        if (menuArtworkReady && menuMusicActive && !document.hidden && document.hasFocus()) menuMusic.play();
     }
     // Covers dynamically created portraits and weapon icons as well.
     document.addEventListener('dragstart', event => {
@@ -51,6 +56,26 @@ export function createGameApplication(): () => void {
     const progressStore = new ProgressStore();
     const rewards = new RewardsScreen(showMenu);
     let characters: CharacterScreen | undefined;
+    const prepareArtwork = createBattleArtwork({ hero: ensureCharacterArt, weapons: weaponSpritesReady,
+        enemies: enemyArtReady, ability: ensureAbilityIcons });
+    let warmupTimer: ReturnType<typeof setTimeout> | undefined;
+    function cancelWarmup() { clearTimeout(warmupTimer); warmupTimer = undefined; }
+    function warmArtwork(character: CharacterId) {
+        cancelWarmup();
+        // Let the portrait paint and avoid loading every hero during quick browsing.
+        warmupTimer = setTimeout(async () => {
+            // Prioritize the likely next tab over optional combat and audio warm-up.
+            await characters?.prepareEquipment();
+            if (signal.aborted || !characters || characters.selectedCharacter !== character || !menu.hidden) return;
+            menuArtworkReady = true;
+            playMenuMusic();
+            const started = performance.now();
+            combatAudio.preload();
+            void prepareArtwork(character).then(() => {
+                performance.measure('battle-artwork-warmup', { start: started, detail: { character } });
+            }).catch(() => { /* Play provides the existing retry UI if preparation failed. */ });
+        }, 200);
+    }
     const preparation = document.createElement('dialog');
     preparation.className = 'battle-preparation';
     preparation.setAttribute('aria-labelledby', 'battle-preparation-status');
@@ -117,6 +142,7 @@ export function createGameApplication(): () => void {
     document.querySelector('#pause-main-menu')!.addEventListener('click', showMenu, { signal });
 
     function showMenu() {
+        cancelWarmup();
         combatAudio.setActive(false);
         battleMusic.stop();
         pauseDialog.close();
@@ -138,18 +164,18 @@ export function createGameApplication(): () => void {
         if (session.world && !session.canContinue(loadout)
             && !window.confirm('Комплект изменён. Начать новый бой? Результаты незавершённого боя будут потеряны: убийства, время и другой прогресс не засчитаются. Отмена сохранит прежний бой — верни прежний комплект, чтобы продолжить его.')) return;
         const version = ++preparationVersion;
+        cancelWarmup();
+        performance.mark('battle-play-click');
         preparing = true;
         retryPreparation.hidden = true;
         preparationStatus.textContent = 'Подготовка боя…';
         preparation.setAttribute('aria-busy', 'true');
         if (!preparation.open) preparation.showModal();
         try {
-            const [hero, weapons, enemies] = await Promise.all([
-                ensureCharacterArt(loadout.character), weaponSpritesReady(), enemyArtReady(), ensureAbilityIcons(loadout.character),
-            ]);
+            await prepareArtwork(loadout.character);
             if (version !== preparationVersion || signal.aborted) return;
-            if (!hero || !weapons.every(Boolean) || !enemies.every(Boolean)) throw new Error('Battle artwork unavailable');
             session.start(loadout);
+            performance.measure('battle-play-to-ready', 'battle-play-click');
         } catch {
             if (version !== preparationVersion || signal.aborted) return;
             preparing = false;
@@ -175,10 +201,11 @@ export function createGameApplication(): () => void {
         else battleMusic.play();
     }
     survivalButton.addEventListener('click', () => {
+        void characters!.prepareCurrent().then(async ready => { if (ready) { await characters!.prepareEquipment(); menuArtworkReady = true; playMenuMusic(); } });
+        void characters!.prepare();
         menu.hidden = true;
         hideDescription();
-        characters ??= new CharacterScreen(showMenu, () => { void startSurvival(); }, loadout => session.canContinue(loadout) ? 'Продолжить бой' : 'Начать новый бой');
-        characters.show();
+        characters!.show();
     }, { signal });
     backButton.addEventListener('click', pauseGame, { signal });
     window.addEventListener('keydown', (event) => {
@@ -247,6 +274,10 @@ export function createGameApplication(): () => void {
         rewards.showAchievements(progressStore.totals, progressStore.storageAvailable);
     }, { signal });
     canvas.hidden = true;
+    // Build the screen offscreen and prepare its complete UI while the player is in the menu.
+    characters = new CharacterScreen(showMenu, () => { void startSurvival(); }, loadout => session.canContinue(loadout) ? 'Продолжить бой' : 'Начать новый бой', warmArtwork);
+    void characters.prepareCurrent().then(async ready => { if (ready) await characters!.prepareEquipment(); menuArtworkReady = ready; if (ready) playMenuMusic(); });
+    void characters.prepare();
     playMenuMusic();
 
     const stopLoop = startGameLoop(ctx, [{
@@ -277,6 +308,7 @@ export function createGameApplication(): () => void {
 
 
     return () => {
+        cancelWarmup();
         cancelPreparation();
         preparation.remove();
         stopLoop();

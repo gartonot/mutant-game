@@ -39,7 +39,8 @@ export class CombatAudio {
     private chargeVoice?: AudioBufferSourceNode;
     private active = false;
     private disposed = false;
-    private loading: Promise<unknown> = Promise.resolve();
+    private loading: Promise<void> = Promise.resolve();
+    private preloadStarted = false;
     private volume = .15;
 
     unlock(): void {
@@ -56,29 +57,38 @@ export class CombatAudio {
             limiter.attack.value = .002;
             limiter.release.value = .12;
             output.connect(limiter).connect(context.destination);
-            this.loading = Promise.all(Object.entries(URLS).map(([sound, url]) =>
-                fetch(url, { signal: this.abort.signal }).then(response => {
-                    if (!response.ok) throw new Error('Audio unavailable');
-                    return response.arrayBuffer();
-                }).then(data => context.decodeAudioData(data)).then(buffer => {
-                    // Balance the loud blast against weapon shots before the shared master volume.
-                    if (sound === 'explosion') {
-                        for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
-                            const samples = buffer.getChannelData(channel);
-                            for (let i = 0; i < samples.length; i++) samples[i] *= .5;
-                        }
-                    }
-                    if (!this.disposed) this.buffers.set(sound as SoundId, buffer);
-                }).catch(() => { /* A missing sound must not interrupt gameplay. */ })
-            ));
         }
         if (this.context.state === 'suspended') void this.context.resume().catch(() => {});
     }
 
+    /** Unlocking on a menu click must not download the entire combat sound catalog. */
+    preload(): Promise<void> {
+        if (this.disposed) return Promise.resolve();
+        this.unlock();
+        const context = this.context;
+        if (!context || this.preloadStarted) return this.loading;
+        this.preloadStarted = true;
+        this.loading = Promise.all(Object.entries(URLS).map(([sound, url]) =>
+            fetch(url, { signal: this.abort.signal, priority: 'low' }).then(response => {
+                if (!response.ok) throw new Error('Audio unavailable');
+                return response.arrayBuffer();
+            }).then(data => context.decodeAudioData(data)).then(buffer => {
+                // Balance the loud blast against weapon shots before the shared master volume.
+                if (sound === 'explosion') {
+                    for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+                        const samples = buffer.getChannelData(channel);
+                        for (let i = 0; i < samples.length; i++) samples[i] *= .5;
+                    }
+                }
+                if (!this.disposed) this.buffers.set(sound as SoundId, buffer);
+            }).catch(() => { /* A missing sound must not interrupt gameplay. */ })
+        )).then(() => {});
+        return this.loading;
+    }
+
     /** Explicit previews wait for decoding instead of losing their first click. */
     async prepare(sound: SoundId): Promise<boolean> {
-        this.unlock();
-        await this.loading;
+        await this.preload();
         if (this.disposed || !this.context) return false;
         if (this.context.state === 'suspended') await this.context.resume().catch(() => {});
         return this.context.state === 'running' && this.buffers.has(sound);
@@ -92,6 +102,7 @@ export class CombatAudio {
 
     setActive(active: boolean): void {
         this.active = active;
+        if (active) void this.preload();
         if (!active) {
             this.setCharge(null);
             this.setSustained('laser', false);

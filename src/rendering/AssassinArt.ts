@@ -1,5 +1,5 @@
 import type { WeaponId } from '@/gameplay/ids';
-import atlasUrl from '@/assets/combat-runtime/characters/assassin.png';
+import atlasUrl from '@/assets/combat-scaled/characters/assassin.png';
 import { createLazyImageAsset } from './ImageAsset';
 import { drawRasterCharacter } from './RasterCharacterArt';
 import type { RasterCharacterStyle } from './RasterCharacterArt';

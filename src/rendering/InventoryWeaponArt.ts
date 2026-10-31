@@ -1,4 +1,4 @@
-import { weaponSpriteInventoryIcon, weaponSpritesReady } from './WeaponSprites';
+import { weaponSpriteInventoryIcon, inventoryWeaponSpritesReady } from './WeaponSprites';
 import type { WeaponId } from '@/gameplay/ids';
 import { drawExperimentalWeapon } from './ExperimentalWeaponArt';
 
@@ -117,7 +117,7 @@ export function inventoryWeaponIcon(id: WeaponId): string {
 
 /** Refresh existing images in place: loading never resets focus or equipment selection. */
 export function refreshWeaponIconsWhenReady(root: HTMLElement): void {
-    void weaponSpritesReady().then(() => {
+    void inventoryWeaponSpritesReady().then(() => {
         root.querySelectorAll<HTMLImageElement>('img[data-weapon-art]').forEach(img => {
             img.src = inventoryWeaponIcon(img.dataset.weaponArt as WeaponId);
         });

@@ -1,0 +1,347 @@
+{
+  "generator": "scripts/optimize-character-textures.mjs",
+  "settings": {
+    "scale": 0.5,
+    "kernel": "lanczos3",
+    "png": {
+      "compressionLevel": 9,
+      "adaptiveFiltering": true,
+      "palette": false
+    }
+  },
+  "sharpVersion": "0.35.5",
+  "libvipsVersion": "8.18.7",
+  "originalsPreserved": true,
+  "files": [
+    {
+      "id": "mercenary",
+      "source": {
+        "path": "src/assets/characters/mercenary-combat-v2.png",
+        "width": 1774,
+        "height": 887,
+        "bytes": 1647733,
+        "sha256": "65bb69c4626c9a5656cf06ba36de77056d0d0b433b3938558ee89a40c416d5c1",
+        "rgbaSha256": "6c5a00dad2f9f37fd2a3acc77b991a286dd8e7cf445c234976fb03cb4a57f4bc"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/mercenary.png",
+        "bytes": 414081,
+        "sha256": "05ac4f639c5eb77d64304390d2d9a76222cce947ad38cea529f8b77918d487f7",
+        "sourceWidth": 1774,
+        "sourceHeight": 887,
+        "width": 887,
+        "height": 444,
+        "scaleX": 0.5,
+        "scaleY": 0.5005636978579482
+      }
+    },
+    {
+      "id": "destroyer",
+      "source": {
+        "path": "src/assets/characters/destroyer-combat-v2.png",
+        "width": 1774,
+        "height": 887,
+        "bytes": 1662905,
+        "sha256": "7f15a0b9ab900c00dfbcf032d2709dd64cfd3ed939799ede0e10e72d623c8fee",
+        "rgbaSha256": "a669dc221bdb048f0957aee8ddfa377eb8a42fc8dc4f81eb76d7735bb5fbae4a"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/destroyer.png",
+        "bytes": 429960,
+        "sha256": "16ede69ce2c36ac545164eed731f93e621f344cd97d228aa965760bb26d4c580",
+        "sourceWidth": 1774,
+        "sourceHeight": 887,
+        "width": 887,
+        "height": 444,
+        "scaleX": 0.5,
+        "scaleY": 0.5005636978579482
+      }
+    },
+    {
+      "id": "assassin",
+      "source": {
+        "path": "src/assets/characters/assassin-combat-v2.png",
+        "width": 1774,
+        "height": 887,
+        "bytes": 1290111,
+        "sha256": "71103449b096d9b44a6883c64c771fa4be69f76dc3f3bbdcf72bf7a1e7a56443",
+        "rgbaSha256": "36d182004a2d2a546b8064ff687af9ff8ec9d0574feb36d75a3cf0b10efb296d"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/assassin.png",
+        "bytes": 340609,
+        "sha256": "741dc3332778db6798bc90df74487f162320485546fddf5d04b074f4a1dc8171",
+        "sourceWidth": 1774,
+        "sourceHeight": 887,
+        "width": 887,
+        "height": 444,
+        "scaleX": 0.5,
+        "scaleY": 0.5005636978579482
+      }
+    },
+    {
+      "id": "telepath",
+      "source": {
+        "path": "src/assets/characters/combat-v3/telepath.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1048290,
+        "sha256": "1d9ee14233257a921af69129ec408939c5cb30a0516a17ce5491f507f27416e3",
+        "rgbaSha256": "b20660d5ccab8973c18070766d9686b71dd06506fc1b03569671d9ad2aa4410f"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/telepath.png",
+        "bytes": 270533,
+        "sha256": "f6742b655afa69a04e03301bd27a3fafaeee62bab60e2bad1bb60e85b05fdf04",
+        "sourceWidth": 1254,
+        "sourceHeight": 1254,
+        "width": 627,
+        "height": 627,
+        "scaleX": 0.5,
+        "scaleY": 0.5
+      }
+    },
+    {
+      "id": "cyborg",
+      "source": {
+        "path": "src/assets/characters/combat-v3/cyborg.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1782946,
+        "sha256": "831e1e2f36f7a913555cc02cae163d1580f13e72d9400bd3846979439812d9fc",
+        "rgbaSha256": "bf4c4b131665eba72d0bca98351d892de9beca889719fc691a13762a96c638c7"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/cyborg.png",
+        "bytes": 462646,
+        "sha256": "a9d1a81c8801afdb4b5dd6f4151617700955db55406999ee316bc65c449d811a",
+        "sourceWidth": 1254,
+        "sourceHeight": 1254,
+        "width": 627,
+        "height": 627,
+        "scaleX": 0.5,
+        "scaleY": 0.5
+      }
+    },
+    {
+      "id": "plasma-nuclear",
+      "source": {
+        "path": "src/assets/characters/combat-v3/plasma-nuclear.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1125642,
+        "sha256": "0ee91beeebf173f1ffb5301c37d887b3948115516d89508a6dbdc016cf226d9a",
+        "rgbaSha256": "2515c9030eb1ccbcb770ed0027e937c8eb988be08982d70c469a3cf753382e6e"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/plasma-nuclear.png",
+        "bytes": 297652,
+        "sha256": "1305fa7e16cc087149d3cadce5ceda6e478fe6c91ad0b5bac8e1cdc20850269f",
+        "sourceWidth": 1254,
+        "sourceHeight": 1254,
+        "width": 627,
+        "height": 627,
+        "scaleX": 0.5,
+        "scaleY": 0.5
+      }
+    },
+    {
+      "id": "hunter",
+      "source": {
+        "path": "src/assets/characters/combat-v3/hunter.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1482531,
+        "sha256": "f57714d28632a8390557939905b93f307f97df2c7960f204a1f45cff4df761f8",
+        "rgbaSha256": "ce1126b4cfe9f226610d17597a67e7407b678f17a94af2c4055b884f5a560a5c"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/hunter.png",
+        "bytes": 386373,
+        "sha256": "6109abf5a87251b8093e66081093a6af3237e9ab635d8a21dbacae196610dc05",
+        "sourceWidth": 1254,
+        "sourceHeight": 1254,
+        "width": 627,
+        "height": 627,
+        "scaleX": 0.5,
+        "scaleY": 0.5
+      }
+    },
+    {
+      "id": "unknown-crossbow",
+      "source": {
+        "path": "src/assets/characters/combat-v3/unknown-crossbow.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1459826,
+        "sha256": "33e5e2248de178f3273e4da9a2061b0c2f513585b1e8f5ce229b0093bfb256ac",
+        "rgbaSha256": "8ea0f4e1dd787a8dec724cd069670d3784139778b858791750cec7f75c1f9a9a"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/unknown-crossbow.png",
+        "bytes": 381652,
+        "sha256": "8b3e040efbeb8ca0db07298843af9873b9a2fd09bf7650d32a054e2f7309083d",
+        "sourceWidth": 1254,
+        "sourceHeight": 1254,
+        "width": 627,
+        "height": 627,
+        "scaleX": 0.5,
+        "scaleY": 0.5
+      }
+    },
+    {
+      "id": "unknown-white-outfit",
+      "source": {
+        "path": "src/assets/characters/combat-v3/unknown-white-outfit.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1367600,
+        "sha256": "f6ad9626683e50fc7675bd403d9bb569dde2608959ccebf4a877ad9edee05a82",
+        "rgbaSha256": "b892042f1d5914fa5a74cebadfad7eaf627bf209821801bae98ea3b37c148011"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/unknown-white-outfit.png",
+        "bytes": 342484,
+        "sha256": "79f7e9a9aea88f10e7d82963b124035e40ca016677e0e76d02a6cdcefce37c27",
+        "sourceWidth": 1254,
+        "sourceHeight": 1254,
+        "width": 627,
+        "height": 627,
+        "scaleX": 0.5,
+        "scaleY": 0.5
+      }
+    },
+    {
+      "id": "half-mutant",
+      "source": {
+        "path": "src/assets/characters/combat-v4/half-mutant.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1135083,
+        "sha256": "49c2932faa896ab73e01647c007bb4797d98db1f1b1907ead7286206270ae93b",
+        "rgbaSha256": "f401ce205ea967cce5ab016cc3d4e4e04c2c2fbe7ddd5c70fcdc6b96964dccac"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/half-mutant.png",
+        "bytes": 292177,
+        "sha256": "95e51ca58b11150607b337040ca2ee8dcf9666da8319c3c74a2a7da86771531f",
+        "sourceWidth": 1254,
+        "sourceHeight": 1254,
+        "width": 627,
+        "height": 627,
+        "scaleX": 0.5,
+        "scaleY": 0.5
+      }
+    },
+    {
+      "id": "goliath",
+      "source": {
+        "path": "src/assets/characters/combat-v4/goliath.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1309381,
+        "sha256": "cc8b2febb7f6340ba0f94e3f937569bb8a0293c4f4c03968602555006cdb5d5d",
+        "rgbaSha256": "b4508ba0d62298dabd304e7e6776b12d5c720acc2f8e03e7894a9f279c35622e"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/goliath.png",
+        "bytes": 353092,
+        "sha256": "d661a630f6bc68d56acd66fab586d524d75b560eecd29bfa18c0737944397246",
+        "sourceWidth": 1254,
+        "sourceHeight": 1254,
+        "width": 627,
+        "height": 627,
+        "scaleX": 0.5,
+        "scaleY": 0.5
+      }
+    },
+    {
+      "id": "fanatic",
+      "source": {
+        "path": "src/assets/characters/combat-v4/fanatic.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1367759,
+        "sha256": "80b001da0fb6f07cc7efb830c16543e1660fb68e30e95c2134e6ee841724c2c6",
+        "rgbaSha256": "bc9b5e5dec7713bd037ace41e6a4c9878a26cdf3370195ba47942174506017c3"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/fanatic.png",
+        "bytes": 371454,
+        "sha256": "b3817ec087f9f21d6740642993f134732389692fb69cf1a7251c18966b0f69ca",
+        "sourceWidth": 1254,
+        "sourceHeight": 1254,
+        "width": 627,
+        "height": 627,
+        "scaleX": 0.5,
+        "scaleY": 0.5
+      }
+    },
+    {
+      "id": "nuclear",
+      "source": {
+        "path": "src/assets/characters/combat-v4/nuclear.png",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 2242986,
+        "sha256": "d10e0f93bd9df511ea7d142f51ce89bd3b51b2b9208d03c7515c2cd54bc96fbf",
+        "rgbaSha256": "8856842575ca282e5c2078dec7ef5491331546c49bdd40bfaa5099d10ff4913a"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/nuclear.png",
+        "bytes": 446632,
+        "sha256": "91935f3533359141dbe8f3b2a00348694e7f8f85091efe6a4eebdcb21ff6d5a4",
+        "sourceWidth": 1536,
+        "sourceHeight": 1024,
+        "width": 768,
+        "height": 512,
+        "scaleX": 0.5,
+        "scaleY": 0.5
+      }
+    },
+    {
+      "id": "silver-hunter",
+      "source": {
+        "path": "src/assets/characters/combat-v4/silver-hunter.png",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1275165,
+        "sha256": "05670ceb1defe6413f95e7e105c226fa3a68f392daa4139506c09ae4a6d3b4e9",
+        "rgbaSha256": "829a13a479ca2dcb2a3b86383e428f4ac6f8146c812b6906454d17f0e3696751"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/silver-hunter.png",
+        "bytes": 341318,
+        "sha256": "d6f94ff50eaf38b45f7e2b903e5545cbe0cf317f1e337c844aa9a9709790ca93",
+        "sourceWidth": 1254,
+        "sourceHeight": 1254,
+        "width": 627,
+        "height": 627,
+        "scaleX": 0.5,
+        "scaleY": 0.5
+      }
+    },
+    {
+      "id": "witcher",
+      "source": {
+        "path": "src/assets/characters/combat-v4/witcher.png",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 2087516,
+        "sha256": "96cbc3f8fb53f316ac123a435b3aee00a08a61d7122fc639c313cffff380c894",
+        "rgbaSha256": "d3578b7ec2bdb774bea384e306968c6249217dd7abbaba40bdbed01222be6a1d"
+      },
+      "output": {
+        "path": "src/assets/combat-scaled/characters/witcher.png",
+        "bytes": 392435,
+        "sha256": "508c8eca96e41a96ffbb0468f53c0a6dd280fcf379ea2fd11b9938489517e477",
+        "sourceWidth": 1536,
+        "sourceHeight": 1024,
+        "width": 768,
+        "height": 512,
+        "scaleX": 0.5,
+        "scaleY": 0.5
+      }
+    }
+  ]
+}

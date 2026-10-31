@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "generator": "scripts/optimize-roster.mjs",
+  "columns": 5,
+  "rows": 3,
+  "tileWidth": 192,
+  "tileHeight": 288,
+  "width": 960,
+  "height": 864,
+  "cells": {
+    "assassin": {
+      "column": 0,
+      "row": 0
+    },
+    "destroyer": {
+      "column": 1,
+      "row": 0
+    },
+    "mercenary": {
+      "column": 2,
+      "row": 0
+    },
+    "hunter": {
+      "column": 3,
+      "row": 0
+    },
+    "cyborg": {
+      "column": 4,
+      "row": 0
+    },
+    "telepath": {
+      "column": 0,
+      "row": 1
+    },
+    "fanatic": {
+      "column": 1,
+      "row": 1
+    },
+    "witcher": {
+      "column": 2,
+      "row": 1
+    },
+    "plasma-nuclear": {
+      "column": 3,
+      "row": 1
+    },
+    "nuclear": {
+      "column": 4,
+      "row": 1
+    },
+    "silver-hunter": {
+      "column": 0,
+      "row": 2
+    },
+    "goliath": {
+      "column": 1,
+      "row": 2
+    },
+    "half-mutant": {
+      "column": 2,
+      "row": 2
+    },
+    "unknown-white-outfit": {
+      "column": 3,
+      "row": 2
+    },
+    "unknown-crossbow": {
+      "column": 4,
+      "row": 2
+    }
+  },
+  "manifest": {
+    "sharpVersion": "0.35.5",
+    "libvipsVersion": "8.18.7",
+    "settings": {
+      "resize": {
+        "width": 192,
+        "height": 288,
+        "fit": "inside",
+        "withoutEnlargement": true,
+        "kernel": "lanczos3"
+      },
+      "webp": {
+        "quality": 85,
+        "alphaQuality": 100,
+        "effort": 6
+      }
+    },
+    "output": {
+      "path": "src/assets/portraits-runtime/roster.webp",
+      "bytes": 225200,
+      "sha256": "a0dd0fa75846de79717778f47a3539bb577f18976f87343f0279935a8b16f8c1"
+    },
+    "verification": {
+      "originalsPreserved": true,
+      "encodedDirectlyFromResizedSource": true
+    },
+    "sources": [
+      {
+        "id": "assassin",
+        "path": "src/assets/characters/assassin.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2352244,
+        "sha256": "94ba804fe6d01a9dfcd02e741f5f6fd3cf29d1495b1750ccca7791eae06f4850",
+        "resizedRgbaSha256": "c550abbcdc5c1c3be1d9ecd4f3a1b86316ea63169bd858c941d3043ec172facf"
+      },
+      {
+        "id": "destroyer",
+        "path": "src/assets/characters/destroyer.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2701051,
+        "sha256": "0c84dd073a0b641273b44c68fda1bfd5592d2c24e6bef0b246f4e3db82bdc864",
+        "resizedRgbaSha256": "adda8b5891f6b2d7f2b9e54d35f6c2652c1b47b6de96d61fa6e29591cef9da0e"
+      },
+      {
+        "id": "mercenary",
+        "path": "src/assets/characters/mercenary.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2908297,
+        "sha256": "ca666f932c39b09413236eb15676394ca3765b4f9684aa95df80d00ac33570f4",
+        "resizedRgbaSha256": "585820f2928fbe6b3241be867959348173d0b502355e4a96374b6919fcd5d5fe"
+      },
+      {
+        "id": "hunter",
+        "path": "src/assets/characters/hunter.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2608565,
+        "sha256": "749dd20c7367add733d51f1da65f7d0fcb0408ebe998a0dac949e24ef8079277",
+        "resizedRgbaSha256": "9d986aec648212c0135462d630a3c15d08ba05cb84b925023233622d40344089"
+      },
+      {
+        "id": "cyborg",
+        "path": "src/assets/characters/cyborg.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2721504,
+        "sha256": "8c087f14d72e52bbf50acb415829007c66b296ae9b7c4837e00369309f4e4523",
+        "resizedRgbaSha256": "c529438939935c43ffce081e532bf0576e424d7eef5798bd154643d43978e703"
+      },
+      {
+        "id": "telepath",
+        "path": "src/assets/characters/telepath.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2356225,
+        "sha256": "cde74ed9127d3fd2dbcfb4b9363c6d7a4b96e847ad441f5ae066a2c17fe0612e",
+        "resizedRgbaSha256": "e76413982b810a7a0737c3ce0c99df33d2dce092b6edbc3182bc9f5d1b33e95d"
+      },
+      {
+        "id": "fanatic",
+        "path": "src/assets/characters/fanatic.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2462332,
+        "sha256": "b6d000b526d5081eb6c1fad7bbc225cb57524f0eff032d4c9df97f0e516ec55b",
+        "resizedRgbaSha256": "a7a3d6b046155f987b444e22d5f416f1d9540c05ea617a722690ba2b7f3d698f"
+      },
+      {
+        "id": "witcher",
+        "path": "src/assets/characters/witcher.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2605787,
+        "sha256": "55ba7819100724879bd54ac925f669b025eba8c056bdffd65869aaf336f5ed3c",
+        "resizedRgbaSha256": "8c7fa26b1c4600b2a7f2c1ebf4964dd0f2e34abdd9577fd628c043fe8048726d"
+      },
+      {
+        "id": "plasma-nuclear",
+        "path": "src/assets/characters/plasma-nuclear.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2540842,
+        "sha256": "bd9cb0777d66a44a87374722632608f8005b939372f97d74ed36c40852f6c4a7",
+        "resizedRgbaSha256": "9c33ae1220b63732e7077f56bb1d39b9884443e2b005fc20d8228dc283479848"
+      },
+      {
+        "id": "nuclear",
+        "path": "src/assets/characters/nuclear.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2779071,
+        "sha256": "d939f9cd0943b9f3c7be1151c7ae50ab98a3ed0b7aa887f8139b5df852cf9007",
+        "resizedRgbaSha256": "d357283465d6e740473de1bfb321ef35d5784beadca25df501e02f756d4edf9a"
+      },
+      {
+        "id": "silver-hunter",
+        "path": "src/assets/characters/silver-hunter.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2535519,
+        "sha256": "0fabe4ef9c55fa4201ec639fe1a6b032225dc6390bf5836159001ce7b8995847",
+        "resizedRgbaSha256": "7fe3d37bdc851232fc9197e16223a8fc1d981b0f523ac73f70e4dffce6a8e712"
+      },
+      {
+        "id": "goliath",
+        "path": "src/assets/characters/goliath.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2955054,
+        "sha256": "a5b1c152c98db03347854865115b3fcedcde7a530d19b060d79f13ea659ae881",
+        "resizedRgbaSha256": "233728f26fba94a4273f9bb1867e35362ac790de04ca1cc9e51d28399241f874"
+      },
+      {
+        "id": "half-mutant",
+        "path": "src/assets/characters/half-mutant.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2489684,
+        "sha256": "833805178f5c76a80ce6c4a063c989144615add64a05185536483d4a0a03c6ec",
+        "resizedRgbaSha256": "860579f18622ad174e1e453779e0ce01aa2941cc23e1172970708eb23fc677bb"
+      },
+      {
+        "id": "unknown-white-outfit",
+        "path": "src/assets/characters/unknown-white-outfit-v1.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2476916,
+        "sha256": "a8e61339c0c44a12b8d079e0e8f4a75ef28f18c2ecc5e82db71e181fe113ad40",
+        "resizedRgbaSha256": "4fcc7962eadd4bc95428bbc587aafb9439aa0f8c32f6ad7c4ae6c05ef4b0b75a"
+      },
+      {
+        "id": "unknown-crossbow",
+        "path": "src/assets/characters/unknown-crossbow-v3.png",
+        "width": 1024,
+        "height": 1536,
+        "bytes": 2529163,
+        "sha256": "5a4ac1b9c5840103e26b0663b7e7232faebfcc6685b7975186c7daa4b5e4e89a",
+        "resizedRgbaSha256": "5d05390ef1418c0a73c1aaaacfeb947be4ae526ee825a1b9fc78b519acedbf68"
+      }
+    ]
+  }
+}

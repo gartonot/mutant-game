@@ -1,0 +1,482 @@
+{
+  "schemaVersion": 1,
+  "generator": "scripts/optimize-combat-weapons.mjs",
+  "sharpVersion": "0.35.5",
+  "libvipsVersion": "8.18.7",
+  "layout": {
+    "path": "src/assets/weapons/v2/layout.ts",
+    "sha256": "ef2157409fcd9580517ebbad8b4e48f7e67e4ce29ff7cc9232a4819b8b94b9b9"
+  },
+  "settings": {
+    "crop": "exact original layout rectangle; no additional alpha trimming",
+    "resize": {
+      "width": 256,
+      "height": 256,
+      "fit": "inside",
+      "withoutEnlargement": true,
+      "kernel": "lanczos3"
+    },
+    "webp": {
+      "lossless": true,
+      "effort": 6
+    }
+  },
+  "files": [
+    {
+      "id": "ak47",
+      "source": {
+        "path": "src/assets/weapons/v2/ak47.png",
+        "width": 1983,
+        "height": 793,
+        "bytes": 584415,
+        "sha256": "993ba472eac6fa98a357c3deb3b42d4271e6a4a3f528dce759ff5b24bc03ce6d",
+        "region": {
+          "x": 51,
+          "y": 306,
+          "width": 1883,
+          "height": 190,
+          "axisY": 393
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/ak47.webp",
+        "width": 256,
+        "height": 26,
+        "bytes": 9846,
+        "sha256": "be162782ab2f2f73a0486fa043f37cfb193ea1bf8b818fab7beec782da44d0ca"
+      }
+    },
+    {
+      "id": "double-barrel",
+      "source": {
+        "path": "src/assets/weapons/v2/double-barrel.png",
+        "width": 1774,
+        "height": 887,
+        "bytes": 699557,
+        "sha256": "5a7f0f1e2228a1951ea9747201aed5e440616656cb9a83baa2a2f2a89db3d65e",
+        "region": {
+          "x": 36,
+          "y": 327,
+          "width": 1701,
+          "height": 229,
+          "axisY": 441
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/double-barrel.webp",
+        "width": 256,
+        "height": 34,
+        "bytes": 13386,
+        "sha256": "660436b796127ae0b780d7d67e87784fcba71011bce17fe04201e670e3051398"
+      }
+    },
+    {
+      "id": "flamethrower",
+      "source": {
+        "path": "src/assets/weapons/v2/flamethrower.png",
+        "width": 1855,
+        "height": 848,
+        "bytes": 894063,
+        "sha256": "06d985e97c1757e29649f759b8fb1ebca464410c4b04c22c545b1b1d5cfd9b01",
+        "region": {
+          "x": 10,
+          "y": 249,
+          "width": 1837,
+          "height": 331,
+          "axisY": 467
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/flamethrower.webp",
+        "width": 256,
+        "height": 46,
+        "bytes": 15752,
+        "sha256": "d20689aa33e8e7194adf7b0b57e5512b3ae0c82004d94db3bd63bb912f874b18"
+      }
+    },
+    {
+      "id": "grenade-launcher",
+      "source": {
+        "path": "src/assets/weapons/v2/grenade-launcher.png",
+        "width": 1920,
+        "height": 819,
+        "bytes": 1018169,
+        "sha256": "39cc4421a70fa490563eb75ee650f8e39c50d7a1006760ca70107d1cc1ba4437",
+        "region": {
+          "x": 57,
+          "y": 174,
+          "width": 1805,
+          "height": 501,
+          "axisY": 442
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/grenade-launcher.webp",
+        "width": 256,
+        "height": 71,
+        "bytes": 17440,
+        "sha256": "7a20b8be392169ab9440d61ac5e5d8dd336721638a235797a5a3f3db4fe7b4b3"
+      }
+    },
+    {
+      "id": "laser",
+      "source": {
+        "path": "src/assets/weapons/v2/laser.png",
+        "width": 1983,
+        "height": 793,
+        "bytes": 787725,
+        "sha256": "b63489f120b7431d254d965df8adc305ea1a844ea0fa2b313f15f08287352f1d",
+        "region": {
+          "x": 42,
+          "y": 258,
+          "width": 1901,
+          "height": 275,
+          "axisY": 384
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/laser.webp",
+        "width": 256,
+        "height": 37,
+        "bytes": 13154,
+        "sha256": "9f617b10451ce4e35192dc51fa14fb7aab680e493fd55452963e68399e85412e"
+      }
+    },
+    {
+      "id": "m16",
+      "source": {
+        "path": "src/assets/weapons/v2/m16.png",
+        "width": 1983,
+        "height": 793,
+        "bytes": 633298,
+        "sha256": "86a023ed8b57859c2e12e649fd70dcd78a61b230d3ff45f2e7c04c72012b32c2",
+        "region": {
+          "x": 52,
+          "y": 275,
+          "width": 1884,
+          "height": 235,
+          "axisY": 390
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/m16.webp",
+        "width": 256,
+        "height": 32,
+        "bytes": 9528,
+        "sha256": "1e4b94ab0b978d723d80d9770a69278be669afbca8e97b3dd57c5b8dd7561290"
+      }
+    },
+    {
+      "id": "machine-gun",
+      "source": {
+        "path": "src/assets/weapons/v2/machine-gun.png",
+        "width": 1774,
+        "height": 887,
+        "bytes": 1030805,
+        "sha256": "819451bb5fe7fcf0a787a7b15b5d23e69c999d62f21e817e1a78cfda833e5c44",
+        "region": {
+          "x": 30,
+          "y": 161,
+          "width": 1715,
+          "height": 585,
+          "axisY": 410
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/machine-gun.webp",
+        "width": 256,
+        "height": 87,
+        "bytes": 20190,
+        "sha256": "e105b3e04f08c6569632c206dd79fb6fdded1e1142ee698c7f04fc7c208006f9"
+      }
+    },
+    {
+      "id": "pistol",
+      "source": {
+        "path": "src/assets/weapons/v2/pistol.png",
+        "width": 1774,
+        "height": 887,
+        "bytes": 1046075,
+        "sha256": "2103bd388efddb319056ade2bfbbeddb812c0af5a1f54e0df3bfc35d1b0d7411",
+        "region": {
+          "x": 77,
+          "y": 286,
+          "width": 1620,
+          "height": 317,
+          "axisY": 443
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/pistol.webp",
+        "width": 256,
+        "height": 50,
+        "bytes": 16970,
+        "sha256": "2c9429e0c330faaf8658eeacb9afea750c1fce0fa74e17abf52b560885fa9c1f"
+      }
+    },
+    {
+      "id": "plasma-auto",
+      "source": {
+        "path": "src/assets/weapons/v2/plasma-auto.png",
+        "width": 1983,
+        "height": 793,
+        "bytes": 726869,
+        "sha256": "c2c5d3632d076f58c17f8dfb20f14ee1411cd8c5a007ea7d09883745f751e3b1",
+        "region": {
+          "x": 98,
+          "y": 260,
+          "width": 1793,
+          "height": 263,
+          "axisY": 392
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/plasma-auto.webp",
+        "width": 256,
+        "height": 38,
+        "bytes": 14648,
+        "sha256": "5396999c805e2a757ee8ac855f2da84c8995d44688036e82c81dc4c401d04d2b"
+      }
+    },
+    {
+      "id": "plasma-cannon",
+      "source": {
+        "path": "src/assets/weapons/v2/plasma-cannon.png",
+        "width": 1774,
+        "height": 887,
+        "bytes": 1158946,
+        "sha256": "26cf05206b5fd9d1b9be389ce55a97030faf78c3753c1e88890741083cf67292",
+        "region": {
+          "x": 41,
+          "y": 230,
+          "width": 1700,
+          "height": 423,
+          "axisY": 440
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/plasma-cannon.webp",
+        "width": 256,
+        "height": 64,
+        "bytes": 23864,
+        "sha256": "658beabc4b8e34ef19779971c39617c4cf229485c430db86c1a896a8072e8761"
+      }
+    },
+    {
+      "id": "plasma-grenade",
+      "source": {
+        "path": "src/assets/weapons/v2/plasma-grenade.png",
+        "width": 1278,
+        "height": 1230,
+        "bytes": 1163020,
+        "sha256": "a5404b1a84c96f3627ece91af6ab081abde96ce60342d8024ebc7de824d83e21",
+        "region": {
+          "x": 259,
+          "y": 229,
+          "width": 762,
+          "height": 750,
+          "axisY": 603.5
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/plasma-grenade.webp",
+        "width": 256,
+        "height": 252,
+        "bytes": 92802,
+        "sha256": "f27cd2e91486d26c9457eeebbefa53ab5e59b5f4f07603804b431056c24400ca"
+      }
+    },
+    {
+      "id": "rifle",
+      "source": {
+        "path": "src/assets/weapons/v2/rifle.png",
+        "width": 2079,
+        "height": 756,
+        "bytes": 780374,
+        "sha256": "f1f27060f78a0c09817bb1747674470331e319e1c94674d73c42159f48c00bb6",
+        "region": {
+          "x": 51,
+          "y": 247,
+          "width": 1986,
+          "height": 252,
+          "axisY": 378
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/rifle.webp",
+        "width": 256,
+        "height": 32,
+        "bytes": 11500,
+        "sha256": "74e0a0049b72304536309c8c190066f6ee8626326bf15a200ae090002dd6af01"
+      }
+    },
+    {
+      "id": "shotgun",
+      "source": {
+        "path": "src/assets/weapons/v2/shotgun.png",
+        "width": 2172,
+        "height": 724,
+        "bytes": 559664,
+        "sha256": "b75c29123aa8e18c9952d4f2415e9c889e795d08804dd454ef35465ef2b088cb",
+        "region": {
+          "x": 43,
+          "y": 277,
+          "width": 2086,
+          "height": 154,
+          "axisY": 354
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/shotgun.webp",
+        "width": 256,
+        "height": 19,
+        "bytes": 8008,
+        "sha256": "1b4a0e04a37cfb0067badebe3233a5385545472aee34f137cbc5a1c27e0362bb"
+      }
+    },
+    {
+      "id": "skull-launcher",
+      "source": {
+        "path": "src/assets/weapons/v2/skull-launcher.png",
+        "width": 1774,
+        "height": 887,
+        "bytes": 1217012,
+        "sha256": "f4c571b1447ffd14f10e0d5cfc247663948671f0ba49638b8b911bb75d09d720",
+        "region": {
+          "x": 47,
+          "y": 237,
+          "width": 1680,
+          "height": 413,
+          "axisY": 438
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/skull-launcher.webp",
+        "width": 256,
+        "height": 63,
+        "bytes": 24038,
+        "sha256": "f2e76e46be2fe3503f59d6368d2bb834cc71257ccf4805afdaac774de69f1487"
+      }
+    },
+    {
+      "id": "tesla",
+      "source": {
+        "path": "src/assets/weapons/v2/tesla.png",
+        "width": 1774,
+        "height": 887,
+        "bytes": 1105999,
+        "sha256": "a3ff725778ac37499631d11c8e55ad77e0c2a3084abb5299a32fdc96f424fe7e",
+        "region": {
+          "x": 22,
+          "y": 256,
+          "width": 1723,
+          "height": 374,
+          "axisY": 434
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/tesla.webp",
+        "width": 256,
+        "height": 56,
+        "bytes": 22248,
+        "sha256": "015356be6eb6cf244e6a0664cfbf3859fe82c0c8e6cd43d60ad4955ffb7711a3"
+      }
+    },
+    {
+      "id": "impulse",
+      "source": {
+        "path": "src/assets/weapons/v2/impulse.png",
+        "width": 1774,
+        "height": 887,
+        "bytes": 1744938,
+        "sha256": "e81de92f15add9e27f1ee9d09bf086d01631f81fc6ff9c63a833f9127c07e83b",
+        "region": {
+          "x": 64,
+          "y": 172,
+          "width": 1672,
+          "height": 535,
+          "axisY": 400
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/impulse.webp",
+        "width": 256,
+        "height": 82,
+        "bytes": 35404,
+        "sha256": "94a24e6bde0dff083d30078fed4f484ce50b8c4d5fd21dcff8d52a591fc12229"
+      }
+    },
+    {
+      "id": "acid-gun",
+      "source": {
+        "path": "src/assets/weapons/v2/acid-gun.png",
+        "width": 1942,
+        "height": 809,
+        "bytes": 1568804,
+        "sha256": "f12ab373955114676c6f15b6387236b7a9c84ba5bd83ad2564a57168c909f053",
+        "region": {
+          "x": 18,
+          "y": 162,
+          "width": 1906,
+          "height": 494,
+          "axisY": 399
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/acid-gun.webp",
+        "width": 256,
+        "height": 66,
+        "bytes": 26366,
+        "sha256": "2de1142b1d08033975c5a2be78cbfd52270922a85d75ab3615a1e6d1935a57c1"
+      }
+    },
+    {
+      "id": "crossbow",
+      "source": {
+        "path": "src/assets/weapons/v2/crossbow.png",
+        "width": 1774,
+        "height": 887,
+        "bytes": 917313,
+        "sha256": "25ae991a60c7affbf19f0d54b7640eade98b60f9ddc9552477e35984671073d0",
+        "region": {
+          "x": 31,
+          "y": 28,
+          "width": 1726,
+          "height": 819,
+          "axisY": 432
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/crossbow.webp",
+        "width": 256,
+        "height": 121,
+        "bytes": 17198,
+        "sha256": "ae7925169155de2c82f43956d125b101bec6fbef67419a43e2610cd33ddd956e"
+      }
+    },
+    {
+      "id": "disc-launcher",
+      "source": {
+        "path": "src/assets/weapons/v2/disc-launcher.png",
+        "width": 1774,
+        "height": 887,
+        "bytes": 1954011,
+        "sha256": "cfb124c29dbfcc8059f0feb790c90c7990fa5616180b3d22768452f3870267fa",
+        "region": {
+          "x": 38,
+          "y": 157,
+          "width": 1727,
+          "height": 573,
+          "axisY": 446
+        }
+      },
+      "output": {
+        "path": "src/assets/weapons-combat/disc-launcher.webp",
+        "width": 256,
+        "height": 85,
+        "bytes": 32806,
+        "sha256": "59858a874aaed6ee6f7cf39595d7e6acbb4fff77d6688525022a5b41f04432b0"
+      }
+    }
+  ]
+}

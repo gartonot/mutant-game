@@ -4,11 +4,11 @@ import { CONSUMABLE_SLOT_COUNT, DEFAULT_CONSUMABLE_SLOTS_UNLOCKED } from '@/game
 import { GOLD_PICKUP_KINDS } from '@/gameplay/PickupVariants';
 import type { GoldPickupKind, PickupTier } from '@/gameplay/PickupVariants';
 import { getPickupBlast } from '@/gameplay/PickupBlasts';
-import { bonusArtUrl } from '@/rendering/BonusArt';
+import { equipmentBonusIcon as bonusArtUrl } from './EquipmentArtwork';
 import type { CharacterId, WeaponCategory } from '@/gameplay/ids';
 import { WEAPON_SLOTS } from '@/gameplay/loadout';
 import { WEAPON_DEFINITIONS } from '@/gameplay/weapons';
-import { inventoryWeaponIcon as weaponIcon, refreshWeaponIconsWhenReady } from '@/rendering/InventoryWeaponArt';
+import { equipmentWeaponIcon as weaponIcon, refreshEquipmentArtwork as refreshWeaponIconsWhenReady } from './EquipmentArtwork';
 import './equipment.css';
 import { EquipmentFlight } from './EquipmentFlight';
 
@@ -49,6 +49,7 @@ export class EquipmentScreen {
     readonly draft = new EquipmentDraft();
     private character: CharacterId = 'mercenary';
     private readonly tooltip = document.createElement('div');
+    private renderedCharacter?: CharacterId;
     constructor(private readonly onChange: () => void) {
         this.element.className = 'equipment-frame character-frame';
         this.element.setAttribute('aria-label', 'Снаряжение');
@@ -64,7 +65,10 @@ export class EquipmentScreen {
         window.addEventListener('resize', () => { this.hideTooltip(); this.flight.cancel(); }, { signal: this.events.signal });
         window.addEventListener('scroll', () => this.hideTooltip(), { capture: true, signal: this.events.signal });
     }
-    prepareArtwork(): void { this.render(); refreshWeaponIconsWhenReady(this.element); }
+    prepareArtwork(): Promise<boolean> {
+        if (this.renderedCharacter !== this.character) this.render();
+        return refreshWeaponIconsWhenReady(this.element);
+    }
     setCharacter(character: CharacterId): void {
         this.character = character;
         if (!this.element.hidden) this.render();
@@ -76,6 +80,7 @@ export class EquipmentScreen {
         this.element.remove();
     }
     private render(): void {
+        this.renderedCharacter = this.character;
         // Cards are recreated below, so CSS transitions alone cannot preserve their old appearance.
         // Capture the current animated values too, keeping quick selection changes continuous.
         const weaponAppearance = new Map<string, { opacity: string; filter: string }>();
@@ -107,7 +112,7 @@ export class EquipmentScreen {
                     ${Array.from({ length: CONSUMABLE_SLOT_COUNT }, (_, i) => {
             const entry = consumables.find(item => item.slotIndex === i);
             const locked = i >= unlocked;
-            return `<button class="bonus-placeholder bonus-slot ${locked ? 'locked' : ''}" data-bonus-slot="${i}" ${entry ? `data-bonus-info="${entry.kind}" data-tier="${entry.tier}"` : ''} ${locked ? 'disabled' : ''} aria-label="Бонус ${i + 1}: ${locked ? 'заблокирован' : entry ? `${bonusNames[entry.kind]}, ${tierName(entry.tier).toLowerCase()}. Нажми, чтобы снять` : 'пусто'}"><span class="bonus-slot-number">${i + 1}</span>${locked ? '<span aria-hidden="true">🔒</span>' : entry ? `<img src="${bonusArtUrl(entry.kind, entry.tier)}" alt=""/>` : '<span aria-hidden="true">+</span>'}</button>`;
+            return `<button class="bonus-placeholder bonus-slot ${locked ? 'locked' : ''}" data-bonus-slot="${i}" ${entry ? `data-bonus-info="${entry.kind}" data-tier="${entry.tier}"` : ''} ${locked ? 'disabled' : ''} aria-label="Бонус ${i + 1}: ${locked ? 'заблокирован' : entry ? `${bonusNames[entry.kind]}, ${tierName(entry.tier).toLowerCase()}. Нажми, чтобы снять` : 'пусто'}"><span class="bonus-slot-number">${i + 1}</span>${locked ? '<span aria-hidden="true">🔒</span>' : entry ? `<img data-bonus-art="${entry.tier}:${entry.kind}" src="${bonusArtUrl(entry.kind, entry.tier)}" alt=""/>` : '<span aria-hidden="true">+</span>'}</button>`;
         }).join('')}
                 </div><p class="equipment-bonus-hint">Клавиши 1–6 · одно применение за бой</p></section>
             </div>
@@ -124,7 +129,7 @@ export class EquipmentScreen {
                 ${bonusTiers.flatMap(tier => GOLD_PICKUP_KINDS.map(kind => {
             const equipped = consumables.find(entry => entry.kind === kind && entry.tier === tier);
             const disabled = !equipped && !this.draft.canEquipConsumable(this.character, kind, tier);
-            return `<button class="equipment-item equipment-bonus-item" data-bonus="${kind}" data-tier="${tier}" data-bonus-info="${kind}" aria-pressed="${!!equipped}" aria-disabled="${disabled}" aria-label="${equipped ? 'Снять' : 'Выбрать'} ${bonusNames[kind]}, ${tierName(tier).toLowerCase()}"><img src="${bonusArtUrl(kind, tier)}" alt=""/><span class="equipment-bonus-name">${bonusNames[kind]}</span><span class="equipment-bonus-tier">${equipped ? 'Выбрано' : tierName(tier)}</span></button>`;
+            return `<button class="equipment-item equipment-bonus-item" data-bonus="${kind}" data-tier="${tier}" data-bonus-info="${kind}" aria-pressed="${!!equipped}" aria-disabled="${disabled}" aria-label="${equipped ? 'Снять' : 'Выбрать'} ${bonusNames[kind]}, ${tierName(tier).toLowerCase()}"><img data-bonus-art="${tier}:${kind}" src="${bonusArtUrl(kind, tier)}" alt=""/><span class="equipment-bonus-name">${bonusNames[kind]}</span><span class="equipment-bonus-tier">${equipped ? 'Выбрано' : tierName(tier)}</span></button>`;
         })).join('')}
             </div>
             <span class="equipment-sr-status" role="status">Выбрано ${loadout.weapons.length - 1} из 4 дополнительных оружий. Бонусов: ${consumables.length} из ${unlocked}</span>`;

@@ -30,6 +30,8 @@
 .upgrade-color-8 { background: linear-gradient(140deg,#ffc843,#dc7900 60%,#536a16); }
 .upgrade-color-9 { background: linear-gradient(140deg,#b9eaf3,#5895cc 55%,#263c7e); }
 .upgrade-icon img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.upgrade-art { display: block; width: 100%; height: 100%; background-repeat: no-repeat; }
+.upgrade-tooltip-art { display: block; flex: 0 0 52px; width: 52px; height: 52px; border: 2px solid #9ba9ac; border-radius: 9px; overflow: hidden; }
 .upgrade-icon img[data-weapon-art] { object-fit: contain; transform: rotate(-45deg) scale(1.05); filter: drop-shadow(1px 2px 1px #000a); }
 .upgrade-value { font-size: 16px; font-weight: bold; color: #e2e5de; text-shadow: 0 2px 2px #0007; }
 .upgrade-controls { display: flex; gap: 7px; }

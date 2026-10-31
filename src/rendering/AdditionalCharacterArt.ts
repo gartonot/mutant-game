@@ -5,7 +5,7 @@ import { drawRasterCharacter } from './RasterCharacterArt';
 import { drawGoliathSlamRaster } from './GoliathSlamArt';
 
 // Only active runtime artwork is bundled; previous authoring versions stay on disk.
-const urls = import.meta.glob<string>('../assets/combat-runtime/characters/*.png', { eager: true, query: '?url', import: 'default' });
+const urls = import.meta.glob<string>('../assets/combat-scaled/characters/*.png', { eager: true, query: '?url', import: 'default' });
 const images = new Map<CharacterId, ReturnType<typeof createLazyImageAsset>>();
 let stormTint: { source: HTMLImageElement; canvas: HTMLCanvasElement } | undefined;
 
@@ -31,7 +31,7 @@ export function drawAdditionalStormCharacter(ctx: CanvasRenderingContext2D, weap
 export function ensureAdditionalCharacterArt(id: CharacterId): Promise<boolean> {
     if (id === 'mercenary' || id === 'assassin' || id === 'destroyer') return Promise.resolve(false);
     if (!Object.prototype.hasOwnProperty.call(layout, id)) return Promise.resolve(false);
-    const url = urls[`../assets/combat-runtime/characters/${id}.png`];
+    const url = urls[`../assets/combat-scaled/characters/${id}.png`];
     if (!url || typeof Image === 'undefined') return Promise.resolve(false);
     let source = images.get(id);
     if (!source) { source = createLazyImageAsset(url); images.set(id, source); }

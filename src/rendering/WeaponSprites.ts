@@ -6,18 +6,32 @@ import { createLazyImageAsset } from './ImageAsset';
 type Layout = { x: number; y: number; width: number; height: number; axisY: number };
 const regions: Partial<Record<WeaponId, Layout>> = layouts;
 // Simulation-only consumers can import pickups without a browser image runtime.
-const urls = typeof Image === 'undefined' ? {} : import.meta.glob<string>('../assets/weapons-runtime/*.webp', { eager: true, query: '?url', import: 'default' });
+const combatUrls = typeof Image === 'undefined' ? {} : import.meta.glob<string>('../assets/weapons-combat/*.webp', { eager: true, query: '?url', import: 'default' });
+const inventoryUrls = typeof Image === 'undefined' ? {} : import.meta.glob<string>('../assets/weapons-runtime/*.webp', { eager: true, query: '?url', import: 'default' });
 const sprites = new Map<WeaponId, ReturnType<typeof createLazyImageAsset>>();
+const inventorySprites = new Map<WeaponId, ReturnType<typeof createLazyImageAsset>>();
 const inventoryIcons = new Map<WeaponId, string>();
 
 /** Failure leaves the Canvas fallback usable, including offline/missing-asset cases. */
-export function weaponSpritesReady(): Promise<boolean[]> { return Promise.all(WEAPON_ORDER.map(id => {
-    const url = urls[`../assets/weapons-runtime/${id}.webp`];
-    if (!url) return Promise.resolve(false);
-    let source = sprites.get(id);
-    if (!source) { source = createLazyImageAsset(url); sprites.set(id, source); }
-    return source.ensure();
-})); }
+function prepareSprites(urls: Record<string, string>, directory: string,
+    cache: Map<WeaponId, ReturnType<typeof createLazyImageAsset>>): Promise<boolean[]> {
+    return Promise.all(WEAPON_ORDER.map(id => {
+        const url = urls[`../assets/${directory}/${id}.webp`];
+        if (!url) return Promise.resolve(false);
+        let source = cache.get(id);
+        if (!source) { source = createLazyImageAsset(url); cache.set(id, source); }
+        return source.ensure();
+    }));
+}
+
+export function weaponSpritesReady(): Promise<boolean[]> {
+    return prepareSprites(combatUrls, 'weapons-combat', sprites);
+}
+
+/** Large artwork is requested only by inventory views; battle preparation stays compact. */
+export function inventoryWeaponSpritesReady(): Promise<boolean[]> {
+    return prepareSprites(inventoryUrls, 'weapons-runtime', inventorySprites);
+}
 
 // Sprite geometry depends only on authoring data, never on the current frame.
 const targets = Object.fromEntries(WEAPON_ORDER.map(id => {
@@ -47,7 +61,7 @@ export function drawWeaponSprite(ctx: CanvasRenderingContext2D, id: WeaponId): b
 export function weaponSpriteInventoryIcon(id: WeaponId): string | undefined {
     const cached = inventoryIcons.get(id);
     if (cached) return cached;
-    const asset = sprites.get(id)?.asset, r = regions[id];
+    const asset = inventorySprites.get(id)?.asset, r = regions[id];
     if (!asset?.loaded || !r) return undefined;
     const canvas = document.createElement('canvas');
     canvas.width = 240; canvas.height = 380;

@@ -1,0 +1,352 @@
+{
+  "schemaVersion": 1,
+  "generator": "scripts/optimize-abilities.mjs",
+  "sharpVersion": "0.35.5",
+  "libvipsVersion": "8.18.7",
+  "settings": {
+    "resize": {
+      "width": 192,
+      "height": 192,
+      "fit": "inside",
+      "withoutEnlargement": true,
+      "kernel": "lanczos3"
+    },
+    "webp": {
+      "quality": 85,
+      "alphaQuality": 100,
+      "effort": 6
+    }
+  },
+  "verification": {
+    "originalsPreserved": true,
+    "decodedPixelsEqualSource": false
+  },
+  "files": [
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/assassin.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 153700,
+        "sha256": "9157d9ada4a5ae5cfe696d425c28bacdc0f1ccfdc9dea7d1cbacadaab088960b"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/assassin.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 11940,
+        "sha256": "2040a60b1e4834e6d0d744cf7c63073e6856a70b95739f24f2401d1be0937db6"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/cyborg.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 171058,
+        "sha256": "d162f04059fc2b7fc57a66835ba82a5963fefab0a34511d930b505965851a332"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/cyborg.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 15578,
+        "sha256": "70b8a4278d315db6a830fc1fa3489e33e45f6f681f6ee564ac711e6a358380dc"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/destroyer.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 163054,
+        "sha256": "a6d3696151027ab681a2fe392975b163d9131ea451a6637cfb49ff35ce556ff6"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/destroyer.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 13722,
+        "sha256": "9993df106e30238348e30d8125889cb2fbed707efaa2b35c558bdeb3f51436a6"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/fanatic.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 173408,
+        "sha256": "19cea7ecb33df71548ef222331b14ddbc7863a0397df72b995aeaf159dd27d75"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/fanatic.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 14440,
+        "sha256": "83c9b43d21edbb951d58923c248bc6d9f0ad69305dbe95e97c6e31436dacc811"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/goliath.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 175365,
+        "sha256": "22c433a4811de0bdc18a11d38e6a705080cbd67c6d2b48104a927fcd8d0d0dfb"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/goliath.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 17128,
+        "sha256": "d8d4127715b1c7980d88c4e82ccd3bceeedf840a6d8ce2bbdbe23652cbaedb32"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/half-mutant.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 144868,
+        "sha256": "68fe41fd8d51523cc666ef07ffe6db6dbf75c86a4b44c9ead663c3e7acfb6208"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/half-mutant.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 11428,
+        "sha256": "424591ea022419dd91952208c6156a4b058359bfc8011e617a18858b69a82f1e"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/hunter.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 144144,
+        "sha256": "fbf430216b0f11b7f9a095026c407690bc0b948e547e6dd4ce7ebc9aad79d156"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/hunter.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 9962,
+        "sha256": "cb92cca8d71f78fd751a6fb81e523819e905b01c25d0f929d7357ea01c931940"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/mercenary.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 148846,
+        "sha256": "906997bac7b896c805d9d2d78bd477e0fab327c7e9248cdd7106a77a3f6e6bbe"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/mercenary.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 12130,
+        "sha256": "904bc1464c8659497f88143026aab67afaee5c5f58c76d52195995cffd87997b"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/nuclear.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 155176,
+        "sha256": "fc9c20c1ac3e8b1cb630c52da3bd610126ecc45f1e0ffdf9a86deecb0420df94"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/nuclear.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 12598,
+        "sha256": "cb3cfa1c2f386dbb6622901f60149199555f7b46f0ebb5f61ac87b3ba01dd384"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/plasma-nuclear.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 173393,
+        "sha256": "f94c48316e1c425322ece7321faba21fe8fcd8bfb66dfff290aa18fd40d79e19"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/plasma-nuclear.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 14674,
+        "sha256": "343c2ccc66d548c72ee4ff6fb3b185887ea6ba79b02fa5f5627adf86d02039ac"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/silver-hunter.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 159707,
+        "sha256": "2d530d5324f60696c9aa93fa254aeb76af05f522c9e878f8b2c16eb946f8809b"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/silver-hunter.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 12788,
+        "sha256": "f52b462ea1229b880f1354b3780efc878d1341721bedff1cef26545c99b9d028"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/telepath.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 141231,
+        "sha256": "37512f9128e6d0451a50afa899ac4b4b9db4e58a962a3c204743cad925c962b7"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/telepath.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 11256,
+        "sha256": "268568abefc269dcfbeb60a8157938d1abeb7da5b423d3a8291be85c6944bf45"
+      }
+    },
+    {
+      "source": {
+        "path": "src/assets/abilities/v1/witcher.png",
+        "width": 256,
+        "height": 256,
+        "bytes": 162612,
+        "sha256": "33dc531d76fbf70d71d7c112c40f087be850a611a4d307c6865f74966f973ea3"
+      },
+      "output": {
+        "path": "src/assets/abilities-runtime/witcher.webp",
+        "width": 192,
+        "height": 192,
+        "bytes": 15534,
+        "sha256": "d394c8f6990a996be0ce61477d8b8cd9e8ede95b93772d0b1a4f682b1e0d2ece"
+      }
+    }
+  ],
+  "atlas": {
+    "columns": 4,
+    "rows": 4,
+    "tileWidth": 192,
+    "tileHeight": 192,
+    "cells": {
+      "assassin": {
+        "column": 0,
+        "row": 0,
+        "x": 0,
+        "y": 0,
+        "width": 192,
+        "height": 192
+      },
+      "cyborg": {
+        "column": 1,
+        "row": 0,
+        "x": 192,
+        "y": 0,
+        "width": 192,
+        "height": 192
+      },
+      "destroyer": {
+        "column": 2,
+        "row": 0,
+        "x": 384,
+        "y": 0,
+        "width": 192,
+        "height": 192
+      },
+      "fanatic": {
+        "column": 3,
+        "row": 0,
+        "x": 576,
+        "y": 0,
+        "width": 192,
+        "height": 192
+      },
+      "goliath": {
+        "column": 0,
+        "row": 1,
+        "x": 0,
+        "y": 192,
+        "width": 192,
+        "height": 192
+      },
+      "half-mutant": {
+        "column": 1,
+        "row": 1,
+        "x": 192,
+        "y": 192,
+        "width": 192,
+        "height": 192
+      },
+      "hunter": {
+        "column": 2,
+        "row": 1,
+        "x": 384,
+        "y": 192,
+        "width": 192,
+        "height": 192
+      },
+      "mercenary": {
+        "column": 3,
+        "row": 1,
+        "x": 576,
+        "y": 192,
+        "width": 192,
+        "height": 192
+      },
+      "nuclear": {
+        "column": 0,
+        "row": 2,
+        "x": 0,
+        "y": 384,
+        "width": 192,
+        "height": 192
+      },
+      "plasma-nuclear": {
+        "column": 1,
+        "row": 2,
+        "x": 192,
+        "y": 384,
+        "width": 192,
+        "height": 192
+      },
+      "silver-hunter": {
+        "column": 2,
+        "row": 2,
+        "x": 384,
+        "y": 384,
+        "width": 192,
+        "height": 192
+      },
+      "telepath": {
+        "column": 3,
+        "row": 2,
+        "x": 576,
+        "y": 384,
+        "width": 192,
+        "height": 192
+      },
+      "witcher": {
+        "column": 0,
+        "row": 3,
+        "x": 0,
+        "y": 576,
+        "width": 192,
+        "height": 192
+      }
+    },
+    "path": "src/assets/abilities-runtime/abilities.webp",
+    "width": 768,
+    "height": 768,
+    "bytes": 165338,
+    "sha256": "aed3f4b5ba591963a57bbf93206f2b3f7afebd8f423579decbbcda443fa58fce",
+    "encodedDirectlyFromResizedSource": true
+  }
+}

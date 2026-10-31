@@ -1,13 +1,9 @@
-import healthIcon from '@/assets/icons-runtime/upgrades/health-v2.png';
-import attackSpeedIcon from '@/assets/icons-runtime/upgrades/attack-speed-v2.png';
-import moveSpeedIcon from '@/assets/icons-runtime/upgrades/move-speed-v2.png';
-import damageIcon from '@/assets/icons-runtime/upgrades/damage-v2.png';
-import armorIcon from '@/assets/icons-runtime/upgrades/armor-v2.png';
-import pistolIcon from '@/assets/icons-runtime/upgrades/arsenal-pistol-v2.png';
-import automaticIcon from '@/assets/icons-runtime/upgrades/arsenal-automatic-v2.png';
-import shotgunIcon from '@/assets/icons-runtime/upgrades/arsenal-shotgun-v2.png';
-import heavyIcon from '@/assets/icons-runtime/upgrades/arsenal-heavy-v2.png';
-import energyIcon from '@/assets/icons-runtime/upgrades/arsenal-energy-v2.png';
+import { prepareUpgradeArtwork, upgradeArtwork } from './UpgradeArtwork';
+import type { UpgradeArtId } from './UpgradeArtwork';
+const healthIcon = 'health-v2', attackSpeedIcon = 'attack-speed-v2', moveSpeedIcon = 'move-speed-v2';
+const damageIcon = 'damage-v2', armorIcon = 'armor-v2', pistolIcon = 'arsenal-pistol-v2';
+const automaticIcon = 'arsenal-automatic-v2', shotgunIcon = 'arsenal-shotgun-v2';
+const heavyIcon = 'arsenal-heavy-v2', energyIcon = 'arsenal-energy-v2';
 import { EMPTY_IMPLANTS, IMPLANT_STEP, IMPLANT_LIMIT, validateImplants, applyImplants } from '@/gameplay/implants';
 import { EMPTY_ARSENAL, ARSENAL_STEP, ARSENAL_LIMIT, validateArsenal, arsenalBonuses } from '@/gameplay/arsenal';
 import type { ArsenalAllocation } from '@/gameplay/arsenal';
@@ -24,14 +20,14 @@ const implantSymbols = [
     '<path d="M12 14l20 18-20 18M30 14l20 18-20 18"/>',
     '<circle cx="32" cy="32" r="19"/><path d="M7 17h50M7 47h50"/>',
 ];
-const confirmedImplants: Record<number, { id: keyof ImplantAllocation; name: string; description: string; source: string }> = {
+const confirmedImplants: Record<number, { id: keyof ImplantAllocation; name: string; description: string; source: UpgradeArtId }> = {
     0: { id: 'health', name: 'Здоровье', description: 'Каждый плюс: +5 к прокачке и +10 ХП выбранному герою на игру.', source: healthIcon },
     1: { id: 'attackSpeed', name: 'Скорость стрельбы', description: 'Каждый плюс: +5 к прокачке и +2% скорости стрельбы выбранного героя.', source: attackSpeedIcon },
     2: { id: 'damage', name: 'Урон', description: 'Каждый плюс: +5 к прокачке и +5% урона выбранного героя.', source: damageIcon },
     3: { id: 'moveSpeed', name: 'Скорость бега', description: 'Каждый плюс: +5 к прокачке и +3% скорости бега выбранного героя.', source: moveSpeedIcon },
     4: { id: 'armor', name: 'Броня', description: 'Каждый плюс: +5 к прокачке и снижение входящего урона на 2%.', source: armorIcon },
 };
-const arsenal: { id: keyof ArsenalAllocation; name: string; source: string }[] = [
+const arsenal: { id: keyof ArsenalAllocation; name: string; source: UpgradeArtId }[] = [
     { id: 'sidearm', name: 'Пистолеты', source: pistolIcon },
     { id: 'automatic', name: 'Автоматы', source: automaticIcon },
     { id: 'shotgun', name: 'Дробовики', source: shotgunIcon },
@@ -69,13 +65,13 @@ export class UpgradesScreen {
                 <div class="upgrade-cards">${implantSymbols.map((symbol, i) => {
                     const implant = confirmedImplants[i];
                     return implant
-                        ? card(`<img src="${implant.source}" alt=""/>`, implant.name, i, implant.description, true)
+                        ? card(upgradeArtwork(implant.source), implant.name, i, implant.description, true)
                         : card(`<svg viewBox="0 0 64 64" aria-hidden="true">${symbol}</svg>`, `Имплант ${i + 1}`, i);
                 }).join('')}</div>
             </section>
             <section class="upgrade-section" aria-labelledby="arsenal-heading">
                 <h2 id="arsenal-heading">Улучшения арсенала: <span>0 / —</span></h2>
-                <div class="upgrade-cards">${arsenal.map((item, i) => card(`<img src="${item.source}" alt=""/>`, item.name, i + 5, item.name, true)).join('')}</div>
+                <div class="upgrade-cards">${arsenal.map((item, i) => card(upgradeArtwork(item.source), item.name, i + 5, item.name, true)).join('')}</div>
             </section>`;
         this.tooltip.id = 'implant-tooltip';
         this.tooltip.className = 'award-tooltip implant-tooltip';
@@ -135,6 +131,9 @@ export class UpgradesScreen {
         this.refresh();
     }
 
+    /** Cards and tooltips share one compact, retryable sheet. */
+    prepareArtwork(): Promise<boolean> { return prepareUpgradeArtwork(); }
+
     hideTooltip(): void {
         this.activePosition = undefined;
         this.element.querySelectorAll('[aria-describedby="implant-tooltip"]').forEach(node => node.removeAttribute('aria-describedby'));
@@ -168,7 +167,7 @@ export class UpgradesScreen {
         const bonus = implant
             ? `<div class="tooltip-bonus">${bonuses[implant.id]}</div>`
             : `<div class="tooltip-bonus">+${percent(weaponBonus!.attackSpeed)}% к скорострельности<br/>+${percent(weaponBonus!.damage)}% к урону${arsenalItem.id === 'sidearm' ? '' : `<br/>+${percent(weaponBonus!.ammo)}% к начальному запасу патронов`}</div>`;
-        this.tooltip.innerHTML = `<div class="tooltip-heading"><img src="${item.source}" alt=""/><strong>${item.name}</strong></div>${bonus}`;
+        this.tooltip.innerHTML = `<div class="tooltip-heading"><span class="upgrade-tooltip-art">${upgradeArtwork(item.source)}</span><strong>${item.name}</strong></div>${bonus}`;
         this.tooltip.classList.add('visible');
         this.tooltip.setAttribute('aria-hidden', 'false');
         const anchor = currentCard.getBoundingClientRect();

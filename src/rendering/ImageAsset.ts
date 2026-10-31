@@ -33,7 +33,13 @@ export function loadImageAsset(url: string, createImage = () => new Image(), tim
 }
 
 /** URL registration is inert. Explicit preparation shares work and retries failed attempts. */
-export function createLazyImageAsset(url: string, createImage = () => new Image()) {
+export function createLazyImageAsset(url: string, createImage = () => {
+    const image = new Image();
+    // Canvas artwork warms up in the background; visible UI images take priority.
+    image.fetchPriority = 'low';
+    image.decoding = 'async';
+    return image;
+}) {
     let asset: ImageAsset | undefined;
     let pending: Promise<boolean> | undefined;
     return {
