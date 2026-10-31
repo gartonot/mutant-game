@@ -26,6 +26,7 @@ export function createGameApplication(): () => void {
     void ensureAbilityIcons();
     const applicationEvents = new AbortController();
     const { signal } = applicationEvents;
+    document.addEventListener('contextmenu', event => event.preventDefault(), { capture: true, signal });
     const combatAudio = new CombatAudio();
     const unlockCombatAudio = () => combatAudio.unlock();
     window.addEventListener('pointerdown', unlockCombatAudio, { signal });
