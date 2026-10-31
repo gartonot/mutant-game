@@ -49,10 +49,6 @@ export function drawWeaponSprite(ctx: CanvasRenderingContext2D, id: WeaponId): b
     return true;
 }
 
-export function loadedWeaponSprites(): WeaponId[] {
-    return [...sprites].filter(([, source]) => source.asset?.loaded).map(([id]) => id);
-}
-
 export function isWeaponSpriteLoaded(id: WeaponId): boolean {
     return sprites.get(id)?.asset?.loaded ?? false;
 }

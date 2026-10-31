@@ -44,10 +44,6 @@ export function drawAdditionalCharacter(ctx: CanvasRenderingContext2D, character
     return asset ? drawRasterCharacter(ctx, character, asset, weapon, recoil) : false;
 }
 
-export function loadedAdditionalCharacters(): CharacterId[] {
-    return [...images].filter(([, source]) => source.asset?.loaded).map(([id]) => id);
-}
-
 export function drawAdditionalGoliathSlam(ctx: CanvasRenderingContext2D, x: number, y: number, angle: number, progress: number): void {
     drawGoliathSlamRaster(ctx, images.get('goliath')?.asset, x, y, angle, progress);
 }

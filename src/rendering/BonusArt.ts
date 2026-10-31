@@ -41,12 +41,6 @@ function imageFor(kind: BonusArtKind, tier: PickupTier = 'silver'): ImageAsset |
     return asset;
 }
 
-/** Preload hook for the shared pickup and HUD medallions. */
-export function bonusArtReady(tier: PickupTier = 'silver'): Promise<boolean[]> {
-    return Promise.all((Object.keys(urls) as BonusArtKind[])
-        .map(kind => imageFor(kind, tier)?.ready ?? Promise.resolve(false)));
-}
-
 /** Draw the same complete medallion on the ground and in the active bonus panel. */
 export function drawBonusArt(ctx: CanvasRenderingContext2D, kind: string,
     x: number, y: number, size: number, tier: PickupTier = 'silver'): boolean {
