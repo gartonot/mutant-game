@@ -9,6 +9,8 @@ export class Bullet implements IGameEntity {
     y: number;
     previousX: number;
     previousY: number;
+    /** One-time contact sweep through the space between the owner and the visual muzzle. */
+    launchOrigin?: { x: number; y: number; muzzleX: number; muzzleY: number };
     effect?: HitEffect;
     piercing = false;
     collisionResolved = false;

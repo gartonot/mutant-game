@@ -9,6 +9,20 @@ import type { PlayerController } from '@/systems/Player/PlayerController';
 import { segmentHit } from './spatial/segmentHit';
 import { SpatialGrid } from './spatial/SpatialGrid';
 
+type LaunchOrigin = NonNullable<Bullet['launchOrigin']>;
+function launchHit(bullet: Bullet, origin: LaunchOrigin | undefined, enemy: Enemy): number | null {
+    if (!origin || (enemy.x - origin.x) * bullet.dx + (enemy.y - origin.y) * bullet.dy < 0) return null;
+    return segmentHit(origin.x, origin.y, origin.muzzleX, origin.muzzleY,
+        enemy.x, enemy.y, enemy.radius + bullet.radius);
+}
+
+/** Negative contacts precede the normal flight segment, preserving near-to-far hit order. */
+function projectileHit(bullet: Bullet, origin: LaunchOrigin | undefined, enemy: Enemy): number | null {
+    const near = launchHit(bullet, origin, enemy);
+    return near !== null ? near - 2 : segmentHit(bullet.previousX, bullet.previousY, bullet.x, bullet.y,
+        enemy.x, enemy.y, enemy.radius + bullet.radius);
+}
+
 export class CollisionSystem {
     private grid = new SpatialGrid<Enemy>();
     private candidates: Enemy[] = [];
@@ -19,21 +33,27 @@ export class CollisionSystem {
         const fragments: Bullet[] = [];
         for (const bullet of controller.getBullets()) {
             if (bullet.isDead || bullet.collisionResolved) continue;
+            const launch = bullet.launchOrigin;
+            bullet.launchOrigin = undefined;
             const beam = bullet instanceof Beam ? bullet : null;
             const pulse = bullet instanceof Pulse ? bullet : null;
-            if (pulse) this.grid.query(pulse.x - pulse.reach, pulse.y - pulse.reach, pulse.x + pulse.reach, pulse.y + pulse.reach, this.candidates);
-            else this.grid.query(Math.min(bullet.previousX, bullet.x, beam?.sweepStartX ?? bullet.x, beam?.sweepEndX ?? bullet.x) - bullet.radius, Math.min(bullet.previousY, bullet.y, beam?.sweepStartY ?? bullet.y, beam?.sweepEndY ?? bullet.y) - bullet.radius,
-                Math.max(bullet.previousX, bullet.x, beam?.sweepStartX ?? bullet.x, beam?.sweepEndX ?? bullet.x) + bullet.radius, Math.max(bullet.previousY, bullet.y, beam?.sweepStartY ?? bullet.y, beam?.sweepEndY ?? bullet.y) + bullet.radius, this.candidates);
+            if (pulse) this.grid.query(Math.min(pulse.x - pulse.reach, launch?.x ?? pulse.x) - bullet.radius,
+                Math.min(pulse.y - pulse.reach, launch?.y ?? pulse.y) - bullet.radius,
+                Math.max(pulse.x + pulse.reach, launch?.x ?? pulse.x) + bullet.radius,
+                Math.max(pulse.y + pulse.reach, launch?.y ?? pulse.y) + bullet.radius, this.candidates);
+            else this.grid.query(Math.min(bullet.previousX, bullet.x, beam?.sweepStartX ?? bullet.x, beam?.sweepEndX ?? bullet.x, launch?.x ?? bullet.x, launch?.muzzleX ?? bullet.x) - bullet.radius,
+                Math.min(bullet.previousY, bullet.y, beam?.sweepStartY ?? bullet.y, beam?.sweepEndY ?? bullet.y, launch?.y ?? bullet.y, launch?.muzzleY ?? bullet.y) - bullet.radius,
+                Math.max(bullet.previousX, bullet.x, beam?.sweepStartX ?? bullet.x, beam?.sweepEndX ?? bullet.x, launch?.x ?? bullet.x, launch?.muzzleX ?? bullet.x) + bullet.radius,
+                Math.max(bullet.previousY, bullet.y, beam?.sweepStartY ?? bullet.y, beam?.sweepEndY ?? bullet.y, launch?.y ?? bullet.y, launch?.muzzleY ?? bullet.y) + bullet.radius, this.candidates);
             if (bullet.piercing) {
                 // Moving discs must consume their target budget in travel order, not grid order.
                 if (bullet instanceof Disc) this.candidates.sort((a, b) =>
-                    (segmentHit(bullet.previousX, bullet.previousY, bullet.x, bullet.y, a.x, a.y, a.radius + bullet.radius) ?? Infinity) -
-                    (segmentHit(bullet.previousX, bullet.previousY, bullet.x, bullet.y, b.x, b.y, b.radius + bullet.radius) ?? Infinity));
+                    (projectileHit(bullet, launch, a) ?? Infinity) - (projectileHit(bullet, launch, b) ?? Infinity));
                 for (const enemy of this.candidates) {
                     if (enemy.isDead || enemy.targetable === false || ((bullet instanceof Flame || bullet instanceof Beam || bullet instanceof Disc) && bullet.touched.has(enemy))) continue;
                     this.checks++;
-                    const hit = pulse ? pulse.intersects(enemy.x, enemy.y, enemy.radius) : beam ? beam.intersects(enemy.x, enemy.y, enemy.radius + bullet.radius) :
-                        segmentHit(bullet.previousX, bullet.previousY, bullet.x, bullet.y, enemy.x, enemy.y, enemy.radius + bullet.radius) !== null;
+                    const hit = launchHit(bullet, launch, enemy) !== null || (pulse ? pulse.intersects(enemy.x, enemy.y, enemy.radius) : beam ? beam.intersects(enemy.x, enemy.y, enemy.radius + bullet.radius) :
+                        segmentHit(bullet.previousX, bullet.previousY, bullet.x, bullet.y, enemy.x, enemy.y, enemy.radius + bullet.radius) !== null);
                     if (!hit) continue;
                     enemy.receiveDamage(bullet.damage, Math.atan2(bullet.dy, bullet.dx), bullet.pushBackForce);
                     enemy.applyEffect(bullet.effect); this.grid.relocate(enemy);
@@ -49,13 +69,18 @@ export class CollisionSystem {
             for (const enemy of this.candidates) {
                 if (enemy.isDead || enemy.targetable === false) continue;
                 this.checks++;
-                const t = segmentHit(bullet.previousX, bullet.previousY, bullet.x, bullet.y, enemy.x, enemy.y, enemy.radius + bullet.radius);
+                const t = projectileHit(bullet, launch, enemy);
                 if (t !== null && t < first) { first = t; target = enemy; }
             }
             if (bullet instanceof Grenade) {
                 if (target) {
-                    bullet.x = bullet.previousX + (bullet.x - bullet.previousX) * first;
-                    bullet.y = bullet.previousY + (bullet.y - bullet.previousY) * first;
+                    if (first < 0 && launch) {
+                        bullet.x = launch.x + (launch.muzzleX - launch.x) * (first + 2);
+                        bullet.y = launch.y + (launch.muzzleY - launch.y) * (first + 2);
+                    } else {
+                        bullet.x = bullet.previousX + (bullet.x - bullet.previousX) * first;
+                        bullet.y = bullet.previousY + (bullet.y - bullet.previousY) * first;
+                    }
                     bullet.detonated = true;
                 }
                 if (!bullet.detonated) continue;

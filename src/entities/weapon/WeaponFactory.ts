@@ -69,9 +69,11 @@ class ConfiguredWeapon implements IWeapon {
             if (this.laser && now + 1e-7 < this.state.nextShotAt && !this.laser.isDead) {
                 const muzzle = muzzlePosition(this.id, x, y, angle, this.character);
                 this.laser.aim(muzzle.x, muzzle.y, angle);
+                this.laser.launchOrigin = { x, y, muzzleX: muzzle.x, muzzleY: muzzle.y };
                 if (this.secondLaser) {
                     const secondMuzzle = muzzlePosition(this.id, second.x, second.y, second.angle, this.character);
                     this.secondLaser.aim(secondMuzzle.x, secondMuzzle.y, second.angle);
+                    this.secondLaser.launchOrigin = { x: second.x, y: second.y, muzzleX: secondMuzzle.x, muzzleY: secondMuzzle.y };
                 }
                 return null;
             }
@@ -98,13 +100,19 @@ class ConfiguredWeapon implements IWeapon {
             if (this.chargeProgress < 1) { this.state.resetCadence(); return null; }
         }
         const muzzle = muzzlePosition(this.id, x, y, angle, this.character);
-        const muzzles = [{ ...muzzle, angle }];
+        const muzzles = [{ ...muzzle, angle, ownerX: x, ownerY: y }];
         if (this.dualWeaponsActive) muzzles.push({
             ...muzzlePosition(this.id, second.x, second.y, second.angle, this.character), angle: second.angle,
+            ownerX: second.x, ownerY: second.y,
         });
         // Construct every projectile independently: beams and special weapons own mutable hit/sweep state.
-        const bullets = muzzles.flatMap(origin => d.pellets.map(pellet => createProjectile(d, origin.x, origin.y, origin.angle + pellet.angleOffset,
-            d.damage * pellet.damageMultiplier * this.damageMultiplier * this.pickupDamage, this.damageMultiplier * this.pickupDamage, this.explosionRadius)));
+        const bullets = muzzles.flatMap(origin => d.pellets.map(pellet => {
+            const projectile = createProjectile(d, origin.x, origin.y, origin.angle + pellet.angleOffset,
+                d.damage * pellet.damageMultiplier * this.damageMultiplier * this.pickupDamage,
+                this.damageMultiplier * this.pickupDamage, this.explosionRadius);
+            projectile.launchOrigin = { x: origin.ownerX, y: origin.ownerY, muzzleX: origin.x, muzzleY: origin.y };
+            return projectile;
+        }));
         if (d.projectile === 'laser') {
             this.laser = bullets[0] as Beam;
             this.laser.lifetimeMs = this.state.shotIntervalMs + 1000 / 60;
