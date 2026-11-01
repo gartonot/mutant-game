@@ -6,6 +6,7 @@ import { Enemy } from '../src/entities/enemy/Enemy';
 import { EnemyType } from '../src/entities/enemy/EnemyType';
 import { defaultLoadout } from '../src/gameplay/characters';
 import { Pickup } from '../src/gameplay/Pickups';
+import { getArenaSize } from '../src/gameplay/Arena';
 import { GOLD_PICKUP_KINDS } from '../src/gameplay/PickupVariants';
 import { GameWorld } from '../src/systems/GameWorld';
 
@@ -55,7 +56,7 @@ test('manual charges match actual floor pickups for every kind and both tiers', 
             }
             const player = floor.getPlayerController().getPlayer();
             const pickup = new Pickup(kind, player.x, player.y, player.x, player.y, 0, 1,
-                { width: 1200, height: 800 }, tier);
+                getArenaSize(), tier);
             pickup.update(400);
             internals(floor).pickups.push(pickup);
             floor.update(0);
@@ -73,6 +74,7 @@ test('manual charges match actual floor pickups for every kind and both tiers', 
             assert.equal(manual.activateConsumable(2), false);
             assert.deepEqual(state(manual), after, 'repeated activation has no effect');
         } finally {
+            manual.dispose(); floor.dispose();
             manual.getPlayerController().dispose(); floor.getPlayerController().dispose();
         }
     }
@@ -97,7 +99,7 @@ test('empty and locked charges do nothing, used slots retain position and comple
         player.currentHp = 100; internals(world).elapsed = GameWorld.DURATION_MS;
         assert.equal(world.activateConsumable(3), false);
         assert.equal(world.consumableSlots[3]!.used, false);
-    } finally { world.getPlayerController().dispose(); }
+    } finally { world.dispose(); world.getPlayerController().dispose(); }
 }));
 
 test('session resume retains spent bonuses while restart restores the original slot selection', () => withBrowser(() => {

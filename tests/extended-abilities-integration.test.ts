@@ -8,6 +8,7 @@ import type { CharacterId } from '../src/gameplay/ids';
 import { GameWorld } from '../src/systems/GameWorld';
 import { planPlasmaTraps } from '../src/gameplay/PlasmaTraps';
 import { Pickup } from '../src/gameplay/Pickups';
+import { getArenaSize, getRenderCameraPosition } from '../src/gameplay/Arena';
 import type { WaveSystem } from '../src/systems/WaveSystem/WaveSystem';
 
 test('survival opening pack starts at three seconds without shifting the first minute boss', () => withWorld('mercenary', world => {
@@ -38,18 +39,19 @@ test('telepath hover sends a health bonus through the normal world collection pa
     const controller = world.getPlayerController(), player = controller.getPlayer();
     player.currentHp = 20;
     const item = new Pickup('health', player.x + 200, player.y, player.x + 200, player.y, 20,
-        1, { width: 1200, height: 800 });
+        1, getArenaSize());
     item.update(400);
     const internal = world as unknown as { pickups: Pickup[] };
     internal.pickups.push(item);
-    controller.getAimPosition = () => ({ x: player.x + 200, y: player.y });
+    const camera = getRenderCameraPosition(player);
+    dispatch(window, 'mousemove', { clientX: item.x - camera.x, clientY: item.y - camera.y });
     world.update(2999);
     assert.equal(item.attracted, false);
     world.update(0);
     assert.equal(item.attracted, false);
     world.update(1);
     assert.equal(item.attracted, true);
-    controller.getAimPosition = () => ({ x: 0, y: 0 });
+    dispatch(window, 'mousemove', { clientX: 0, clientY: 0 });
     world.update(400);
     assert.equal(internal.pickups.length, 0);
     world.update(400);
@@ -126,7 +128,8 @@ test('goliath ability kills enter real run statistics once', () => withWorld('go
 
 test('silver hunter invisibility preserves last known target and prevents contact, then expires', () => withWorld('silver-hunter', (world, enemies) => {
     const player = world.getPlayerController().getPlayer();
-    const chaser = new Enemy(player.x + 400, player.y);
+    // Keep the chase fixture clear of the solid striped block on the arena's right side.
+    const chaser = new Enemy(player.x + 250, player.y);
     enemies.push(chaser);
     assert.equal(world.activateAbility(), true);
     assert.equal(player.abilityInvisible, true);

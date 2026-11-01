@@ -2,6 +2,7 @@ import type { Enemy } from '@/entities/enemy/Enemy';
 import { EnemyType } from '@/entities/enemy/EnemyType';
 import { ENEMY_MOVEMENT_SCALE } from '@/entities/enemy/enemyConfigs';
 import { drawBossHUD } from '@/ui/BossHUD';
+import { ARENA_BORDER, getVisibleArena, isArenaConfigured } from './Arena';
 
 export interface BossPlayer { x: number; y: number; radius: number; abilityInvisible?: boolean }
 export interface BossCallbacks {
@@ -99,10 +100,18 @@ export class BossEncounter {
     }
     private relocate(enemy: Enemy, arena: { width: number; height: number }, player: BossPlayer): void {
         const margin = enemy.radius + 45;
-        let x = arena.width / 2, y = arena.height / 2;
+        const view = isArenaConfigured() ? getVisibleArena(player) : { x: 0, y: 0, ...arena };
+        const border = isArenaConfigured() ? ARENA_BORDER : 0;
+        const insetX = Math.min(enemy.radius + border, arena.width / 2);
+        const insetY = Math.min(enemy.radius + border, arena.height / 2);
+        const minX = Math.min(arena.width - insetX, Math.max(insetX, view.x + Math.min(margin, view.width / 2)));
+        const minY = Math.min(arena.height - insetY, Math.max(insetY, view.y + Math.min(margin, view.height / 2)));
+        const maxX = Math.max(minX, Math.min(arena.width - enemy.radius - border, view.x + view.width - margin));
+        const maxY = Math.max(minY, Math.min(arena.height - enemy.radius - border, view.y + view.height - margin));
+        let x = (minX + maxX) / 2, y = (minY + maxY) / 2;
         for (let i = 0; i < 8; i++) {
-            x = margin + this.random() * Math.max(0, arena.width - margin * 2);
-            y = margin + this.random() * Math.max(0, arena.height - margin * 2);
+            x = minX + this.random() * (maxX - minX);
+            y = minY + this.random() * (maxY - minY);
             if (Math.hypot(x - player.x, y - player.y) > 180) break;
         }
         enemy.x = x; enemy.y = y; this.anchor = { x, y };

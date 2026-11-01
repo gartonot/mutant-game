@@ -1,4 +1,5 @@
 import { drawPlasmaCharge } from '@/rendering/PlasmaEffects';
+import { getRenderCameraPosition } from '@/gameplay/Arena';
 import { dualCharacterPose, muzzlePosition } from '@/rendering/WeaponGeometry';
 import { InputSystem } from '@/systems/InputSystem.ts';
 import { PlayerInputController } from '@/systems/Player/PlayerInputController.ts';
@@ -54,7 +55,7 @@ export class PlayerController implements IGameEntity {
         this.weaponController.setPickupModifiers(this.player.pickupDamageMultiplier, this.player.pickupAttackSpeed);
         // Обрабаотчик передвижения
         this.movementController.update();
-        const mouse = this.inputController.getMousePosition();
+        const mouse = this.getAimPosition();
         this.player.angle = Math.atan2(mouse.y - this.player.y, mouse.x - this.player.x);
         this.player.weapon = this.weaponController.selectedWeapon.id;
         this.player.recoil *= .7;
@@ -135,7 +136,11 @@ export class PlayerController implements IGameEntity {
         return this.player;
     }
 
-    public getAimPosition(): { x: number; y: number } { return this.inputController.getMousePosition(); }
+    public getAimPosition(): { x: number; y: number } {
+        const mouse = this.inputController.getMousePosition();
+        const camera = getRenderCameraPosition(this.player);
+        return { x: mouse.x + camera.x, y: mouse.y + camera.y };
+    }
 
     public collectDrop(drop: PickupDrop): void {
         if (this.player.currentHp <= 0) return;
@@ -206,7 +211,7 @@ export class PlayerController implements IGameEntity {
     private handleShooting() {
 
 
-        const mousePos = this.inputController.getMousePosition();
+        const mousePos = this.getAimPosition();
         const angle = Math.atan2(mousePos.y - this.player.y, mousePos.x - this.player.x);
 
         const fired = this.weaponController.tryShoot(

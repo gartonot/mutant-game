@@ -1,4 +1,8 @@
 import { GroundStampQueue } from '@/effects/GroundStampQueue';
+import { ArenaBackground } from '@/rendering/ArenaBackground';
+import { getArenaBarrels, getArenaSolidPolygons, resolveArenaObstacles, resolveArenaSolidPolygons } from '@/gameplay/ArenaObstacles';
+import { drawArenaBarrels } from '@/rendering/ArenaBarrels';
+import { drawArenaCrates } from '@/rendering/ArenaCrates';
 import { emitSound } from '@/audio/SoundEvents';
 import { prepareBloodDecal, warmBloodDecalWorkers } from '@/effects/BloodDecalWorkerPool';
 import { compact } from '@/core/compact';
@@ -8,7 +12,8 @@ import { drawAbilityHUD } from '@/ui/AbilityHUD';
 import { ConsumableInventory } from '@/gameplay/ConsumableInventory';
 import type { ConsumableSelection } from '@/gameplay/Consumables';
 import { drawConsumableHUD } from '@/ui/ConsumableHUD';
-import { getArenaSize } from '@/gameplay/Arena';
+import { ARENA_BORDER, getArenaSize, getVisibleArena, isArenaConfigured, updateArenaCamera } from '@/gameplay/Arena';
+import { drawArenaBorder } from '@/rendering/ArenaBorder';
 import { applyPickupBlast, getPickupBlast } from '@/gameplay/PickupBlasts';
 import { PickupWaveEffect } from '@/effects/PickupWaveEffect';
 import { PickupExplosionEffect } from '@/effects/PickupExplosionEffect';
@@ -42,6 +47,7 @@ import type { WeaponId } from '@/gameplay/ids';
 import { DEFAULT_UNLOCKED_GOLD_PICKUPS, type GoldPickupKind, type PickupTier } from '@/gameplay/PickupVariants';
 
 export class GameWorld implements IGameEntity {
+    private readonly background = new ArenaBackground();
     public static readonly DURATION_MS = 6 * 60 * 1000;
     public get remainingMs() { return Math.max(0, GameWorld.DURATION_MS - this.elapsed); }
     public get isVictory() { return this.remainingMs === 0 && this.controller.getPlayer().currentHp > 0; }
@@ -94,17 +100,19 @@ export class GameWorld implements IGameEntity {
     }
 
     private applyGround(draw: (ctx: CanvasRenderingContext2D) => void) {
-        const width = window.innerWidth, height = window.innerHeight;
-        if (!this.bloodLayer) this.bloodLayer = document.createElement('canvas');
-        const layer = this.bloodLayer;
-        if (layer.width < width || layer.height < height) {
-            const resized = document.createElement('canvas');
-            resized.width = Math.max(width, layer.width);
-            resized.height = Math.max(height, layer.height);
-            resized.getContext('2d')!.drawImage(layer, 0, 0);
-            this.bloodLayer = resized;
+        const { width, height } = getArenaSize();
+        // Bound persistent decal memory to 16 MB even on large/high-resolution maps.
+        const scale = Math.min(1, 2048 / Math.max(width, height));
+        if (!this.bloodLayer) {
+            this.bloodLayer = document.createElement('canvas');
+            this.bloodLayer.width = Math.ceil(width * scale);
+            this.bloodLayer.height = Math.ceil(height * scale);
         }
-        draw(this.bloodLayer.getContext('2d')!);
+        const context = this.bloodLayer.getContext('2d')!;
+        context.save();
+        context.setTransform(scale, 0, 0, scale, 0, 0);
+        draw(context);
+        context.restore();
     }
     private separation = new EnemySeparation();
     private elapsed = 0;
@@ -117,7 +125,8 @@ export class GameWorld implements IGameEntity {
         private readonly unlockedWeapons: readonly WeaponId[] = ALL_DROP_WEAPONS,
         consumables: readonly ConsumableSelection[] = [], consumableSlotsUnlocked?: number,
         waveRandom: () => number = random) {
-        this.waveSystem = new WaveSystem({ random: waveRandom });
+        this.waveSystem = new WaveSystem({ random: waveRandom,
+            viewport: () => getVisibleArena(controller.getPlayer()) });
         this.enemyArrivals = new EnemyArrivalQueue(waveRandom);
         this.bossEncounter = new BossEncounter(waveRandom);
         this.controller = controller;
@@ -163,7 +172,9 @@ export class GameWorld implements IGameEntity {
             this.wavesStarted++;
         }
         this.enemies.push(...this.enemyArrivals.release(this.elapsed));
+        updateArenaCamera(this.controller.getPlayer(), deltaMs);
         // Input and projectile motion precede collision detection in the same tick.
+        const previousPlayerPosition = { x: this.controller.getPlayer().x, y: this.controller.getPlayer().y };
         this.controller.update(deltaMs);
         this.extendedAbilities.update(deltaMs);
         if (['hunter', 'silver-hunter'].includes(this.controller.getPlayer().character) && !this.extendedAbilities.isActive) {
@@ -171,6 +182,11 @@ export class GameWorld implements IGameEntity {
         }
         const player = this.controller.getPlayer();
         const arena = getArenaSize();
+        const sectors = isArenaConfigured() ? 3 : 1;
+        const barrels = getArenaBarrels(arena.width, arena.height, sectors);
+        const solids = getArenaSolidPolygons(arena.width, arena.height, sectors);
+        resolveArenaSolidPolygons(player, solids, previousPlayerPosition);
+        resolveArenaObstacles(player, barrels, previousPlayerPosition);
         if (!player.abilityInvisible) this.lastVisiblePlayer = { x: player.x, y: player.y };
         for (const enemy of this.enemies) enemy.setTarget(this.lastVisiblePlayer.x, this.lastVisiblePlayer.y);
         this.ordinaryEnemies.update(deltaMs, this.enemies, player, {
@@ -180,13 +196,16 @@ export class GameWorld implements IGameEntity {
             damagePlayer: amount => player.takeDamage(amount),
             pullPlayer: (x, y, lockMs) => {
                 player.x = x; player.y = y; player.applyEnemyRoot(lockMs);
-                constrainPlayerToArena(player, arena.width, arena.height);
+                constrainPlayerToArena(player, arena.width, arena.height, isArenaConfigured() ? ARENA_BORDER : 0);
             },
         });
         for (const enemy of this.enemies) {
+            const previousEnemyPosition = { x: enemy.x, y: enemy.y };
             enemy.update(deltaMs);
             if (enemy.isDead) continue;
-            if (!enemy.contactDisabled && !enemy.isFeared && !player.abilityInvisible) resolvePlayerContact(player, enemy, this.controller.isMoving, this.elapsed, window.innerWidth, window.innerHeight);
+            resolveArenaSolidPolygons(enemy, solids, previousEnemyPosition);
+            resolveArenaObstacles(enemy, barrels, previousEnemyPosition);
+            if (!enemy.contactDisabled && !enemy.isFeared && !player.abilityInvisible) resolvePlayerContact(player, enemy, this.controller.isMoving, this.elapsed, arena.width, arena.height);
         }
         this.collisionSystem.checkBulletEnemyCollisions(this.controller, this.enemies,
             (x, y, radius, plasma, variant) => {
@@ -217,6 +236,13 @@ export class GameWorld implements IGameEntity {
         this.processEnemyDeaths();
         this.controller.cleanupBullets();
         this.separation.resolve(this.enemies);
+        resolveArenaSolidPolygons(player, solids);
+        resolveArenaObstacles(player, barrels);
+        constrainPlayerToArena(player, arena.width, arena.height, isArenaConfigured() ? ARENA_BORDER : 0);
+        for (const enemy of this.enemies) if (!enemy.isDead) {
+            resolveArenaSolidPolygons(enemy, solids);
+            resolveArenaObstacles(enemy, barrels);
+        }
         for (const effect of this.deathEffects) effect.update(deltaMs);
         compact(this.deathEffects, effect => {
             if (effect.isExpired) { effect.dispose(); return false; }
@@ -244,10 +270,10 @@ export class GameWorld implements IGameEntity {
         if (player.currentHp <= 0 || this.remainingMs === 0 || !this.abilityClock.activate()) return false;
         const blast = getPickupBlast('fireBlast');
         if (player.character === 'destroyer') {
-            const width = window.innerWidth, height = window.innerHeight;
+            const { x: viewX, y: viewY, width, height } = getVisibleArena(player);
             for (const enemy of this.enemies) {
-                if (enemy.x + enemy.radius < 0 || enemy.x - enemy.radius > width ||
-                    enemy.y + enemy.radius < 0 || enemy.y - enemy.radius > height) continue;
+                if (enemy.x + enemy.radius < viewX || enemy.x - enemy.radius > viewX + width ||
+                    enemy.y + enemy.radius < viewY || enemy.y - enemy.radius > viewY + height) continue;
                 enemy.receiveDamage(blast.damage, Math.atan2(enemy.y - player.y, enemy.x - player.x), 0);
             }
             const columns = Math.min(3, Math.max(2, Math.ceil(width / 520)));
@@ -255,8 +281,8 @@ export class GameWorld implements IGameEntity {
             const points: { x: number; y: number; order: number }[] = [];
             for (let row = 0; row < rows; row++) for (let col = 0; col < columns; col++) {
                 const seed = col * 17 + row * 31;
-                const x = (col + .5 + Math.sin(seed + 2) * .2) * width / columns;
-                const y = (row + .5 + Math.sin(seed + 7) * .2) * height / rows;
+                const x = viewX + (col + .5 + Math.sin(seed + 2) * .2) * width / columns;
+                const y = viewY + (row + .5 + Math.sin(seed + 7) * .2) * height / rows;
                 points.push({ x, y, order: Math.sin(seed + 13) });
             }
             // Separate local impacts in time instead of overlapping screen-wide fireballs.
@@ -347,8 +373,17 @@ export class GameWorld implements IGameEntity {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
+        const arena = getArenaSize();
+        const view = getVisibleArena(this.controller.getPlayer());
+        const sectors = isArenaConfigured() ? 3 : 1;
+        ctx.save();
+        ctx.translate(-view.x, -view.y);
+        this.background.draw(ctx, arena.width, arena.height, view, sectors);
         if (this.groundStamps.pendingCount) this.applyGround(layer => this.groundStamps.flush(layer));
-        if (this.bloodLayer) ctx.drawImage(this.bloodLayer, 0, 0);
+        if (this.bloodLayer) ctx.drawImage(this.bloodLayer, 0, 0, arena.width, arena.height);
+        drawArenaBarrels(ctx, getArenaBarrels(arena.width, arena.height, sectors), view);
+        drawArenaCrates(ctx, arena.width, arena.height, sectors, view);
+        if (isArenaConfigured()) drawArenaBorder(ctx, arena.width, arena.height, view);
         this.artilleryMarks.forEach(mark => mark.draw(ctx));
         this.extendedAbilities.drawGroundEffects(ctx);
         this.ordinaryEnemies.drawGround(ctx);
@@ -379,6 +414,7 @@ export class GameWorld implements IGameEntity {
         this.extendedAbilities.draw(ctx);
 
         // All HUD elements render after every world object, including the player.
+        ctx.restore();
         this.uiRenderer.draw(ctx);
         this.controller.drawHUD(ctx);
         drawConsumableHUD(ctx, this.consumables.slots, this.consumables.unlockedSlots);

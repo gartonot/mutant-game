@@ -1,4 +1,5 @@
 import type { HitEffect } from '@/gameplay/HitEffect';
+import { ARENA_BORDER, getArenaSize, isArenaConfigured } from '@/gameplay/Arena';
 import { drawEnemyArt } from '@/rendering/EnemyArt';
 import { ENEMY_CONFIGS } from '@entities/enemy/enemyConfigs.ts';
 import { EnemyType } from '@entities/enemy/EnemyType.ts';
@@ -123,9 +124,8 @@ export class Enemy implements IGameEntity {
         const bend = this.fearTurn * .18;
         let steerX = dx * Math.cos(bend) - dy * Math.sin(bend);
         let steerY = dx * Math.sin(bend) + dy * Math.cos(bend);
-        const width = typeof window !== 'undefined' ? window.innerWidth : 0;
-        const height = typeof window !== 'undefined' ? window.innerHeight : 0;
-        const margin = this.radius + 8;
+        const { width, height } = getArenaSize();
+        const margin = this.radius + 8 + (isArenaConfigured() ? ARENA_BORDER : 0);
         if (width > margin * 2 && height > margin * 2) {
             const zone = 100;
             const pressure = (distance: number) => Math.max(0, Math.min(1, 1 - distance / zone));
@@ -200,8 +200,8 @@ export class Enemy implements IGameEntity {
                 ? this.bugRoute * .8 * Math.max(0, Math.min(1, (length - 80) / 180)) : 0;
             let direction = Math.atan2(dy, dx) + Math.max(-1.4, Math.min(1.4, weave + flank));
             if (this.type === EnemyType.BUG && typeof window !== 'undefined') {
-                const width = window.innerWidth, height = window.innerHeight;
-                const margin = this.radius + 8;
+                const { width, height } = getArenaSize();
+                const margin = this.radius + 8 + (isArenaConfigured() ? ARENA_BORDER : 0);
                 // Bend back into the arena, without clamping offscreen arrivals.
                 if (this.x >= margin && this.x <= width - margin && this.y >= margin && this.y <= height - margin) {
                     const pressure = (d: number) => Math.max(0, 1 - d / 90);

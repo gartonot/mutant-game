@@ -1,14 +1,16 @@
 import { Enemy } from '@/entities/enemy/Enemy';
 import { EnemyType } from '@/entities/enemy/EnemyType';
-import { getArenaSize } from '@/gameplay/Arena';
+import { ARENA_BORDER, getArenaSize, isArenaConfigured } from '@/gameplay/Arena';
 
 import { BOSS_SEQUENCE, BOSS_WAVE_INTERVAL, SURVIVAL_WAVE_COUNT, WaveConfigs } from './WaveConfig';
 import type { IWaveRule } from './WaveConfig';
 
+interface SpawnViewport { x?: number; y?: number; width: number; height: number }
+
 export interface WaveSystemOptions {
     rules?: readonly IWaveRule[];
     random?: () => number;
-    viewport?: () => { width: number; height: number };
+    viewport?: () => SpawnViewport;
 }
 
 export class WaveSystem {
@@ -18,7 +20,7 @@ export class WaveSystem {
     private ingressSide = 2;
     private readonly rules: readonly IWaveRule[];
     private readonly random: () => number;
-    private readonly viewport: () => { width: number; height: number };
+    private readonly viewport: () => SpawnViewport;
 
     constructor(options: WaveSystemOptions = {}) {
         this.rules = options.rules ?? WaveConfigs;
@@ -105,26 +107,30 @@ export class WaveSystem {
     }
 
     private createPackEnemy(type: EnemyType, side: number, anchor: number, index: number): Enemy {
-        const { width, height } = this.viewport();
+        const viewport = this.viewport();
+        const { width, height } = viewport;
         const grunt = type === EnemyType.GRUNT;
         // Arrival timing belongs to the release queue, not long invisible columns.
         const offset = 40 + Math.floor(index / 3) * (grunt ? 24 : 35);
+        side = this.availableIngressSide(side, viewport, offset);
         const spread = (index % 3 - 1) * (grunt ? 55 : 38) + (this.random() - .5) * 14;
         const y = Math.max(35, Math.min(height - 35, anchor * height + spread));
         const x = Math.max(35, Math.min(width - 35, anchor * width + spread));
-        return new Enemy(side === 2 ? -offset : side === 3 ? width + offset : x,
-            side === 0 ? -offset : side === 1 ? height + offset : y, type);
+        return this.createWorldEnemy(type, viewport,
+            side === 2 ? -offset : side === 3 ? width + offset : x,
+            side === 0 ? -offset : side === 1 ? height + offset : y);
     }
 
     private createEnemy(type: EnemyType): Enemy {
-        const { width, height } = this.viewport();
-        const position = this.getRandomPosition(width, height);
-        return new Enemy(position.x, position.y, type);
+        const viewport = this.viewport();
+        const position = this.getRandomPosition(viewport);
+        return this.createWorldEnemy(type, viewport, position.x, position.y);
     }
 
-    private getRandomPosition(width: number, height: number): { x: number; y: number } {
+    private getRandomPosition(viewport: SpawnViewport): { x: number; y: number } {
+        const { width, height } = viewport;
         const offset = 50;
-        const side = Math.floor(this.random() * 4);
+        const side = this.availableIngressSide(Math.floor(this.random() * 4), viewport, offset);
         switch (side) {
             case 0: return { x: this.random() * width, y: -offset };
             case 1: return { x: this.random() * width, y: height + offset };
@@ -132,5 +138,28 @@ export class WaveSystem {
             case 3: return { x: width + offset, y: this.random() * height };
             default: return { x: 0, y: 0 };
         }
+    }
+
+    private availableIngressSide(side: number, viewport: SpawnViewport, offset: number): number {
+        if (viewport.x === undefined || viewport.y === undefined) return side;
+        const arena = getArenaSize();
+        const border = isArenaConfigured() ? ARENA_BORDER : 0;
+        const free = [viewport.y - border, arena.height - border - viewport.y - viewport.height,
+            viewport.x - border, arena.width - border - viewport.x - viewport.width];
+        if (free[side] >= offset + 40) return side;
+        for (const candidate of [side ^ 1, (side + 2) % 4, (side + 3) % 4]) {
+            if (free[candidate] >= offset + 40) return candidate;
+        }
+        return side;
+    }
+
+    private createWorldEnemy(type: EnemyType, viewport: SpawnViewport, x: number, y: number): Enemy {
+        const enemy = new Enemy(x + (viewport.x ?? 0), y + (viewport.y ?? 0), type);
+        if (viewport.x === undefined || viewport.y === undefined) return enemy;
+        const arena = getArenaSize();
+        const inset = enemy.radius + (isArenaConfigured() ? ARENA_BORDER : 0);
+        enemy.x = Math.max(Math.min(inset, arena.width / 2), Math.min(arena.width - inset, enemy.x));
+        enemy.y = Math.max(Math.min(inset, arena.height / 2), Math.min(arena.height - inset, enemy.y));
+        return enemy;
     }
 }

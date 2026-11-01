@@ -1,4 +1,5 @@
 import { InputKey } from '@/constants/InputKey';
+import { ARENA_BORDER, getArenaSize, isArenaConfigured } from '@/gameplay/Arena';
 import { Player } from '@/entities/player/Player';
 import { InputSystem } from '@/systems/InputSystem';
 import { constrainPlayerToArena } from '@/systems/spatial/playerBounds';
@@ -29,7 +30,8 @@ export class PlayerMovementController {
         this.player.y += dy * step;
         this.isMoving = dx !== 0 || dy !== 0;
 
-        constrainPlayerToArena(this.player, window.innerWidth, window.innerHeight);
+        const arena = getArenaSize();
+        constrainPlayerToArena(this.player, arena.width, arena.height, isArenaConfigured() ? ARENA_BORDER : 0);
     }
 
     public get moving(): boolean { return this.isMoving; }

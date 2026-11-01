@@ -1,5 +1,5 @@
 import { drawBonusArt } from '@/rendering/BonusArt';
-import { getArenaSize } from './Arena';
+import { ARENA_BORDER, getArenaSize, isArenaConfigured } from './Arena';
 import { drawAmmoArt } from '@/rendering/AmmoArt';
 import { drawWeapon, WEAPON_ART } from '@/rendering/WeaponArt';
 import type { AmmoCategory } from './WeaponLoot';
@@ -93,15 +93,17 @@ export class Pickup {
     }
 
     private clampTarget(): void {
-        const clamp = (value: number, size: number) => size <= this.radius * 2
-            ? Math.max(0, size / 2) : Math.max(this.radius, Math.min(size - this.radius, value));
+        const inset = this.radius + (isArenaConfigured() ? ARENA_BORDER : 0);
+        const clamp = (value: number, size: number) => size <= inset * 2
+            ? Math.max(0, size / 2) : Math.max(inset, Math.min(size - inset, value));
         this.targetX = clamp(this.targetX, this.viewport.width);
         this.targetY = clamp(this.targetY, this.viewport.height);
     }
 
     private clampPosition(): void {
-        const insetX = Math.min(this.radius, this.viewport.width / 2);
-        const insetY = Math.min(this.radius, this.viewport.height / 2);
+        const inset = this.radius + (isArenaConfigured() ? ARENA_BORDER : 0);
+        const insetX = Math.min(inset, this.viewport.width / 2);
+        const insetY = Math.min(inset, this.viewport.height / 2);
         this.x = Math.max(insetX, Math.min(this.viewport.width - insetX, this.x));
         this.y = Math.max(insetY, Math.min(this.viewport.height - insetY, this.y));
     }
