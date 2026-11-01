@@ -84,6 +84,7 @@ export class ZombieDeathEffect {
     }>();
     private readonly bloodColor: string;
     private readonly greenBlood: boolean;
+    private readonly visualRadius: number;
 
     constructor(
         private readonly x: number,
@@ -94,6 +95,8 @@ export class ZombieDeathEffect {
         random: () => number = Math.random,
     ) {
         const scale = Math.max(8, radius);
+        // Covers maximum landing spread, airborne height, tails and rotating remains.
+        this.visualRadius = scale * 16 + 32;
         const trailLengthScale = .7;
         const colors = palette.length ? palette : ['#703733', '#87423b', '#964c42'];
         this.bloodColor = colors[Math.min(1, colors.length - 1)];
@@ -271,8 +274,10 @@ export class ZombieDeathEffect {
         if (this.retired) this.dispose();
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D, view?: { x: number; y: number; width: number; height: number }): void {
         if (this.isExpired || this.waitingForPreparation || this.retired) return;
+        if (view && (this.x + this.visualRadius < view.x || this.x - this.visualRadius > view.x + view.width
+            || this.y + this.visualRadius < view.y || this.y - this.visualRadius > view.y + view.height)) return;
         const seconds = this.ageMs / 1000;
         const distanceTime = (1 - Math.exp(-this.drag * seconds)) / this.drag;
         const tailSeconds = Math.max(0, seconds - .035);

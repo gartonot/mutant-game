@@ -3,6 +3,7 @@ import { ArenaBackground } from '@/rendering/ArenaBackground';
 import { getArenaBarrels, getArenaSolidPolygons, resolveArenaObstacles, resolveArenaSolidPolygons } from '@/gameplay/ArenaObstacles';
 import { drawArenaBarrels } from '@/rendering/ArenaBarrels';
 import { drawArenaCrates } from '@/rendering/ArenaCrates';
+import { isWorldCircleVisible } from '@/rendering/WorldVisibility';
 import { emitSound } from '@/audio/SoundEvents';
 import { prepareBloodDecal, warmBloodDecalWorkers } from '@/effects/BloodDecalWorkerPool';
 import { compact } from '@/core/compact';
@@ -395,16 +396,21 @@ export class GameWorld implements IGameEntity {
         ctx.translate(-view.x, -view.y);
         this.background.draw(ctx, arena.width, arena.height, view, sectors);
         if (this.groundStamps.pendingCount) this.applyGround(layer => this.groundStamps.flush(layer));
-        if (this.bloodLayer) ctx.drawImage(this.bloodLayer, 0, 0, arena.width, arena.height);
+        if (this.bloodLayer) {
+            const sx = this.bloodLayer.width / arena.width, sy = this.bloodLayer.height / arena.height;
+            ctx.drawImage(this.bloodLayer, view.x * sx, view.y * sy, view.width * sx, view.height * sy,
+                view.x, view.y, view.width, view.height);
+        }
         drawArenaBarrels(ctx, getArenaBarrels(arena.width, arena.height, sectors), view);
         drawArenaCrates(ctx, arena.width, arena.height, sectors, view);
         if (isArenaConfigured()) drawArenaBorder(ctx, arena.width, arena.height, view);
         this.artilleryMarks.forEach(mark => mark.draw(ctx));
         this.extendedAbilities.drawGroundEffects(ctx);
-        this.ordinaryEnemies.drawGround(ctx);
+        this.ordinaryEnemies.drawGround(ctx, view);
         this.bossEncounter.drawGround(ctx);
         const acquiredCategories = this.controller.acquiredAmmoCategories;
         this.pickups.forEach(pickup => {
+            if (!isWorldCircleVisible(view, pickup.x, pickup.y, pickup.radius + 40)) return;
             // Read current inventory: another drop in this category may have been
             // collected since this weapon landed, turning it into an ammo refill.
             const category = pickup.weaponId ? WEAPON_DEFINITIONS[pickup.weaponId].category : undefined;
@@ -414,10 +420,13 @@ export class GameWorld implements IGameEntity {
         });
         this.fearWaves.forEach(effect => effect.draw(ctx));
         // Отрисовываем врагов
-        this.enemies.forEach(enemy => enemy.draw(ctx));
-        this.ordinaryEnemies.draw(ctx);
+        for (const enemy of this.enemies) {
+            const extent = enemy.radius * Math.max(1, enemy.renderScale) * 4 + Math.abs(enemy.visualLift);
+            if (isWorldCircleVisible(view, enemy.x, enemy.y, extent)) enemy.draw(ctx);
+        }
+        this.ordinaryEnemies.draw(ctx, view);
         this.bossEncounter.drawWorld(ctx);
-        this.deathEffects.forEach(effect => effect.draw(ctx));
+        this.deathEffects.forEach(effect => effect.draw(ctx, view));
         this.explosions.forEach(effect => effect.draw(ctx));
         this.pickupWaves.forEach(effect => effect.draw(ctx));
         this.pickupExplosions.forEach(effect => effect.draw(ctx));

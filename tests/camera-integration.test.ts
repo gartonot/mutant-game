@@ -3,6 +3,8 @@ import { test } from 'node:test';
 import { createGameWorld } from '../src/GameRuntime';
 import { configureArena, getArenaSize, getCameraPosition, getRenderCameraPosition, resetArena, updateArenaCamera } from '../src/gameplay/Arena';
 import type { GameWorld } from '../src/systems/GameWorld';
+import { Enemy } from '../src/entities/enemy/Enemy';
+import { Pickup } from '../src/gameplay/Pickups';
 
 function withWorld(run: (world: GameWorld, win: EventTarget) => void): void {
     const previous = ['window', 'document', 'HTMLCanvasElement'].map(key =>
@@ -99,4 +101,27 @@ test('world draw applies camera translation to world objects and restores it bef
         { kind: 'boss HUD', translation: { x: 0, y: 0 } },
     ]);
     assert.equal(drawing.depth(), 0);
+}));
+
+test('offscreen enemies and pickups keep simulating while artwork touching the camera edge remains visible', () => withWorld(world => {
+    const state = world as unknown as { enemies: Enemy[]; pickups: Pickup[] };
+    const calls: string[] = [];
+    const on = new Enemy(1800, 1200), off = new Enemy(300, 300);
+    const edge = new Enemy(1170, 1200);
+    const lifted = new Enemy(1800, 1800); lifted.visualLift = 300;
+    on.draw = () => calls.push('on'); off.draw = () => calls.push('off');
+    edge.draw = () => calls.push('edge'); lifted.draw = () => calls.push('lifted');
+    state.enemies.push(on, off, edge, lifted);
+    const pickup = new Pickup('health', 300, 300, 300, 300, 20);
+    pickup.draw = () => calls.push('off pickup'); state.pickups.push(pickup);
+    const before = { x: off.x, y: off.y };
+    world.update(16);
+    assert.ok(off.x !== before.x || off.y !== before.y, 'offscreen enemies still pursue the player');
+    lifted.visualLift = 300;
+    world.draw(recordingContext().ctx);
+    assert.ok(calls.includes('on'));
+    assert.ok(calls.includes('edge'), 'arms and artwork outside the body circle must not pop at the edge');
+    assert.ok(calls.includes('lifted'), 'jumping artwork can be visible even with an offscreen body');
+    assert.ok(!calls.includes('off'));
+    assert.ok(!calls.includes('off pickup'));
 }));

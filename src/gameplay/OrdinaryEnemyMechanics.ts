@@ -7,6 +7,11 @@ type Corpse = { x: number; y: number; radius: number; hits: number; age: number;
 type Glob = { x: number; y: number; vx: number; vy: number; life: number; radius: number };
 type Stain = { x: number; y: number; radius: number; age: number; seed: number };
 type Jump = { phase: 'windup' | 'air' | 'recover'; elapsed: number; fromX: number; fromY: number; toX: number; toY: number; hit: boolean };
+interface Viewport { x: number; y: number; width: number; height: number }
+function visible(view: Viewport | undefined, x: number, y: number, radius: number): boolean {
+    return !view || (x + radius >= view.x && x - radius <= view.x + view.width
+        && y + radius >= view.y && y - radius <= view.y + view.height);
+}
 export interface OrdinaryEnemyCallbacks { applySlow(durationMs: number, factor: number): void }
 const ZOMBIES = new Set([EnemyType.GRUNT, EnemyType.RUNNER, EnemyType.ARMORED, EnemyType.SLOWER, EnemyType.CYAN]);
 const GREEN_DEATHS = new Set([EnemyType.BUG, EnemyType.LEECH, EnemyType.BEETLE, EnemyType.JUMPER]);
@@ -136,9 +141,10 @@ export class OrdinaryEnemyMechanics {
         }
     }
 
-    drawGround(ctx: CanvasRenderingContext2D): void {
+    drawGround(ctx: CanvasRenderingContext2D, view?: Viewport): void {
         ctx.save();
         for (const mark of this.stains) {
+            if (!visible(view, mark.x, mark.y, mark.radius + 4)) continue;
             ctx.globalAlpha = .4;
             ctx.fillStyle = '#3d502d';
             ctx.beginPath(); ctx.ellipse(mark.x, mark.y, mark.radius, mark.radius * .68, mark.seed, 0, Math.PI * 2); ctx.fill();
@@ -150,6 +156,7 @@ export class OrdinaryEnemyMechanics {
         }
         ctx.globalAlpha = 1;
         for (const corpse of this.corpses) {
+            if (!visible(view, corpse.x, corpse.y, corpse.radius * 2 + 14)) continue;
             if (drawFatCorpse(ctx, corpse.x, corpse.y, corpse.radius, corpse.variant)) continue;
             ctx.save(); ctx.translate(corpse.x, corpse.y); ctx.rotate(corpse.variant);
             ctx.fillStyle = '#20281b'; ctx.beginPath(); ctx.ellipse(2, 5, corpse.radius * 1.1, corpse.radius * .8, 0, 0, Math.PI * 2); ctx.fill();
@@ -165,20 +172,23 @@ export class OrdinaryEnemyMechanics {
         }
         for (const [enemy, jump] of this.jumps) {
             if (jump.phase !== 'windup') continue;
+            if (!visible(view, jump.toX, jump.toY, enemy.radius + 9)) continue;
             ctx.strokeStyle = 'rgba(173,213,81,.65)'; ctx.lineWidth = 2;
             ctx.beginPath(); ctx.arc(jump.toX, jump.toY, enemy.radius + 7, 0, Math.PI * 2); ctx.stroke();
         }
         ctx.restore();
     }
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D, view?: Viewport): void {
         ctx.save();
         for (const glob of this.globs) {
+            if (!visible(view, glob.x, glob.y, Math.max(6, glob.radius + 2))) continue;
             ctx.fillStyle = '#2d531c'; ctx.beginPath(); ctx.arc(glob.x, glob.y, glob.radius + 2, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = '#8bb737'; ctx.beginPath(); ctx.arc(glob.x, glob.y, glob.radius, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = '#c6db79'; ctx.beginPath(); ctx.arc(glob.x - 2, glob.y - 3, 3, 0, Math.PI * 2); ctx.fill();
         }
         for (const mark of this.stains) {
             if (mark.age > 300) continue;
+            if (!visible(view, mark.x, mark.y, mark.radius * 1.5 + 4)) continue;
             const t = mark.age / 300; ctx.globalAlpha = 1 - t; ctx.strokeStyle = '#b2da4b'; ctx.lineWidth = 3 * (1 - t);
             ctx.beginPath(); ctx.arc(mark.x, mark.y, mark.radius * (.3 + t), 0, Math.PI * 2); ctx.stroke();
             ctx.fillStyle = '#8fb52b';

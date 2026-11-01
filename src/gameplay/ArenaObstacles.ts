@@ -1,7 +1,89 @@
 export interface ArenaBarrel { x: number; y: number; radius: number }
 interface Body { x: number; y: number; radius: number }
 interface Point { x: number; y: number }
-const polygonBounds = new WeakMap<readonly Point[], { minX: number; minY: number; maxX: number; maxY: number }>();
+interface Bounds { minX: number; minY: number; maxX: number; maxY: number }
+const polygonBounds = new WeakMap<readonly Point[], Bounds>();
+const polygonIndexes = new WeakMap<readonly (readonly Point[])[], StaticObstacleIndex>();
+const barrelIndexes = new WeakMap<readonly ArenaBarrel[], StaticObstacleIndex>();
+const ascending = (a: number, b: number) => a - b;
+
+/** Static props share a broad phase; queries reuse scratch storage rather than scanning the map. */
+class StaticObstacleIndex {
+    private readonly cells = new Map<number, Map<number, number[]>>();
+    private readonly seen: Uint32Array;
+    private stamp = 0;
+    private readonly candidates: number[] = [];
+
+    constructor(private readonly bounds: readonly Bounds[]) {
+        this.seen = new Uint32Array(bounds.length);
+        bounds.forEach((box, index) => {
+            for (let x = Math.floor(box.minX / 128); x <= Math.floor(box.maxX / 128); x++) {
+                let column = this.cells.get(x);
+                if (!column) { column = new Map(); this.cells.set(x, column); }
+                for (let y = Math.floor(box.minY / 128); y <= Math.floor(box.maxY / 128); y++) {
+                    const bucket = column.get(y);
+                    if (bucket) bucket.push(index); else column.set(y, [index]);
+                }
+            }
+        });
+    }
+
+    query(minX: number, minY: number, maxX: number, maxY: number, after = -1): readonly number[] {
+        const result = this.candidates;
+        result.length = 0;
+        this.stamp = (this.stamp + 1) >>> 0;
+        if (this.stamp === 0) { this.seen.fill(0); this.stamp = 1; }
+        for (let x = Math.floor(minX / 128); x <= Math.floor(maxX / 128); x++) {
+            const column = this.cells.get(x);
+            if (!column) continue;
+            for (let y = Math.floor(minY / 128); y <= Math.floor(maxY / 128); y++) {
+                const bucket = column.get(y);
+                if (!bucket) continue;
+                for (const index of bucket) {
+                    if (index <= after || this.seen[index] === this.stamp) continue;
+                    this.seen[index] = this.stamp;
+                    const box = this.bounds[index];
+                    if (box.maxX < minX || box.minX > maxX || box.maxY < minY || box.minY > maxY) continue;
+                    result.push(index);
+                }
+            }
+        }
+        // Preserve the original solver order, including overlapping props and equal-time contacts.
+        if (result.length > 1) result.sort(ascending);
+        return result;
+    }
+
+    around(body: Body, after = -1): readonly number[] {
+        return this.query(body.x - body.radius, body.y - body.radius, body.x + body.radius, body.y + body.radius, after);
+    }
+}
+
+function getPolygonIndex(solids: readonly (readonly Point[])[]): StaticObstacleIndex {
+    let index = polygonIndexes.get(solids);
+    if (!index) {
+        index = new StaticObstacleIndex(solids.map(polygon => {
+            let bounds = polygonBounds.get(polygon);
+            if (!bounds) {
+                bounds = { minX: Math.min(...polygon.map(p => p.x)), minY: Math.min(...polygon.map(p => p.y)),
+                    maxX: Math.max(...polygon.map(p => p.x)), maxY: Math.max(...polygon.map(p => p.y)) };
+                polygonBounds.set(polygon, bounds);
+            }
+            return bounds;
+        }));
+        polygonIndexes.set(solids, index);
+    }
+    return index;
+}
+
+function getBarrelIndex(obstacles: readonly ArenaBarrel[]): StaticObstacleIndex {
+    let index = barrelIndexes.get(obstacles);
+    if (!index) {
+        index = new StaticObstacleIndex(obstacles.map(barrel => ({ minX: barrel.x - barrel.radius, minY: barrel.y - barrel.radius,
+            maxX: barrel.x + barrel.radius, maxY: barrel.y + barrel.radius })));
+        barrelIndexes.set(obstacles, index);
+    }
+    return index;
+}
 
 export const ARENA_SLABS = [[0.14, 0.24, 0.12], [0.84, 0.7, -0.3], [0.2, 0.82, 0.4]] as const;
 export const ARENA_STRIPED_BLOCK = [0.83, 0.46, -0.18] as const;
@@ -104,6 +186,7 @@ export function getArenaSolidPolygons(width: number, height: number, count = 1):
 }
 
 export function resolveArenaSolidPolygons(body: Body, solids: readonly (readonly Point[])[], previous?: Point): void {
+    const index = getPolygonIndex(solids);
     const targetX = body.x, targetY = body.y;
     const steps = previous ? Math.max(1, Math.ceil(Math.hypot(targetX - previous.x, targetY - previous.y) / Math.max(1, body.radius * 0.5))) : 1;
     const vx = previous ? (targetX - previous.x) / steps : 0;
@@ -111,37 +194,40 @@ export function resolveArenaSolidPolygons(body: Body, solids: readonly (readonly
     if (previous) { body.x = previous.x; body.y = previous.y; }
     for (let step = 0; step < steps; step++) {
         body.x += vx; body.y += vy;
-        for (let pass = 0; pass < 3; pass++) for (const polygon of solids) {
-            let bounds = polygonBounds.get(polygon);
-            if (!bounds) {
-                bounds = { minX: Math.min(...polygon.map(p => p.x)), minY: Math.min(...polygon.map(p => p.y)),
-                    maxX: Math.max(...polygon.map(p => p.x)), maxY: Math.max(...polygon.map(p => p.y)) };
-                polygonBounds.set(polygon, bounds);
+        for (let pass = 0; pass < 3; pass++) {
+            let corrected = false;
+            let candidates = index.around(body);
+            for (let candidate = 0; candidate < candidates.length; candidate++) {
+                const obstacleIndex = candidates[candidate];
+                const polygon = solids[obstacleIndex];
+                let inside = false, nearestX = 0, nearestY = 0, nearestSquared = Infinity;
+                for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+                    const a = polygon[j], b = polygon[i];
+                    if ((a.y > body.y) !== (b.y > body.y) && body.x < (b.x - a.x) * (body.y - a.y) / (b.y - a.y) + a.x) inside = !inside;
+                    const ex = b.x - a.x, ey = b.y - a.y;
+                    const t = Math.max(0, Math.min(1, ((body.x - a.x) * ex + (body.y - a.y) * ey) / (ex * ex + ey * ey)));
+                    const x = a.x + ex * t, y = a.y + ey * t;
+                    const squared = (body.x - x) ** 2 + (body.y - y) ** 2;
+                    if (squared < nearestSquared) { nearestSquared = squared; nearestX = x; nearestY = y; }
+                }
+                const distance = Math.sqrt(nearestSquared);
+                if (!inside && distance >= body.radius) continue;
+                let nx = body.x - nearestX, ny = body.y - nearestY;
+                if (inside) { nx = -nx; ny = -ny; }
+                if (distance < 1e-8) {
+                    const centerX = polygon.reduce((sum, p) => sum + p.x, 0) / polygon.length;
+                    const centerY = polygon.reduce((sum, p) => sum + p.y, 0) / polygon.length;
+                    nx = nearestX - centerX; ny = nearestY - centerY;
+                }
+                const length = Math.hypot(nx, ny) || 1;
+                body.x = nearestX + nx / length * (body.radius + 0.001);
+                body.y = nearestY + ny / length * (body.radius + 0.001);
+                corrected = true;
+                // A correction can touch a new prop. Re-query remaining IDs exactly as a full scan would.
+                candidates = index.around(body, obstacleIndex);
+                candidate = -1;
             }
-            if (body.x + body.radius < bounds.minX || body.y + body.radius < bounds.minY ||
-                body.x - body.radius > bounds.maxX || body.y - body.radius > bounds.maxY) continue;
-            let inside = false, nearestX = 0, nearestY = 0, nearestSquared = Infinity;
-            for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-                const a = polygon[j], b = polygon[i];
-                if ((a.y > body.y) !== (b.y > body.y) && body.x < (b.x - a.x) * (body.y - a.y) / (b.y - a.y) + a.x) inside = !inside;
-                const ex = b.x - a.x, ey = b.y - a.y;
-                const t = Math.max(0, Math.min(1, ((body.x - a.x) * ex + (body.y - a.y) * ey) / (ex * ex + ey * ey)));
-                const x = a.x + ex * t, y = a.y + ey * t;
-                const squared = (body.x - x) ** 2 + (body.y - y) ** 2;
-                if (squared < nearestSquared) { nearestSquared = squared; nearestX = x; nearestY = y; }
-            }
-            const distance = Math.sqrt(nearestSquared);
-            if (!inside && distance >= body.radius) continue;
-            let nx = body.x - nearestX, ny = body.y - nearestY;
-            if (inside) { nx = -nx; ny = -ny; }
-            if (distance < 1e-8) {
-                const centerX = polygon.reduce((sum, p) => sum + p.x, 0) / polygon.length;
-                const centerY = polygon.reduce((sum, p) => sum + p.y, 0) / polygon.length;
-                nx = nearestX - centerX; ny = nearestY - centerY;
-            }
-            const length = Math.hypot(nx, ny) || 1;
-            body.x = nearestX + nx / length * (body.radius + 0.001);
-            body.y = nearestY + ny / length * (body.radius + 0.001);
+            if (!corrected) break;
         }
     }
 }
@@ -163,6 +249,7 @@ export function getArenaBarrels(width: number, height: number, count = 1): reado
 
 /** Stop swept movement at the first impact, preserving the tangent for sliding. */
 export function resolveArenaObstacles(body: Body, obstacles: readonly ArenaBarrel[], previous?: { x: number; y: number }): void {
+    const index = getBarrelIndex(obstacles);
     if (previous) {
         let startX = previous.x, startY = previous.y;
         let vx = body.x - startX, vy = body.y - startY;
@@ -171,7 +258,10 @@ export function resolveArenaObstacles(body: Body, obstacles: readonly ArenaBarre
             let hit: ArenaBarrel | undefined;
             const a = vx * vx + vy * vy;
             if (a < 1e-12) break;
-            for (const obstacle of obstacles) {
+            const candidates = index.query(Math.min(startX, startX + vx) - body.radius, Math.min(startY, startY + vy) - body.radius,
+                Math.max(startX, startX + vx) + body.radius, Math.max(startY, startY + vy) + body.radius);
+            for (const obstacleIndex of candidates) {
+                const obstacle = obstacles[obstacleIndex];
                 const dx = startX - obstacle.x, dy = startY - obstacle.y;
                 const radius = body.radius + obstacle.radius;
                 const b = dx * vx + dy * vy;
@@ -194,12 +284,22 @@ export function resolveArenaObstacles(body: Body, obstacles: readonly ArenaBarre
         body.x = startX; body.y = startY;
     }
     // Also recover from resize, spawn overlap and external displacement.
-    for (let pass = 0; pass < 3; pass++) for (const obstacle of obstacles) {
-        const dx = body.x - obstacle.x, dy = body.y - obstacle.y;
-        const radius = body.radius + obstacle.radius;
-        const distance = Math.hypot(dx, dy);
-        if (distance >= radius) continue;
-        body.x = obstacle.x + (distance > 0 ? dx / distance : 1) * (radius + 0.001);
-        body.y = obstacle.y + (distance > 0 ? dy / distance : 0) * (radius + 0.001);
+    for (let pass = 0; pass < 3; pass++) {
+        let corrected = false;
+        let candidates = index.around(body);
+        for (let candidate = 0; candidate < candidates.length; candidate++) {
+            const obstacleIndex = candidates[candidate];
+            const obstacle = obstacles[obstacleIndex];
+            const dx = body.x - obstacle.x, dy = body.y - obstacle.y;
+            const radius = body.radius + obstacle.radius;
+            const distance = Math.hypot(dx, dy);
+            if (distance >= radius) continue;
+            body.x = obstacle.x + (distance > 0 ? dx / distance : 1) * (radius + 0.001);
+            body.y = obstacle.y + (distance > 0 ? dy / distance : 0) * (radius + 0.001);
+            corrected = true;
+            candidates = index.around(body, obstacleIndex);
+            candidate = -1;
+        }
+        if (!corrected) break;
     }
 }

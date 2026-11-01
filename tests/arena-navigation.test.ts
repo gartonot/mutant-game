@@ -57,3 +57,26 @@ test('nearby targets in the same cell reuse the flow field while open lines purs
     const exact = { x: 270, y: 425 };
     assert.deepEqual(navigation.getWaypoint(body, exact, 1200, 900, solids, barrels), exact);
 });
+
+test('navigation spatial queries retain capsule clearance across bucket boundaries and all ray directions', () => {
+    const navigation = new ArenaNavigation();
+    const solids = [rectangle(256, 240, 24, 200)];
+    const barrels = [{ x: 640, y: 384, radius: 20 }];
+    const cases = [
+        { from: [200, 100], to: [320, 500], radius: 15, clear: false },
+        { from: [80, 80], to: [780, 80], radius: 15, clear: true },
+        { from: [80, 80], to: [780, 80], radius: 180, clear: false },
+        { from: [250, 100], to: [250, 600], radius: 10, clear: false },
+        { from: [220, 100], to: [220, 600], radius: 10, clear: true },
+        { from: [630, 100], to: [630, 650], radius: 5, clear: false },
+        { from: [600, 100], to: [600, 650], radius: 5, clear: true },
+    ];
+    for (const sample of cases) for (const reverse of [false, true]) {
+        const [from, to] = reverse ? [sample.to, sample.from] : [sample.from, sample.to];
+        const body = { x: from[0], y: from[1], radius: sample.radius };
+        const target = { x: to[0], y: to[1] };
+        const waypoint = navigation.getWaypoint(body, target, 1000, 800, solids, barrels);
+        if (sample.clear) assert.equal(waypoint, target, 'an unobstructed capsule keeps exact pursuit');
+        else assert.notEqual(waypoint, target, 'a distant or neighboring-cell obstacle must prevent the direct shortcut');
+    }
+});
