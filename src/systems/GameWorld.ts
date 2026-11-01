@@ -34,6 +34,7 @@ import { constrainPlayerToArena } from '@/systems/spatial/playerBounds';
 import { CollisionSystem } from '@/systems/CollisionSystem';
 import type { PlayerController } from '@/systems/Player/PlayerController';
 import { EnemySeparation } from '@/systems/spatial/EnemySeparation';
+import { ArenaNavigation } from '@/systems/spatial/ArenaNavigation';
 import { resolvePlayerContact } from '@/systems/spatial/playerContact';
 import { UIRenderer } from '@/systems/UIRenderer';
 import { WaveSystem } from '@/systems/WaveSystem/WaveSystem';
@@ -115,6 +116,8 @@ export class GameWorld implements IGameEntity {
         context.restore();
     }
     private separation = new EnemySeparation();
+    private readonly navigation = new ArenaNavigation();
+    private readonly obstaclePositions = new WeakMap<Enemy, { x: number; y: number }>();
     private elapsed = 0;
     private wavesStarted = 0;
     private bossesKilled = 0;
@@ -187,8 +190,18 @@ export class GameWorld implements IGameEntity {
         const solids = getArenaSolidPolygons(arena.width, arena.height, sectors);
         resolveArenaSolidPolygons(player, solids, previousPlayerPosition);
         resolveArenaObstacles(player, barrels, previousPlayerPosition);
+        const safePlayerPosition = { x: player.x, y: player.y };
         if (!player.abilityInvisible) this.lastVisiblePlayer = { x: player.x, y: player.y };
-        for (const enemy of this.enemies) enemy.setTarget(this.lastVisiblePlayer.x, this.lastVisiblePlayer.y);
+        for (const enemy of this.enemies) {
+            enemy.setTarget(this.lastVisiblePlayer.x, this.lastVisiblePlayer.y);
+            if (isArenaConfigured() && !enemy.isDead && !enemy.isFeared) {
+                enemy.setMovementWaypoint(this.navigation.getWaypoint(enemy, this.lastVisiblePlayer,
+                    arena.width, arena.height, solids, barrels));
+            }
+            let position = this.obstaclePositions.get(enemy);
+            if (!position) { position = { x: enemy.x, y: enemy.y }; this.obstaclePositions.set(enemy, position); }
+            position.x = enemy.x; position.y = enemy.y;
+        }
         this.ordinaryEnemies.update(deltaMs, this.enemies, player, {
             applySlow: (duration, factor) => player.applyEnemySlow(duration, factor),
         });
@@ -200,11 +213,12 @@ export class GameWorld implements IGameEntity {
             },
         });
         for (const enemy of this.enemies) {
-            const previousEnemyPosition = { x: enemy.x, y: enemy.y };
+            const previousEnemyPosition = this.obstaclePositions.get(enemy)!;
             enemy.update(deltaMs);
             if (enemy.isDead) continue;
             resolveArenaSolidPolygons(enemy, solids, previousEnemyPosition);
             resolveArenaObstacles(enemy, barrels, previousEnemyPosition);
+            previousEnemyPosition.x = enemy.x; previousEnemyPosition.y = enemy.y;
             if (!enemy.contactDisabled && !enemy.isFeared && !player.abilityInvisible) resolvePlayerContact(player, enemy, this.controller.isMoving, this.elapsed, arena.width, arena.height);
         }
         this.collisionSystem.checkBulletEnemyCollisions(this.controller, this.enemies,
@@ -236,12 +250,13 @@ export class GameWorld implements IGameEntity {
         this.processEnemyDeaths();
         this.controller.cleanupBullets();
         this.separation.resolve(this.enemies);
-        resolveArenaSolidPolygons(player, solids);
-        resolveArenaObstacles(player, barrels);
+        resolveArenaSolidPolygons(player, solids, safePlayerPosition);
+        resolveArenaObstacles(player, barrels, safePlayerPosition);
         constrainPlayerToArena(player, arena.width, arena.height, isArenaConfigured() ? ARENA_BORDER : 0);
         for (const enemy of this.enemies) if (!enemy.isDead) {
-            resolveArenaSolidPolygons(enemy, solids);
-            resolveArenaObstacles(enemy, barrels);
+            const safe = this.obstaclePositions.get(enemy);
+            resolveArenaSolidPolygons(enemy, solids, safe);
+            resolveArenaObstacles(enemy, barrels, safe);
         }
         for (const effect of this.deathEffects) effect.update(deltaMs);
         compact(this.deathEffects, effect => {

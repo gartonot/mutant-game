@@ -28,6 +28,7 @@ export class Enemy implements IGameEntity {
     }
     private targetX = 0;
     private targetY = 0;
+    private movementWaypoint?: { x: number; y: number };
     private config: IEnemyConfig;
     private health: number;
     private isDeadFlag: boolean = false;
@@ -183,7 +184,8 @@ export class Enemy implements IGameEntity {
         if (this.isDead) return;
         if (this.movementLocked) return;
         if (feared) { this.flee(deltaMs, movement); return; }
-        const dx = this.targetX - this.x, dy = this.targetY - this.y;
+        const dx = (this.movementWaypoint?.x ?? this.targetX) - this.x;
+        const dy = (this.movementWaypoint?.y ?? this.targetY) - this.y;
         const length = Math.hypot(dx, dy);
         if (length > 0) {
             // Individual, simulation-timed weaving; ease out near the target to avoid orbiting it.
@@ -287,9 +289,12 @@ export class Enemy implements IGameEntity {
     }
 
     setTarget(x: number, y: number) {
+        this.movementWaypoint = undefined;
         this.targetX = x;
         this.targetY = y;
     }
+
+    setMovementWaypoint(point: { x: number; y: number }): void { this.movementWaypoint = point; }
 
     // Проверяем столкновение
     checkCollision(bulletX: number, bulletY: number, bulletRadius: number) {
