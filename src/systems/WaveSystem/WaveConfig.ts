@@ -11,17 +11,24 @@ export const BOSS_WAVE_INTERVAL = 12;
 export const BOSS_SEQUENCE: readonly E[] = [E.BOSS, E.STEROID, E.TENTACLE, E.WORM];
 // Six minutes, no spawn on the victory frame.
 export const SURVIVAL_WAVE_COUNT = 71;
+// Temporary stress settings: ordinary zombies plus a larger escort of unlocked special roles.
+export const TEMPORARY_WAVE_SIZE = 40;
+export const TEMPORARY_SPECIAL_MULTIPLIER = 3;
+export const TEMPORARY_ARRIVAL_WINDOW_MS = 1000;
 const pack = (...composition: E[]): IWaveRule => {
     // Bugs arrive with a partner, without increasing the total wave population.
     if (composition.filter(type => type === E.BUG).length === 1) {
         const grunt = composition.lastIndexOf(E.GRUNT);
         if (grunt !== -1) composition[grunt] = E.BUG;
     }
+    const specials = composition.filter(type => type !== E.GRUNT)
+        .flatMap(type => Array<E>(TEMPORARY_SPECIAL_MULTIPLIER).fill(type));
+    composition = [...Array<E>(TEMPORARY_WAVE_SIZE).fill(E.GRUNT), ...specials];
     return { types: [...new Set(composition)], count: composition.length, composition };
 };
 const grunts = (n: number) => Array<E>(n).fill(E.GRUNT);
 
-// Opening waves sustain pressure with ten enemies, mostly ordinary zombies.
+// Original rosters retain special-enemy progression; the temporary filler increases crowd size.
 // At 5:00 remaining the field already has
 // runners, small bugs, slowers and a fat zombie, alongside the first boss.
 const opening: IWaveRule[] = [
@@ -58,7 +65,7 @@ const late: readonly E[][] = [
 export const WaveConfigs: readonly IWaveRule[] = Array.from({ length: SURVIVAL_WAVE_COUNT }, (_, index) => {
     if (index < opening.length) return opening[index];
     const phase = index % 12;
-    // Light escorts at minute marks and the next wave, even if a boss was delayed.
+    // Original escort roles at minute marks; temporary filler also strengthens these waves.
     if (phase === 11 || phase === 0) return pack(...grunts(3), E.BUG, E.BUG);
     const roles = index < 24 ? middle[phase - 1] : late[phase - 1];
     return pack(...grunts(index < 24 ? 4 : 5), ...roles,

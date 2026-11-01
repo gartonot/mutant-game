@@ -26,7 +26,7 @@ import { ZombieDeathEffect } from '@/effects/ZombieDeathEffect';
 import { MuzzleFlashEffect } from '@/effects/MuzzleFlashEffect.ts';
 import { Enemy } from '@/entities/enemy/Enemy';
 import { isBossType } from '@/entities/enemy/EnemyType';
-import { BOSS_SEQUENCE } from '@/systems/WaveSystem/WaveConfig';
+import { BOSS_SEQUENCE, TEMPORARY_ARRIVAL_WINDOW_MS } from '@/systems/WaveSystem/WaveConfig';
 import { OrdinaryEnemyMechanics } from '@/gameplay/OrdinaryEnemyMechanics';
 import { EnemyArrivalQueue } from '@/gameplay/EnemyArrivalQueue';
 import { BossEncounter } from '@/gameplay/BossEncounter';
@@ -171,7 +171,7 @@ export class GameWorld implements IGameEntity {
                 this.enemies.push(enemy);
             }
             this.enemyArrivals.schedule(spawned.filter(enemy => !isBossType(enemy.type)),
-                this.elapsed, this.wavesStarted === 0 ? 6000 : 4500);
+                this.elapsed, TEMPORARY_ARRIVAL_WINDOW_MS);
             this.wavesStarted++;
         }
         this.enemies.push(...this.enemyArrivals.release(this.elapsed));

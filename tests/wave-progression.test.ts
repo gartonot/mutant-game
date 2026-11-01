@@ -1,19 +1,35 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { EnemyType, isBossType } from '../src/entities/enemy/EnemyType';
-import { WaveConfigs, SURVIVAL_WAVE_COUNT, BOSS_SEQUENCE } from '../src/systems/WaveSystem/WaveConfig';
+import { WaveConfigs, SURVIVAL_WAVE_COUNT, BOSS_SEQUENCE, TEMPORARY_WAVE_SIZE, TEMPORARY_SPECIAL_MULTIPLIER } from '../src/systems/WaveSystem/WaveConfig';
 import { WaveSystem } from '../src/systems/WaveSystem/WaveSystem';
 import { ENEMY_CONFIGS } from '../src/entities/enemy/enemyConfigs';
 
 const viewport = () => ({ width: 800, height: 600 });
 const roster = (wave: number) => WaveConfigs[wave - 1].composition!;
 
-test('opening keeps ten enemies per wave, starting with ordinary zombies', () => {
+test('temporary hard mode keeps the configured crowd size, starting with ordinary zombies', () => {
     for (let wave = 1; wave < 12; wave++) {
-        assert.equal(roster(wave).length, 10, `wave ${wave}`);
-        assert.equal(WaveConfigs[wave - 1].count, 10);
-        assert.ok(roster(wave).filter(type => type === EnemyType.GRUNT).length >= 7);
-        if (wave <= 3) assert.ok(roster(wave).every(type => type === EnemyType.GRUNT));
+        assert.equal(roster(wave).filter(type => type === EnemyType.GRUNT).length, TEMPORARY_WAVE_SIZE, `wave ${wave}`);
+        assert.equal(WaveConfigs[wave - 1].count, roster(wave).length);
+        if (wave <= 3) {
+            assert.equal(roster(wave).length, TEMPORARY_WAVE_SIZE);
+            assert.ok(roster(wave).every(type => type === EnemyType.GRUNT));
+        }
+    }
+});
+
+test('temporary hard mode increases special enemy groups without introducing them early', () => {
+    const count = (wave: number, type: EnemyType) => roster(wave).filter(enemy => enemy === type).length;
+    assert.equal(count(4, EnemyType.BUG), 3 * TEMPORARY_SPECIAL_MULTIPLIER);
+    assert.equal(count(6, EnemyType.TANK), TEMPORARY_SPECIAL_MULTIPLIER);
+    assert.equal(count(7, EnemyType.SLOWER), TEMPORARY_SPECIAL_MULTIPLIER);
+    assert.equal(count(8, EnemyType.RUNNER), TEMPORARY_SPECIAL_MULTIPLIER);
+    assert.equal(count(10, EnemyType.RUNNER), 2 * TEMPORARY_SPECIAL_MULTIPLIER);
+    assert.equal(count(10, EnemyType.CYAN), TEMPORARY_SPECIAL_MULTIPLIER);
+    for (const wave of [4, 6, 7, 8, 10]) {
+        assert.ok(count(wave, EnemyType.GRUNT) > roster(wave).length / 2,
+            'ordinary zombies must still make up most of each opening crowd');
     }
 });
 
@@ -21,7 +37,7 @@ test('opening zombies arrive in variable compact groups with uneven gaps', () =>
     const layouts: string[] = [];
     for (const roll of [0, .3, .55, .8, .99]) {
         const enemies = new WaveSystem({ random: () => roll, viewport }).spawnWave();
-        assert.equal(enemies.length, 10);
+        assert.equal(enemies.length, TEMPORARY_WAVE_SIZE);
         const side = (e: typeof enemies[number]) => e.x < 0 ? 'left' : e.x > 800 ? 'right' : e.y < 0 ? 'top' : 'bottom';
         const horizontal = enemies[0].x < 0 || enemies[0].x > 800;
         const along = enemies.filter(e => side(e) === side(enemies[0])).map(e => horizontal ? e.y : e.x);
@@ -58,10 +74,12 @@ test('exact wave composition is independent of random side and coordinates', () 
     }
 });
 
-test('minute escorts and following recovery packs contain no control or elite enemies', () => {
-    assert.ok(WaveConfigs.every(rule => rule.count <= 11));
+test('temporary hard mode also fills minute escorts while preserving their ordinary enemy roles', () => {
+    assert.ok(WaveConfigs.every(rule => rule.count === rule.composition!.length));
+    assert.ok(WaveConfigs.every(rule => rule.composition!.filter(type => type === EnemyType.GRUNT).length === TEMPORARY_WAVE_SIZE));
+    assert.ok(WaveConfigs.every(rule => rule.count >= TEMPORARY_WAVE_SIZE && rule.count <= TEMPORARY_WAVE_SIZE + 18));
     for (const wave of [12, 13, 24, 25, 36, 37, 48, 49, 60, 61]) {
-        assert.equal(roster(wave).length, 5);
+        assert.equal(roster(wave).length, TEMPORARY_WAVE_SIZE + 2 * TEMPORARY_SPECIAL_MULTIPLIER);
         assert.ok(roster(wave).every(type => type === EnemyType.GRUNT || type === EnemyType.BUG));
     }
 });
@@ -105,7 +123,7 @@ test('default packs favor horizontal flanks and keep each half clustered outside
     assert.equal(horizontal, 80);
 });
 
-test('bugs enter survival in compact pairs or trios, never as a lone flank spawn', () => {
+test('larger bug crowds retain nearby partners and never arrive as a lone flank spawn', () => {
     for (const roll of [.1, .6, .85, .95]) {
         const waves = new WaveSystem({ random: () => roll, viewport });
         for (let wave = 1; wave <= SURVIVAL_WAVE_COUNT; wave++) {
@@ -118,8 +136,14 @@ test('bugs enter survival in compact pairs or trios, never as a lone flank spawn
                 byEdge.set(edge, group);
             }
             for (const group of byEdge.values()) {
-                assert.ok(group.length === 2 || group.length === 3, `wave ${wave}: ${group.length} bugs`);
-                for (const bug of group) assert.ok(Math.hypot(bug.x - group[0].x, bug.y - group[0].y) <= 76);
+                for (let start = 0; start < group.length;) {
+                    const left = group.length - start;
+                    const size = left === 4 ? 2 : Math.min(3, left);
+                    assert.ok(size === 2 || size === 3, `wave ${wave}: entry subgroup has ${size} bugs`);
+                    const subgroup = group.slice(start, start + size);
+                    for (const bug of subgroup) assert.ok(Math.hypot(bug.x - subgroup[0].x, bug.y - subgroup[0].y) <= 76);
+                    start += size;
+                }
             }
         }
     }
