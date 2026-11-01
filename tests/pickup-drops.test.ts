@@ -5,11 +5,11 @@ import { GOLD_PICKUP_KINDS, type GoldPickupKind } from '../src/gameplay/PickupVa
 import { AMMO_CATEGORIES, type AmmoCategory } from '../src/gameplay/WeaponLoot';
 
 function dropAt(selection: number, unlocks: readonly GoldPickupKind[] = [], categories: readonly AmmoCategory[] = [], ammoSelection = 0) {
-    const rolls = [.29, selection, ammoSelection];
+    const rolls = [.14, selection, ammoSelection];
     return rollPickupDrop(() => rolls.shift()!, unlocks, categories);
 }
 
-test('pistol-only runs exclude ammunition and keep the ordinary bonus chance', () => {
+test('pistol-only runs exclude ammunition and use the halved ordinary bonus chance', () => {
     const kinds = PICKUP_KINDS.filter(kind => kind !== 'ammo');
     assert.equal(rollPickup(() => .3), null);
     assert.equal(rollPickup(() => .99), null);
@@ -18,6 +18,38 @@ test('pistol-only runs exclude ammunition and keep the ordinary bonus chance', (
     }
     assert.equal(rollPickupDrop(() => .3, [], []), null);
     assert.deepEqual(dropAt(0, [], ['shotgun']), { kind: 'ammo', tier: 'silver', ammoCategory: 'shotgun' });
+});
+
+test('silver and gold bonuses halve their drop frequency while ammunition keeps its original frequency', () => {
+    const cases = [
+        { selection: 1 / 8, unlocks: [] as GoldPickupKind[], expected: { kind: 'health', tier: 'silver' }, drops: 150 },
+        { selection: 1, unlocks: ['shield'] as GoldPickupKind[], expected: { kind: 'shield', tier: 'gold' }, drops: 150 },
+        { selection: 0, unlocks: [] as GoldPickupKind[], expected: { kind: 'ammo', tier: 'silver', ammoCategory: 'shotgun' }, drops: 300 },
+    ];
+    for (const entry of cases) {
+        let count = 0;
+        for (let chance = 0; chance < 1000; chance++) {
+            const rolls = [chance / 1000, entry.selection, 0];
+            const drop = rollPickupDrop(() => rolls.shift()!, entry.unlocks, ['shotgun']);
+            if (!drop) continue;
+            assert.deepEqual(drop, entry.expected);
+            count++;
+        }
+        assert.equal(count, entry.drops, entry.expected.kind);
+    }
+});
+
+test('bonus chance stops at fifteen percent and ammo still drops up to thirty percent', () => {
+    const rollAt = (chance: number, selection: number, gold: readonly GoldPickupKind[] = []) => {
+        const rolls = [chance, selection, 0];
+        return rollPickupDrop(() => rolls.shift()!, gold, ['shotgun']);
+    };
+    assert.deepEqual(rollAt(.1499, 1 / 8), { kind: 'health', tier: 'silver' });
+    assert.equal(rollAt(.15, 1 / 8), null);
+    assert.deepEqual(rollAt(.1499, 1, ['shield']), { kind: 'shield', tier: 'gold' });
+    assert.equal(rollAt(.15, 1, ['shield']), null);
+    assert.deepEqual(rollAt(.29, 0), { kind: 'ammo', tier: 'silver', ammoCategory: 'shotgun' });
+    assert.equal(rollAt(.3, 0), null);
 });
 
 test('ammo only selects acquired categories, without weighting duplicates or changing total ammo chance', () => {

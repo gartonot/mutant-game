@@ -5,6 +5,7 @@ import { DEFAULT_UNLOCKED_GOLD_PICKUPS, GOLD_PICKUP_KINDS, GOLD_PICKUP_WEIGHT,
     type GoldPickupKind, type PickupDrop } from './PickupVariants';
 
 export const PICKUP_DROP_CHANCE = .3;
+export const BONUS_DROP_CHANCE = PICKUP_DROP_CHANCE / 2;
 export const PICKUP_KINDS: readonly Exclude<PickupKind, 'weapon'>[] = ['ammo', 'health', 'rapidFire', 'moveSpeed', 'doubleDamage', 'shield', 'iceBlast', 'fireBlast'];
 
 /** One independent drop roll per defeated enemy; all ordinary kinds have equal weight. */
@@ -12,11 +13,12 @@ export function rollPickup(random: () => number = Math.random): PickupKind | nul
     return rollPickupDrop(random)?.kind ?? null;
 }
 
-/** Preserve the overall drop chance; each unlocked gold variant has a quarter of its silver weight. */
+/** Bonuses use half the original chance; ammo and relative variant weights remain unchanged. */
 export function rollPickupDrop(random: () => number = Math.random,
     unlockedGoldKinds: readonly GoldPickupKind[] = DEFAULT_UNLOCKED_GOLD_PICKUPS,
     ammoCategories: readonly AmmoCategory[] = []): PickupDrop | null {
-    if (random() >= PICKUP_DROP_CHANCE) return null;
+    const chanceRoll = random();
+    if (chanceRoll >= PICKUP_DROP_CHANCE) return null;
     // Filtering the canonical list also ignores duplicate unlocks and prevents gold ammunition.
     const goldKinds = GOLD_PICKUP_KINDS.filter(kind => unlockedGoldKinds.includes(kind));
     const eligibleAmmo = AMMO_CATEGORIES.filter(category => ammoCategories.includes(category));
@@ -25,6 +27,7 @@ export function rollPickupDrop(random: () => number = Math.random,
     const roll = Math.max(0, Math.min(1 - Number.EPSILON, random())) * totalWeight;
     if (roll < silverKinds.length) {
         const kind = silverKinds[Math.floor(roll)];
+        if (kind !== 'ammo' && chanceRoll >= BONUS_DROP_CHANCE) return null;
         if (kind === 'ammo') {
             const index = Math.floor(Math.max(0, Math.min(1 - Number.EPSILON, random())) * eligibleAmmo.length);
             return { kind, tier: 'silver', ammoCategory: eligibleAmmo[index] };
@@ -33,5 +36,6 @@ export function rollPickupDrop(random: () => number = Math.random,
     }
     const index = Math.min(goldKinds.length - 1,
         Math.floor((roll - silverKinds.length) / GOLD_PICKUP_WEIGHT));
+    if (chanceRoll >= BONUS_DROP_CHANCE) return null;
     return { kind: goldKinds[index], tier: 'gold' };
 }
