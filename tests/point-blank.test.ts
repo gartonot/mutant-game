@@ -65,6 +65,20 @@ test('the close target intercepts a non-piercing shot before a target beyond the
     assert.equal(shots[0].isDead, true);
 });
 
+test('character-specific muzzle poses resolve front contact hits at rotated world angles', () => {
+    for (const character of ['mercenary', 'assassin', 'destroyer'] as const) {
+        for (const angle of [0, .8, Math.PI, -Math.PI / 2]) {
+            const shots = createWeapon('rifle', 1, 1, character).tryFire(0, 300, 300, angle)!;
+            const front = target(300 + Math.cos(angle) * 25, 300 + Math.sin(angle) * 25);
+            const behind = target(300 - Math.cos(angle) * 25, 300 - Math.sin(angle) * 25);
+            shots[0].update();
+            new CollisionSystem().checkBulletEnemyCollisions(fixture(shots).controller, [behind.enemy, front.enemy]);
+            assert.equal(front.damage.length, 1, `${character}, angle ${angle}`);
+            assert.equal(behind.damage.length, 0);
+        }
+    }
+});
+
 test('the launch segment neither hits behind the shooter nor remains active after a projectile leaves', () => {
     for (const id of ['rifle', 'shotgun', 'crossbow', 'laser', 'impulse'] as WeaponId[]) {
         const { shots } = fire(id), behind = target(275, 300);
