@@ -25,14 +25,14 @@ function move(keys: string[]) {
     return { dx: player.x - 1000, dy: player.y - 1000, moving: controller.moving };
 }
 
-test('all four diagonals travel exactly 50% farther than cardinal movement', () => withViewport(() => {
+test('all four diagonals travel exactly 8% farther than cardinal movement', () => withViewport(() => {
     const cardinal = move(['KeyD']).dx;
     for (const [horizontal, vertical, sx, sy] of [
         ['KeyD', 'KeyS', 1, 1], ['KeyD', 'KeyW', 1, -1],
         ['KeyA', 'KeyS', -1, 1], ['KeyA', 'KeyW', -1, -1],
     ] as const) {
         const result = move([horizontal, vertical]);
-        assert.ok(Math.abs(Math.hypot(result.dx, result.dy) / cardinal - 1.5) < 1e-10);
+        assert.ok(Math.abs(Math.hypot(result.dx, result.dy) / cardinal - 1.08) < 1e-10);
         assert.equal(Math.sign(result.dx), sx);
         assert.equal(Math.sign(result.dy), sy);
         assert.equal(result.moving, true);

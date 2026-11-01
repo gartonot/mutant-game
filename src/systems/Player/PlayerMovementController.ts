@@ -24,8 +24,8 @@ export class PlayerMovementController {
         if (speed === 0) return;
         const dx = Number(this.input.isPressed(InputKey.D)) - Number(this.input.isPressed(InputKey.A));
         const dy = Number(this.input.isPressed(InputKey.S)) - Number(this.input.isPressed(InputKey.W));
-        // Keep diagonal travel exactly 50% faster than cardinal movement.
-        const step = speed * (dx !== 0 && dy !== 0 ? 1.5 / Math.SQRT2 : 1);
+        // A small diagonal bonus keeps travel slightly faster without a large speed jump.
+        const step = speed * (dx !== 0 && dy !== 0 ? 1.08 / Math.SQRT2 : 1);
         this.player.x += dx * step;
         this.player.y += dy * step;
         this.isMoving = dx !== 0 || dy !== 0;
