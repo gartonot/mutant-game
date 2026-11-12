@@ -165,8 +165,10 @@ test('mutant lifesteal is bounded per pulse, ignores dead targets and restores f
     assert.equal(player.abilityMoveSpeed, 1.7);
     ability.update(0); ability.update(Number.NaN); ability.update(-100);
     assert.equal(player.currentHp, 50);
-    ability.update(250); assert.equal(player.currentHp, 52);
-    enemies.forEach(enemy => enemy.receiveDamage(100));
+    ability.update(250); assert.equal(player.currentHp, 50);
+    player.updateHealing(125); assert.equal(player.currentHp, 51);
+    player.updateHealing(125); assert.equal(player.currentHp, 52);
+    enemies.forEach(enemy => enemy.receiveDamage(enemy.maxHealth));
     ability.update(250); assert.equal(player.currentHp, 52);
     ability.update(6500);
     assert.equal(player.abilityForm, null);
@@ -213,9 +215,9 @@ test('silver hunter loses invisibility when all three traps trigger early; traps
 test('hunter traps persist beyond five seconds and expire without dealing proximity-free damage', () => {
     const { player, aim, enemies, ability } = setup('hunter');
     const point = planPlasmaTraps(player, aim, player.angle)[0];
-    const boss = new Enemy(point.x + 90, point.y, EnemyType.BOSS);
-    let damage = 0; boss.receiveDamage = amount => { damage += amount; };
-    enemies.push(boss); // 90px from nearest trap: outside trigger but inside blast.
+    const enemy = new Enemy(point.x + 90, point.y);
+    let damage = 0; enemy.receiveDamage = amount => { damage += amount; };
+    enemies.push(enemy); // 90px from nearest trap: outside trigger but inside blast.
     ability.update(5000); assert.equal(damage, 0);
     assert.equal(ability.isActive, true);
     ability.update(10400); assert.equal(damage, 0);
@@ -243,8 +245,7 @@ test('radial abilities exclude distant enemies, slam waits for impact and gravit
         assert.equal(boss.x, character === 'cyborg' ? 490 : 420);
         assert.equal(outside.isDead, false);
         ability.update(1000); assert.equal(boss.x, character === 'cyborg' ? 490 : 420);
-        boss.receiveDamage(character === 'cyborg' ? 15.9 : 14.9); assert.equal(boss.isDead, false);
-        boss.receiveDamage(.2); assert.equal(boss.isDead, true);
+        assert.equal(boss.currentHealth, boss.maxHealth - (character === 'cyborg' ? 4 : 5));
     }
 });
 
@@ -271,9 +272,9 @@ test('goliath recovers movement and shooting after impact and disposal cancels a
 
 test('pyrokinesis keeps its activation target while the swarm follows aim', () => {
     for (const character of ['telepath', 'witcher'] as const) {
-        const boss = new Enemy(300, 300, EnemyType.BOSS);
-        let damage = 0; boss.receiveDamage = amount => { damage += amount; };
-        const { ability, aim } = setup(character, [boss]);
+        const target = new Enemy(300, 300);
+        let damage = 0; target.receiveDamage = amount => { damage += amount; };
+        const { ability, aim } = setup(character, [target]);
         aim.x = 1000;
         ability.update(1000);
         assert.equal(damage, character === 'telepath' ? 1 : .5);

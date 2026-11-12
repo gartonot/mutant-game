@@ -7,6 +7,21 @@ import { defaultLoadout } from '../src/gameplay/characters';
 import { EMPTY_IMPLANTS } from '../src/gameplay/implants';
 import { EMPTY_ARSENAL } from '../src/gameplay/arsenal';
 
+test('zombie reward carries fractional ammunition between ordinary refills in the same category', () => {
+    const shotgun = createWeapon('shotgun');
+    const inventory = new PlayerWeaponController([createWeapon('pistol'), shotgun], () => 0, .03);
+    const pack = Math.ceil(shotgun.state.ammoCapacity * .25);
+    let collected = 0;
+    let time = 0;
+    for (let pickup = 1; pickup <= 10; pickup++) {
+        while (shotgun.state.hasAmmo) shotgun.state.consumeShot(time += 10000);
+        if (pickup % 2) inventory.replenishAmmo('shotgun');
+        else inventory.acquireWeapon(createWeapon('double-barrel'));
+        collected += shotgun.state.ammoRemaining;
+        assert.equal(collected, pickup * pack + Math.floor(pickup * pack * 3 / 100));
+    }
+});
+
 test('loot acquisition locks the first weapon in each slot and preserves fired bullets and starting slots', () => {
     const initial = [createWeapon('pistol'), null, null, null, null];
     const inventory = new PlayerWeaponController(initial, () => 0);

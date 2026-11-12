@@ -1,5 +1,5 @@
 import { Enemy } from '@/entities/enemy/Enemy';
-import { EnemyType, isBossType } from '@/entities/enemy/EnemyType';
+import { EnemyType, isBossType, isZombieType } from '@/entities/enemy/EnemyType';
 import type { Player } from '@/entities/player/Player';
 import { drawFatCorpse } from '@/rendering/EnemyArt';
 
@@ -13,7 +13,6 @@ function visible(view: Viewport | undefined, x: number, y: number, radius: numbe
         && y + radius >= view.y && y - radius <= view.y + view.height);
 }
 export interface OrdinaryEnemyCallbacks { applySlow(durationMs: number, factor: number): void }
-const ZOMBIES = new Set([EnemyType.GRUNT, EnemyType.RUNNER, EnemyType.ARMORED, EnemyType.SLOWER, EnemyType.CYAN]);
 const GREEN_DEATHS = new Set([EnemyType.BUG, EnemyType.LEECH, EnemyType.BEETLE, EnemyType.JUMPER]);
 
 /** Ordinary attacks use simulation time exclusively; reset on every new run. */
@@ -57,7 +56,7 @@ export class OrdinaryEnemyMechanics {
             const cooldown = Math.max(0, (this.cooldowns.get(enemy) ?? (enemy.type === EnemyType.SPITTER ? 900 : 0)) - deltaMs);
             this.cooldowns.set(enemy, cooldown);
             if (enemy.isFeared) { this.jumps.delete(enemy); continue; }
-            if (ZOMBIES.has(enemy.type) && this.feed(enemy, deltaMs)) continue;
+            if (enemy.type !== EnemyType.TANK && isZombieType(enemy.type) && this.feed(enemy, deltaMs)) continue;
             const distance = Math.hypot(player.x - enemy.x, player.y - enemy.y);
             if (enemy.type === EnemyType.SLOWER && distance < enemy.radius + player.radius + 2 && !player.abilityInvisible) {
                 callbacks.applySlow(1000, .68);

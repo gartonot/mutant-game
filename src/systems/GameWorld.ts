@@ -26,7 +26,7 @@ import { ArtilleryGroundMark } from '@/effects/ArtilleryGroundMark';
 import { ZombieDeathEffect } from '@/effects/ZombieDeathEffect';
 import { MuzzleFlashEffect } from '@/effects/MuzzleFlashEffect.ts';
 import { Enemy } from '@/entities/enemy/Enemy';
-import { isBossType } from '@/entities/enemy/EnemyType';
+import { isBossType, isZombieType } from '@/entities/enemy/EnemyType';
 import { BOSS_SEQUENCE, TEMPORARY_ARRIVAL_WINDOW_MS } from '@/systems/WaveSystem/WaveConfig';
 import { OrdinaryEnemyMechanics } from '@/gameplay/OrdinaryEnemyMechanics';
 import { EnemyArrivalQueue } from '@/gameplay/EnemyArrivalQueue';
@@ -122,6 +122,7 @@ export class GameWorld implements IGameEntity {
     private elapsed = 0;
     private wavesStarted = 0;
     private bossesKilled = 0;
+    private zombieKills = 0;
     private lastVisiblePlayer = { x: 0, y: 0 };
 
     constructor(controller: PlayerController, private readonly random = Math.random,
@@ -208,6 +209,12 @@ export class GameWorld implements IGameEntity {
         });
         this.bossEncounter.update(deltaMs, player, arena, {
             damagePlayer: amount => player.takeDamage(amount),
+            placeWorm: enemy => {
+                // Underground travel bypasses walls; above-ground movement starts at the cleared exit.
+                resolveArenaSolidPolygons(enemy, solids);
+                resolveArenaObstacles(enemy, barrels);
+                this.obstaclePositions.set(enemy, { x: enemy.x, y: enemy.y });
+            },
             pullPlayer: (x, y, lockMs) => {
                 player.x = x; player.y = y; player.applyEnemyRoot(lockMs);
                 constrainPlayerToArena(player, arena.width, arena.height, isArenaConfigured() ? ARENA_BORDER : 0);
@@ -369,6 +376,7 @@ export class GameWorld implements IGameEntity {
                 this.deathEffects.push(effect);
             }
             this.controller.registerKill();
+            if (isZombieType(enemy.type)) this.zombieKills++;
             if (isBossType(enemy.type)) this.bossesKilled++;
             const drop = rollPickupDrop(this.random, this.unlockedGoldPickups, this.controller.acquiredAmmoCategories);
             const weaponId = rollWeaponDrop(this.random, this.unlockedWeapons, this.controller.acquiredAmmoCategories);
@@ -473,6 +481,7 @@ export class GameWorld implements IGameEntity {
         const stats = this.controller.getStats();
         return {
             ...stats,
+            zombieKills: this.zombieKills,
             sharpshooterWins: this.isVictory && stats.shots > 0 && stats.preciseAccuracy >= 70
                 && this.bossesKilled >= BOSS_SEQUENCE.length ? 1 : 0,
             seconds: this.elapsed / 1000,

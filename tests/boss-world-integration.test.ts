@@ -87,3 +87,31 @@ test('hidden worm does not accumulate fear or damage-over-time effects for its r
     const health = enemy.currentHealth; enemy.update(1000);
     assert.equal(enemy.currentHealth, health);
 });
+
+test('worm emerges with its head and hole on the far side of an intervening slab', () => runWorld(f => {
+    f.player.x = 460; f.player.y = 168;
+    const worm = new Enemy(35, 168, EnemyType.WORM);
+    f.state.enemies.push(worm);
+    f.state.bossEncounter.registerBoss(worm);
+    f.world.update(16);
+    const { anchor } = f.state.bossEncounter as unknown as { anchor: { x: number; y: number } };
+    assert.ok(worm.x > 500);
+    assert.ok(Math.hypot(worm.x - anchor.x, worm.y - anchor.y) < .01);
+}));
+
+test('contact, fear, crowd pressure and repeated knockback cannot move the final boss out of its hole', () => runWorld(f => {
+    const worm = new Enemy(500, 400, EnemyType.WORM);
+    f.state.enemies.push(worm);
+    f.state.bossEncounter.registerBoss(worm);
+    f.world.update(2000);
+    const origin = { x: worm.x, y: worm.y };
+    f.state.enemies.push(new Enemy(worm.x + 5, worm.y + 1));
+    for (let i = 0; i < 20; i++) {
+        f.player.x = worm.x + 10; f.player.y = worm.y;
+        if (i === 10) worm.applyFear(2000, worm.x - 100, worm.y);
+        worm.receiveDamage(1, .75, 180);
+        f.world.update(16);
+        assert.deepEqual({ x: worm.x, y: worm.y }, origin);
+    }
+    assert.equal(worm.currentHealth, worm.maxHealth - 20);
+}));

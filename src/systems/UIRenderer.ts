@@ -12,7 +12,7 @@ export class UIRenderer {
     }
 
     update(remainingMs: number) {
-        this.healthBar.update(this.player.currentHp, remainingMs);
+        this.healthBar.update(this.player.currentHp, remainingMs, this.player.healingReceived);
     }
 
     draw(ctx: CanvasRenderingContext2D) {

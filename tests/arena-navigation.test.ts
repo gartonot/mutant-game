@@ -1,10 +1,32 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { ArenaNavigation } from '../src/systems/spatial/ArenaNavigation';
-import { resolveArenaObstacles, resolveArenaSolidPolygons } from '../src/gameplay/ArenaObstacles';
+import { getArenaBarrels, getArenaSolidPolygons, resolveArenaObstacles, resolveArenaSolidPolygons } from '../src/gameplay/ArenaObstacles';
+import { Enemy } from '../src/entities/enemy/Enemy';
+import { EnemyType } from '../src/entities/enemy/EnemyType';
 
 const rectangle = (x: number, y: number, width: number, height: number) =>
     [{ x, y }, { x: x + width, y }, { x: x + width, y: y + height }, { x, y: y + height }];
+
+test('the largest boss can pursue a player across the barricades of the survival arena', () => {
+    const width = 3840, height = 2160;
+    const solids = getArenaSolidPolygons(width, height, 3);
+    const barrels = getArenaBarrels(width, height, 3);
+    const navigation = new ArenaNavigation();
+    const boss = new Enemy(1280, 1080, EnemyType.STEROID);
+    const player = { x: 1920, y: 1080 };
+    for (let frame = 0; frame < 1800 && Math.hypot(boss.x - player.x, boss.y - player.y) > boss.radius; frame++) {
+        boss.setTarget(player.x, player.y);
+        boss.setMovementWaypoint(navigation.getWaypoint(boss, player, width, height, solids, barrels));
+        const previous = { x: boss.x, y: boss.y };
+        boss.update();
+        const intended = { x: boss.x, y: boss.y };
+        resolveArenaSolidPolygons(boss, solids, previous);
+        resolveArenaObstacles(boss, barrels, previous);
+        assert.ok(Math.hypot(boss.x - intended.x, boss.y - intended.y) < .01);
+    }
+    assert.ok(Math.hypot(boss.x - player.x, boss.y - player.y) <= boss.radius);
+});
 
 test('crowd navigation routes around the closed side of a U and reaches the player through its opening', () => {
     const navigation = new ArenaNavigation();

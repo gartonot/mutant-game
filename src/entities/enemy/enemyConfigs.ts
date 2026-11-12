@@ -17,10 +17,10 @@ export const ENEMY_CONFIGS: Record<EnemyType, IEnemyConfig> = {
     [EnemyType.BEETLE]: { type: EnemyType.BEETLE, maxHealth: 7.5, damageToPlayer: 2, radius: 19, speed: 2.8, color: '#5c7848' },
     [EnemyType.SPITTER]: { type: EnemyType.SPITTER, maxHealth: 7.5, damageToPlayer: 2, radius: 25, speed: .85, color: '#739c32' },
     [EnemyType.JUMPER]: { type: EnemyType.JUMPER, maxHealth: 3, damageToPlayer: 3, radius: 15, speed: 1.6, color: '#81b92b' },
-    [EnemyType.BOSS]: { type: EnemyType.BOSS, maxHealth: 20, damageToPlayer: 5, radius: 48, speed: 1, color: '#68774a' },
-    [EnemyType.STEROID]: { type: EnemyType.STEROID, maxHealth: 210, damageToPlayer: 6, radius: 52, speed: 2.8, color: '#6b864b' },
-    [EnemyType.TENTACLE]: { type: EnemyType.TENTACLE, maxHealth: 240, damageToPlayer: 5, radius: 55, speed: .85, color: '#995933' },
-    [EnemyType.WORM]: { type: EnemyType.WORM, maxHealth: 260, damageToPlayer: 5, radius: 48, speed: .4, color: '#9c5148' },
+    [EnemyType.BOSS]: { type: EnemyType.BOSS, maxHealth: 230, damageToPlayer: 4, radius: 76, speed: 1.65, color: '#68774a' },
+    [EnemyType.STEROID]: { type: EnemyType.STEROID, maxHealth: 330, damageToPlayer: 6, radius: 80, speed: 2.8, color: '#6b864b' },
+    [EnemyType.TENTACLE]: { type: EnemyType.TENTACLE, maxHealth: 450, damageToPlayer: 8, radius: 80, speed: 1.8, color: '#995933' },
+    [EnemyType.WORM]: { type: EnemyType.WORM, maxHealth: 620, damageToPlayer: 10, radius: 72, speed: .4, color: '#9c5148' },
 };
 
 for (const config of Object.values(ENEMY_CONFIGS)) config.speed *= ENEMY_MOVEMENT_SCALE;

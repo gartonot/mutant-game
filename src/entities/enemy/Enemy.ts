@@ -315,7 +315,7 @@ export class Enemy implements IGameEntity {
         }
 
         // Отталкивание при попадании, если передан угол
-        if (hitAngle !== undefined && Number.isFinite(hitAngle)) {
+        if (this.type !== EnemyType.WORM && hitAngle !== undefined && Number.isFinite(hitAngle)) {
             const force = Number.isFinite(pushBackDistance) ? Math.max(0, pushBackDistance) : 0;
             // Heavy bodies ignore ordinary bullets. Shotgun pellets and stronger
             // impulses produce only a tiny nudge (five shotgun pellets total .5 px).

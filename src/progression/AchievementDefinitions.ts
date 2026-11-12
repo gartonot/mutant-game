@@ -23,9 +23,9 @@ export const achievements: Achievement[] = [
     },
     {
         id: 'zombie-exterminator', name: 'Истребитель зомби', metric: 'zombieKills', goal: 5000,
-        requirement: 'Предай забвению 5000 зомби.',
+        requirement: 'Предай забвению 5000 зомби. Засчитываются обычные, красные, бронированные, замедляющие, голубые и пузатые зомби.',
         bonus: '+3% обычных патронов за уровень', effect: 'normalAmmo', perLevel: .03,
-        icon: 'zombie', tracking: 'pending',
+        icon: 'zombie', tracking: 'active',
     },
     {
         id: 'wavekeeper', name: 'Сдерживающий волну', metric: 'seconds', goal: 120 * 60,

@@ -1,3 +1,4 @@
+import { EnemyType } from '@/entities/enemy/EnemyType';
 import type { Enemy } from '@/entities/enemy/Enemy';
 import type { Player } from '@/entities/player/Player';
 import { constrainPlayerToArena } from './playerBounds';
@@ -12,7 +13,7 @@ export function resolvePlayerContact(player: Player, enemy: Enemy, moving: boole
     const overlap = radius - distance;
     const x = (distance > 0 ? dx / distance : 1) * overlap;
     const y = (distance > 0 ? dy / distance : 0) * overlap;
-    const enemyShare = moving ? .7 : .3;
+    const enemyShare = enemy.type === EnemyType.WORM ? 0 : moving ? .7 : .3;
     enemy.x += x * enemyShare; enemy.y += y * enemyShare;
     player.x -= x * (1 - enemyShare); player.y -= y * (1 - enemyShare);
     constrainPlayerToArena(player, width, height);

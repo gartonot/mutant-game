@@ -13,7 +13,7 @@ Common generation specification: single isolated overhead 2D shooter enemy, faci
 - boss: massive slate-blue armored mutant, exposed ridged blue brain, small pale face, two thick clawed arms.
 - steroid: grey-green muscular mutant, one gigantic arm/fist and opposite skinny arm, green pustules, small bald head.
 - tentacle: bulky brown-red mutant, leathery folds, short clawed arms, green head and four long grasping tentacles extending right.
-- worm: red burrowing worm, curved segmented body, tan ridged underside, large round tooth-lined mouth.
+- worm: replaced on 2026-11-12 with a compact burrowing maw seen from above. Four digging hooks and ridged armor surround an open, tusked throat. Its body emerges vertically at the burrow.
 - slower: lime-green slimy zombie, reaching arms, bald green head and torn moss-green clothes.
 - cyan: turquoise zombie, ordinary mutant physique, dark teal ragged clothes.
 - armored: forest-green mutant, overlapping olive organic armor, pale small bald head, broad plate-covered shoulders and arms.

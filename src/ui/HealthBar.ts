@@ -5,54 +5,37 @@ export class HealthBar {
     private currentHp: number;
 
     private animatedHp: number;
-    private animatedHpTarget: number;
-    private lastUpdateTime: number = 0;
     private displayedHp: number;
     private remainingMs = 360_000;
+    private lastHealingReceived = 0;
+    private healingOpacity = 0;
 
     constructor(maxHp: number) {
         this.maxHp = maxHp;
         this.currentHp = maxHp;
         this.animatedHp = maxHp;
-        this.animatedHpTarget = maxHp;
         this.displayedHp = maxHp;
-        this.lastUpdateTime = performance.now();
     }
 
-    update(currentHp: number, remainingMs = this.remainingMs) {
+    update(currentHp: number, remainingMs: number, healingReceived: number) {
+        const dt = Math.max(0, this.remainingMs - Math.max(0, remainingMs));
+        const healing = healingReceived > this.lastHealingReceived;
+        this.lastHealingReceived = healingReceived;
         this.remainingMs = Math.max(0, remainingMs);
-        // Medkit healing is already animated by the simulation over exactly 400 ms.
-        // Follow increases directly rather than adding another easing delay.
-        if (currentHp > this.currentHp) {
-            this.displayedHp = currentHp;
-            this.animatedHp = Math.max(this.animatedHp, currentHp);
-        }
+        this.healingOpacity = currentHp <= 0 ? 0 : healing
+            ? Math.min(1, this.healingOpacity + dt / 100)
+            : Math.max(0, this.healingOpacity - dt / 180);
+        // Follow the actual healing edge even if a hit outweighed this tick's gain.
+        if (currentHp === 0 || healing || currentHp >= this.displayedHp) this.displayedHp = currentHp;
+        else this.displayedHp += (currentHp - this.displayedHp) * Math.min(1, dt / 40);
+        this.animatedHp = Math.max(currentHp, this.animatedHp + (currentHp - this.animatedHp) * Math.min(1, dt / 500));
+        if (Math.abs(this.displayedHp - currentHp) < .1) this.displayedHp = currentHp;
+        if (Math.abs(this.animatedHp - currentHp) < .1) this.animatedHp = currentHp;
         this.currentHp = currentHp;
-        this.animatedHpTarget = currentHp;
     }
 
     draw(ctx: CanvasRenderingContext2D) {
         ctx.save();
-        const now = performance.now();
-        const delta = (now - this.lastUpdateTime) / 1000;
-        this.lastUpdateTime = now;
-
-        // Медленный хвост
-        const tailSpeed = 2;
-        if (this.animatedHp !== this.animatedHpTarget) {
-            const deltaHp = this.animatedHpTarget - this.animatedHp;
-            this.animatedHp += deltaHp * Math.min(1, tailSpeed * delta);
-            if (Math.abs(this.animatedHp - this.animatedHpTarget) < 0.1) this.animatedHp = this.animatedHpTarget;
-        }
-
-        // Быстрый основной бар
-        const barSpeed = 25; // Быстрее, ~0.2 сек
-        if (this.displayedHp !== this.currentHp) {
-            const deltaHp = this.currentHp - this.displayedHp;
-            this.displayedHp += deltaHp * Math.min(1, barSpeed * delta);
-            if (Math.abs(this.displayedHp - this.currentHp) < 0.1) this.displayedHp = this.currentHp;
-        }
-
         const centerX = window.innerWidth / 2;
         const centerY = window.innerHeight;
 
@@ -82,13 +65,29 @@ export class HealthBar {
 
         // Основная дуга ХП (красная)
         this.drawHealthArc(ctx, centerX, centerY, radius, widthArc - offsetWidthArc, this.displayedHp / this.maxHp, '#d00400');
+        if (this.healingOpacity > 0) {
+            const fraction = this.displayedHp / this.maxHp;
+            const from = Math.max(0, fraction - .095);
+            const start = Math.PI * (1 + from), end = Math.PI * (1 + fraction);
+            const glow = ctx.createLinearGradient(centerX + radius * Math.cos(start), centerY + radius * Math.sin(start),
+                centerX + radius * Math.cos(end), centerY + radius * Math.sin(end));
+            glow.addColorStop(0, 'rgba(255, 155, 0, 0)');
+            glow.addColorStop(.55, '#ffac12');
+            glow.addColorStop(1, '#fff287');
+            ctx.save();
+            ctx.globalAlpha *= this.healingOpacity;
+            this.drawHealthArc(ctx, centerX, centerY, radius, widthArc - offsetWidthArc, fraction, glow, from);
+            ctx.restore();
+        }
 
         // Текст кол-во ХП
         const textY = centerY - radius - 6;
         ctx.fillStyle = 'white';
         ctx.textAlign = 'center';
         ctx.font = 'bold  18px Arial';
-        ctx.fillText(`${Math.ceil(this.currentHp)}`, centerX, textY);
+        // Fractional healing can leave a whole HP a few floating-point units above its integer.
+        const hpNumber = this.currentHp > 0 ? Math.max(1, Math.ceil(this.currentHp - 1e-8)) : 0;
+        ctx.fillText(String(hpNumber), centerX, textY);
 
         // Внутренний полукруг (фон внутри дуги)
         ctx.fillStyle = '#5d6265';
@@ -117,13 +116,14 @@ export class HealthBar {
         radius: number,
         thickness: number,
         fraction: number,
-        color: string,
+        color: string | CanvasGradient,
+        from = 0,
     ) {
         const progress = Math.max(0, Math.min(1, fraction));
         if (progress === 0) return;
 
-        const start = Math.PI;
-        const end = start + Math.PI * progress;
+        const start = Math.PI * (1 + from);
+        const end = Math.PI * (1 + progress);
         const outerRadius = radius + thickness / 2;
         const innerRadius = radius - thickness / 2;
         ctx.beginPath();

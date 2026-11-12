@@ -64,10 +64,11 @@ test('manual charges match actual floor pickups for every kind and both tiers', 
             assert.equal(manual.activateConsumable(2), true);
             assert.deepEqual(state(manual), state(floor), `${kind}/${tier} activation parity`);
             if (kind === 'iceBlast' || kind === 'fireBlast') {
-                assert.ok(state(manual).enemies[0].health < 20);
-                assert.equal(state(manual).enemies[1].health, 20);
+                const initialHealth = internals(manual).enemies[0].maxHealth;
+                assert.ok(state(manual).enemies[0].health < initialHealth);
+                assert.equal(state(manual).enemies[1].health, initialHealth);
             }
-            for (const world of [manual, floor]) world.getPlayerController().getPlayer().updatePickupHealing(400);
+            for (const world of [manual, floor]) world.getPlayerController().getPlayer().updateHealing(400);
             assert.deepEqual(state(manual), state(floor), `${kind}/${tier} healing parity`);
             if (kind === 'health') assert.equal(state(manual).hp, tier === 'gold' ? 120 : 70);
             const after = state(manual);

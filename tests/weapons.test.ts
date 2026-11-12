@@ -26,6 +26,18 @@ test('all nineteen catalog weapons fire and consume their configured ammunition'
         assert.equal(w.state.ammoRemaining, d.ammo.kind === 'finite' ? d.ammo.initial - 1 : Infinity);
     }
 });
+test('gunfire damages enlarged bosses at their outer hitbox without knocking them out of their approach', () => {
+    for (const type of [EnemyType.BOSS, EnemyType.STEROID, EnemyType.TENTACLE, EnemyType.WORM]) {
+        const boss = new Enemy(200, 100, type);
+        const bullets = createWeapon('pistol').tryFire(0, boss.x - boss.radius + 1, boss.y, 0)!;
+        const controller = fixture(bullets);
+        new CollisionSystem().checkBulletEnemyCollisions(controller.controller, [boss]);
+        assert.equal(controller.hits, 1);
+        assert.equal(boss.currentHealth, boss.maxHealth - bullets[0].damage);
+        const expectedPush = type === EnemyType.WORM ? 0 : bullets[0].pushBackForce * .08;
+        assert.ok(Math.abs((boss.x - 200) - expectedPush) < 1e-8);
+    }
+});
 test('double barrel spends two shells across two shots, finishes after release, then reloads', () => {
     const w = createWeapon('double-barrel');
     assert.equal(w.tryFire(0, 0, 0, 0)?.length, 4);

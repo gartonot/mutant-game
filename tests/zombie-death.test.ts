@@ -39,6 +39,6 @@ test('burn death remembers flame direction; fat zombies reserve their body for f
     assert.deepEqual(enemy.deathBurst!.palette, ['#703733', '#87423b', '#964c42']);
     assert.equal(tank.deathBurst, undefined);
     const boss = new Enemy(0, 0, EnemyType.BOSS);
-    boss.receiveDamage(99, 0);
+    boss.receiveDamage(boss.maxHealth, 0);
     assert.deepEqual(boss.deathBurst!.palette, ['#703733', '#87423b', '#964c42']);
 });

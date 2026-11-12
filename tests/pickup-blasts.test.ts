@@ -38,12 +38,11 @@ test('gold blast tiers increase power but retain the requested fixed radii', () 
     iceBoss.setTarget(1000, 0); iceBoss.update(7999); assert.equal(iceBoss.x, iceBoss.speed * .25);
     iceBoss.update(1); assert.equal(iceBoss.x, iceBoss.speed * .5);
     iceBoss.update(1); assert.equal(iceBoss.x, iceBoss.speed * 1.5);
-    iceBoss.receiveDamage(18); assert.equal(iceBoss.isDead, true);
-    for (const [tier, remainder] of [['silver', 14], ['gold', 8]] as const) {
+    assert.equal(iceBoss.currentHealth, iceBoss.maxHealth - 2);
+    for (const [tier, damage] of [['silver', 6], ['gold', 12]] as const) {
         const boss = new Enemy(0, 0, EnemyType.BOSS);
         applyPickupBlast('fireBlast', tier, 0, 0, [boss]);
-        boss.receiveDamage(remainder - .1); assert.equal(boss.isDead, false);
-        boss.receiveDamage(.2); assert.equal(boss.isDead, true);
+        assert.equal(boss.currentHealth, boss.maxHealth - damage);
     }
 });
 
@@ -54,8 +53,7 @@ test('cluster explosion lasts 600 simulation milliseconds and cannot repeat game
     wave.update(599); assert.equal(wave.isExpired, false);
     wave.update(0); assert.equal(wave.isExpired, false, 'paused simulation does not advance waves');
     wave.update(1); assert.equal(wave.isExpired, true);
-    enemy.receiveDamage(13.9); assert.equal(enemy.isDead, false);
-    enemy.receiveDamage(.2); assert.equal(enemy.isDead, true);
+    assert.equal(enemy.currentHealth, enemy.maxHealth - 6);
 });
 
 test('world collection credits blast kills once and preserves their new drops after compacting', () => {

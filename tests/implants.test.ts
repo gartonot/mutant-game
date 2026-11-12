@@ -34,7 +34,7 @@ test('armor reduces actual enemy contact damage once without reducing healing', 
     resolvePlayerContact(player, enemy, false, 0, 1000, 1000);
     assert.equal(player.currentHp, 100 - enemy.damage * .98);
     assert.equal(player.damageTaken, enemy.damage * .98);
-    player.heal(1);
+    player.heal(1); player.updateHealing(400);
     assert.equal(player.currentHp, 101 - enemy.damage * .98);
     player.takeDamage(1000);
     assert.equal(player.currentHp, 0);

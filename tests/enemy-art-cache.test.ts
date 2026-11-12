@@ -70,7 +70,8 @@ test('enemy tint preparation retries failures, shares work and keeps allocation 
             const masks = canvases.filter(canvas => canvas.context?.fills.length);
             assert.equal(masks.length, 36);
             assert.equal(masks.filter(c => c.width === 738 && c.height === 695).length, 8, 'four zombie palettes share the original crop');
-            assert.equal(masks.filter(c => c.width === 412).length, 28, 'other sprites use 384px occupied width with padding');
+            assert.equal(masks.filter(c => Math.max(c.width, c.height) === 412).length, 28, 'cropped sprites use 384px on their longest side plus padding');
+            assert.equal(masks.filter(c => c.width === 408 && c.height === 412).length, 2, 'both maw tints cover the full upright body');
             for (const canvas of masks) {
                 const ctx = canvas.context!;
                 assert.equal(ctx.draws.length, 1);

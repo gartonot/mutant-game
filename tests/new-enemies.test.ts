@@ -13,7 +13,13 @@ test('enemy roles use configured movement, collider and contact damage', () => {
         assert.equal(enemy.canDamage(0), true); assert.equal(enemy.canDamage(100), false);
         enemy.applyFear(1000); assert.equal(enemy.canDamage(1000), false);
     }
-    assert.equal(new Enemy(0, 0, EnemyType.BOSS).damage, 5, 'boss contact is stronger than ordinary zombies');
+    const bosses = [EnemyType.BOSS, EnemyType.STEROID, EnemyType.TENTACLE, EnemyType.WORM]
+        .map(type => new Enemy(0, 0, type));
+    assert.ok(bosses[0].damage > ENEMY_CONFIGS[EnemyType.GRUNT].damageToPlayer);
+    for (let i = 1; i < bosses.length; i++) {
+        assert.ok(bosses[i].damage > bosses[i - 1].damage);
+        assert.ok(bosses[i].maxHealth > bosses[i - 1].maxHealth);
+    }
 });
 
 test('bugs weave to both sides while closing in and ordinary enemies keep a straight path', () => {

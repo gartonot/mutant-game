@@ -48,8 +48,7 @@ test('artillery hits visible enemies exactly once, credits kills, and excludes o
         assert.equal(world.activateAbility(), false);
         assert.equal(state.kills, 1); assert.equal(offscreen.isDead, false);
         world.update(500); world.update(500);
-        boss.receiveDamage(13.9); assert.equal(boss.isDead, false, 'visual bursts must not deal extra damage');
-        boss.receiveDamage(.2); assert.equal(boss.isDead, true);
+        assert.equal(boss.currentHealth, boss.maxHealth - 6, 'visual bursts must not deal extra damage');
     });
 });
 

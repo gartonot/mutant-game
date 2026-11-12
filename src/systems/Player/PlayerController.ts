@@ -38,8 +38,8 @@ export class PlayerController implements IGameEntity {
     private onFireVisualEffect: ((x: number, y: number, angle: number) => void) | null = null;
 
     constructor(player: Player, input: InputSystem, weapons: readonly (IWeapon | null)[],
-        private readonly createRunWeapon: (id: WeaponId) => IWeapon = createWeapon) {
-        this.weaponController = new PlayerWeaponController(weapons, () => this.simulationTime);
+        private readonly createRunWeapon: (id: WeaponId) => IWeapon = createWeapon, normalAmmoBonus = 0) {
+        this.weaponController = new PlayerWeaponController(weapons, () => this.simulationTime, normalAmmoBonus);
         this.input = input;
         this.player = player;
         this.movementController = new PlayerMovementController(player, input);
@@ -48,8 +48,7 @@ export class PlayerController implements IGameEntity {
     update(deltaMs = 1000 / 60) {
         this.simulationTime += deltaMs;
         this.player.updateEnemyEffects(deltaMs);
-        this.player.updatePickupHealing(deltaMs);
-        this.player.updateRegeneration(deltaMs);
+        this.player.updateHealing(deltaMs);
         this.player.updateBonuses(deltaMs);
         this.bonusHUD.update(deltaMs, this.player.bonusProgress, this.player.bonusOrder, this.player.bonusTiers);
         this.weaponController.setPickupModifiers(this.player.pickupDamageMultiplier, this.player.pickupAttackSpeed);
@@ -161,7 +160,7 @@ export class PlayerController implements IGameEntity {
 
     public collectPickup(kind: Exclude<PickupKind, 'ammo' | 'weapon'>, tier: PickupTier = 'silver', activated = false): void {
         if (this.player.currentHp <= 0) return;
-        if (kind === 'health') this.player.startPickupHealing(tier === 'gold' ? 100 : 50);
+        if (kind === 'health') this.player.heal(tier === 'gold' ? 100 : 50);
         else if (kind !== 'iceBlast' && kind !== 'fireBlast') this.player.activateBonus(kind, tier);
         this.bonusHUD.notifyPickup(kind, tier, activated);
         this.bonusHUD.update(0, this.player.bonusProgress, this.player.bonusOrder, this.player.bonusTiers);

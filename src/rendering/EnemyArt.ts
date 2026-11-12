@@ -19,7 +19,7 @@ const sprites: Record<EnemyType | 'fat-corpse' | 'tank-green' | 'fat-corpse-gree
     [EnemyType.JUMPER]: { url: new URL('../assets/enemies/v3/jumper.png', import.meta.url).href, bounds: [12,12,384,281] },
     [EnemyType.STEROID]: { url: new URL('../assets/enemies/v3/steroid.png', import.meta.url).href, bounds: [12,12,384,306] },
     [EnemyType.TENTACLE]: { url: new URL('../assets/enemies/v3/tentacle.png', import.meta.url).href, bounds: [12,12,384,225] },
-    [EnemyType.WORM]: { url: new URL('../assets/enemies/v3/worm.png', import.meta.url).href, bounds: [12,12,384,134] },
+    [EnemyType.WORM]: { url: new URL('../assets/enemies/v3/worm.png', import.meta.url).href, bounds: [12,12,380,384] },
     'fat-corpse': { url: new URL('../assets/enemies/v3/fat-corpse.png', import.meta.url).href, bounds: [12,12,384,344] },
     'tank-green': { url: new URL('../assets/enemies/v3/tank-green.png', import.meta.url).href, bounds: [12,12,384,355] },
     'fat-corpse-green': { url: new URL('../assets/enemies/v3/fat-corpse-green.png', import.meta.url).href, bounds: [12,12,384,341] },
@@ -34,6 +34,8 @@ const bodyScale: Partial<Record<RasterEnemy, number>> = {
     [EnemyType.SPITTER]: 1.25, [EnemyType.TANK]: 1.2,
     'tank-green': 1.2, 'fat-corpse': 1.2, 'fat-corpse-green': 1.2,
     [EnemyType.LEECH]: 2.5,
+    [EnemyType.BOSS]: 1.35, [EnemyType.STEROID]: 1.3,
+    [EnemyType.TENTACLE]: 1.5, [EnemyType.WORM]: 1.6,
 };
 const images = new Map<RasterEnemy, ReturnType<typeof createLazyImageAsset>>();
 export type EnemyTint = 'ice' | 'fire';

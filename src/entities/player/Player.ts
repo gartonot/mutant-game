@@ -42,12 +42,13 @@ export class Player {
     maxHp = 100;
     currentHp = 100;
     damageTaken = 0;
+    healingReceived = 0;
     damageReduction = 0;
     regeneration = 0;
     bonusGroundDuration = 1;
     bonusDuration = 1;
     private regenerationElapsed = 0;
-    private pickupHealing: { remainingMs: number; hpPerMs: number }[] = [];
+    private healingCourses: { remainingHp: number; remainingMs: number }[] = [];
     private bonusTimers: Record<TemporaryBonus, number> = { rapidFire: 0, moveSpeed: 0, doubleDamage: 0, shield: 0 };
     private bonusDurations: Record<TemporaryBonus, number> = { rapidFire: 0, moveSpeed: 0, doubleDamage: 0, shield: 0 };
     private bonusPickupOrder: TemporaryBonus[] = [];
@@ -101,52 +102,78 @@ export class Player {
         this.currentHp -= damage;
         if (this.currentHp <= 0) {
             this.currentHp = 0;
-            this.pickupHealing = [];
+            this.healingCourses = []; this.regenerationElapsed = 0;
             console.log('💀 Game Over');
         }
     }
 
-    heal(amount: number) {
-        if (this.currentHp <= 0 || !Number.isFinite(amount) || amount <= 0) return;
-        this.currentHp += amount;
-        if (this.currentHp > this.maxHp) {
-            this.currentHp = this.maxHp;
-        }
+    /** Reserve only HP still missing after previously accepted healing finishes. */
+    private get unreservedMissingHp(): number {
+        const pending = this.healingCourses.reduce((sum, course) => sum + course.remainingHp, 0);
+        return Math.max(0, this.maxHp - this.currentHp - pending);
     }
 
-    /** Each medkit restores its health over 400 active simulation milliseconds. */
-    startPickupHealing(amount: number): void {
-        if (this.currentHp <= 0 || !Number.isFinite(amount) || amount <= 0) return;
-        const healing = Math.min(amount, this.maxHp - this.currentHp);
-        if (healing > 0) this.pickupHealing.push({ remainingMs: 400, hpPerMs: healing / 400 });
+    private creditHealing(amount: number): void {
+        const received = Math.min(this.maxHp - this.currentHp, amount);
+        if (received <= 0) return;
+        this.currentHp += received;
+        this.healingReceived += received;
     }
 
-    updatePickupHealing(deltaMs: number): void {
+    /** Award a discrete heal over simulation time. Damage does not enlarge or cancel the accepted course. */
+    heal(amount: number, durationMs = 400): void {
+        if (this.currentHp <= 0 || !Number.isFinite(amount) || amount <= 0 || !Number.isFinite(durationMs) || durationMs <= 0) return;
+        const accepted = Math.min(amount, this.unreservedMissingHp);
+        if (accepted > 0) this.healingCourses.push({ remainingHp: accepted, remainingMs: durationMs });
+    }
+
+    updateHealing(deltaMs: number): void {
         if (this.currentHp <= 0) {
-            this.pickupHealing = [];
-            return;
-        }
-        if (!Number.isFinite(deltaMs) || deltaMs <= 0) return;
-        for (const healing of this.pickupHealing) {
-            const elapsed = Math.min(deltaMs, healing.remainingMs);
-            this.heal(elapsed * healing.hpPerMs);
-            healing.remainingMs -= elapsed;
-        }
-        this.pickupHealing = this.currentHp >= this.maxHp
-            ? [] : this.pickupHealing.filter(healing => healing.remainingMs > 1e-7);
-    }
-
-    /** Called only by the active simulation; regeneration ticks once per game second. */
-    updateRegeneration(deltaMs: number) {
-        if (this.currentHp <= 0 || this.regeneration <= 0) {
+            this.healingCourses.length = 0;
             this.regenerationElapsed = 0;
             return;
         }
         if (!Number.isFinite(deltaMs) || deltaMs <= 0) return;
-        this.regenerationElapsed += deltaMs;
-        const ticks = Math.floor((this.regenerationElapsed + 1e-7) / 1000);
-        if (ticks === 0) return;
-        this.regenerationElapsed = Math.max(0, this.regenerationElapsed - ticks * 1000);
-        this.heal(ticks * this.regeneration);
+        if (!Number.isFinite(this.regeneration) || this.regeneration <= 0) {
+            this.regenerationElapsed = 0;
+            this.advanceHealingCourses(deltaMs);
+            return;
+        }
+        // Keep the original one-second award clock. A new tick starts its own 400 ms course
+        // at the boundary, even when a large update spans several award and finish times.
+        let remaining = deltaMs;
+        while (remaining > 0) {
+            if (this.currentHp >= this.maxHp && !this.healingCourses.length) {
+                this.regenerationElapsed = (this.regenerationElapsed + remaining) % 1000;
+                break;
+            }
+            const step = Math.min(remaining, 1000 - this.regenerationElapsed);
+            this.advanceHealingCourses(step);
+            this.regenerationElapsed += step;
+            remaining -= step;
+            if (this.regenerationElapsed >= 1000 - 1e-7) {
+                this.regenerationElapsed = 0;
+                this.heal(this.regeneration);
+            }
+        }
     }
+
+    private advanceHealingCourses(deltaMs: number): void {
+        if (!this.healingCourses.length) return;
+        for (const course of this.healingCourses) {
+            const elapsed = Math.min(deltaMs, course.remainingMs);
+            const amount = course.remainingHp * (elapsed / course.remainingMs);
+            this.creditHealing(amount);
+            course.remainingMs -= elapsed;
+            course.remainingHp -= amount;
+        }
+        this.healingCourses = this.healingCourses.filter(course => course.remainingMs > 0);
+    }
+
+    /** Continuous sources award only the fraction earned in this active simulation step. */
+    healAtRate(hpPerSecond: number, deltaMs: number): void {
+        if (this.currentHp <= 0 || !Number.isFinite(hpPerSecond) || hpPerSecond <= 0 || !Number.isFinite(deltaMs) || deltaMs <= 0) return;
+        this.creditHealing(Math.min(this.unreservedMissingHp, hpPerSecond * deltaMs / 1000));
+    }
+
 }

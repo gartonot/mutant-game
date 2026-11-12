@@ -15,7 +15,9 @@ export class PlayerWeaponController {
     private dualWeaponsActive = false;
     private pickupDamage = 1;
     private pickupAttackSpeed = 1;
-    constructor(weapons: readonly (IWeapon | null)[], private readonly now = () => performance.now()) {
+    private readonly ammoBonusRemainders = new Map<AmmoCategory, number>();
+    constructor(weapons: readonly (IWeapon | null)[], private readonly now = () => performance.now(),
+        private readonly normalAmmoBonus = 0) {
         this.weapons = [...weapons];
         for (const weapon of weapons) {
             if (!weapon) continue;
@@ -51,8 +53,14 @@ export class PlayerWeaponController {
     }
     replenishAmmo(category: AmmoCategory): void {
         for (const weapon of this.weapons) {
-            if (weapon && WEAPON_DEFINITIONS[weapon.id].category === category && Number.isFinite(weapon.state.ammoCapacity))
-                weapon.state.addAmmo(Math.ceil(weapon.state.ammoCapacity * .25));
+            if (!weapon || WEAPON_DEFINITIONS[weapon.id].category !== category) continue;
+            const { ammoCapacity, ammoRemaining } = weapon.state;
+            if (!Number.isFinite(ammoCapacity) || ammoRemaining >= ammoCapacity) continue;
+            const refill = Math.min(Math.ceil(ammoCapacity * .25), ammoCapacity - ammoRemaining);
+            // Carry hundredths between pickups so small packs also earn the advertised percentage.
+            const hundredths = refill * Math.round(this.normalAmmoBonus * 100) + (this.ammoBonusRemainders.get(category) ?? 0);
+            this.ammoBonusRemainders.set(category, hundredths % 100);
+            weapon.state.addAmmo(refill + Math.floor(hundredths / 100));
         }
     }
     setPickupModifiers(damage: number, attackSpeed: number): void {

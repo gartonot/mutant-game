@@ -121,8 +121,10 @@ export class ArenaNavigation {
     private createField(radius: number): Field {
         const size = this.columns * this.rows;
         const blocked = new Uint8Array(size);
-        // Inflating by half a cell diagonal makes all points in a free cell safe for this body.
-        const clearance = radius + CELL / Math.SQRT2;
+        // Large bosses fit some passages only near their centerline. Validate the
+        // swept edges explicitly there; small bodies keep the cheaper inflated cells.
+        const checkEdges = radius >= 64;
+        const clearance = checkEdges ? radius : radius + CELL / Math.SQRT2;
         for (let index = 0; index < size; index++) {
             const point = this.center(index);
             if (point.x < ARENA_BORDER + clearance || point.x > this.width - ARENA_BORDER - clearance ||
@@ -165,6 +167,7 @@ export class ArenaNavigation {
                 if (nx < 0 || nx >= this.columns || ny < 0 || ny >= this.rows) continue;
                 const next = ny * this.columns + nx;
                 if (blocked[next] || (dx && dy && (blocked[y * this.columns + nx] || blocked[ny * this.columns + x]))) continue;
+                if (checkEdges && !this.clearSegment(this.center(index), this.center(next), radius)) continue;
                 neighbors[index * 8 + direction] = next;
             }
         }

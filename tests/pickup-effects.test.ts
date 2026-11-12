@@ -48,53 +48,76 @@ test('mixed tier pickups upgrade, refresh and reorder without downgrading active
 
 test('gold medkit restores 100 HP over 400 ms and respects maximum health', () => {
     const player = new Player(); player.maxHp = 200; player.currentHp = 30;
-    player.startPickupHealing(100);
-    player.updatePickupHealing(200); assert.equal(player.currentHp, 80);
-    player.updatePickupHealing(200); assert.equal(player.currentHp, 130);
+    player.heal(100);
+    player.updateHealing(200); assert.equal(player.currentHp, 80);
+    player.updateHealing(200); assert.equal(player.currentHp, 130);
     assert.deepEqual(player.bonusOrder, []);
-    player.startPickupHealing(100);
-    player.updatePickupHealing(400); assert.equal(player.currentHp, 200);
+    player.heal(100);
+    player.updateHealing(400); assert.equal(player.currentHp, 200);
 });
 
 test('medkit heals 50 HP smoothly over 400 ms without becoming a timed HUD bonus', () => {
     const player = new Player(); player.takeDamage(80);
-    player.startPickupHealing(50);
+    player.heal(50);
     assert.equal(player.currentHp, 20);
-    player.updatePickupHealing(200); assert.equal(player.currentHp, 45);
-    player.updatePickupHealing(200); assert.equal(player.currentHp, 70);
-    player.updatePickupHealing(1000); assert.equal(player.currentHp, 70);
+    player.updateHealing(200); assert.equal(player.currentHp, 45);
+    player.updateHealing(200); assert.equal(player.currentHp, 70);
+    player.updateHealing(1000); assert.equal(player.currentHp, 70);
     assert.deepEqual(player.bonusOrder, []);
     assert.deepEqual(player.activeBonuses, { rapidFire: 0, moveSpeed: 0, doubleDamage: 0, shield: 0 });
 });
 
 test('medkits cap at maximum, overlap independently, and discard unused healing at full health', () => {
     const player = new Player(); player.maxHp = 200; player.currentHp = 20;
-    player.startPickupHealing(50); player.updatePickupHealing(200);
-    player.startPickupHealing(50); player.updatePickupHealing(200);
+    player.heal(50); player.updateHealing(200);
+    player.heal(50); player.updateHealing(200);
     assert.equal(player.currentHp, 95);
-    player.updatePickupHealing(200); assert.equal(player.currentHp, 120);
-    player.currentHp = 180; player.startPickupHealing(50);
-    player.updatePickupHealing(200); assert.equal(player.currentHp, 190);
-    player.updatePickupHealing(200); assert.equal(player.currentHp, 200);
-    player.startPickupHealing(50); player.takeDamage(20);
-    player.updatePickupHealing(400); assert.equal(player.currentHp, 180);
+    player.updateHealing(200); assert.equal(player.currentHp, 120);
+    player.currentHp = 180; player.heal(50);
+    player.updateHealing(200); assert.equal(player.currentHp, 190);
+    player.updateHealing(200); assert.equal(player.currentHp, 200);
+    player.heal(50); player.takeDamage(20);
+    player.updateHealing(400); assert.equal(player.currentHp, 180);
 });
 
 test('medkit healing preserves subsequent damage and never resurrects the player', () => {
     const player = new Player(); player.currentHp = 40;
-    player.startPickupHealing(50); player.updatePickupHealing(200);
-    player.takeDamage(20); player.updatePickupHealing(200);
+    player.heal(50); player.updateHealing(200);
+    player.takeDamage(20); player.updateHealing(200);
     assert.equal(player.currentHp, 70);
-    player.startPickupHealing(50); player.takeDamage(100);
-    player.updatePickupHealing(400); player.startPickupHealing(50);
+    player.heal(50); player.takeDamage(100);
+    player.updateHealing(400); player.heal(50);
     assert.equal(player.currentHp, 0);
-    player.currentHp = 10; player.updatePickupHealing(400);
+    player.currentHp = 10; player.updateHealing(400);
     assert.equal(player.currentHp, 10);
 });
 
+test('overlapping sources reserve only missing HP and keep their accepted amount through incoming damage', () => {
+    const player = new Player(); player.currentHp = 80;
+    player.heal(50);
+    player.updateHealing(100);
+    assert.equal(player.currentHp, 85);
+    assert.equal(player.healingReceived, 5);
+    player.heal(100);
+    player.healAtRate(3, 1000);
+    assert.equal(player.healingReceived, 5, 'pending medkit already covers all missing HP');
+    player.takeDamage(25);
+    player.updateHealing(300);
+    assert.equal(player.currentHp, 75);
+    assert.equal(player.healingReceived, 20);
+    player.healAtRate(3, 500);
+    assert.equal(player.currentHp, 76.5);
+    assert.equal(player.healingReceived, 21.5);
+    player.heal(50);
+    player.takeDamage(100);
+    player.updateHealing(1000);
+    assert.equal(player.currentHp, 0);
+    assert.equal(player.healingReceived, 21.5);
+});
+
 test('medkit uses fixed simulation time and discards paused wall-clock time', () => {
-    const player = new Player(); player.currentHp = 20; player.startPickupHealing(50);
-    const clock = new FixedStep(), update = (dt: number) => player.updatePickupHealing(dt);
+    const player = new Player(); player.currentHp = 20; player.heal(50);
+    const clock = new FixedStep(), update = (dt: number) => player.updateHealing(dt);
     for (let tick = 0; tick <= 12; tick++) clock.advance(tick * STEP_MS, update);
     assert.ok(Math.abs(player.currentHp - 45) < 1e-7);
     clock.reset(); clock.advance(100000, update);
@@ -148,7 +171,7 @@ test('shield halves incoming damage after armor and restores normal damage on ex
     assert.equal(player.currentHp, 92); assert.equal(player.damageTaken, 8);
     player.updateBonuses(10000); player.takeDamage(20);
     assert.equal(player.currentHp, 76); assert.equal(player.damageTaken, 24);
-    player.heal(50); assert.equal(player.currentHp, 100);
+    player.heal(50); player.updateHealing(400); assert.equal(player.currentHp, 100);
     player.damageReduction = 0; player.activateBonus('shield'); player.takeDamage(20);
     assert.equal(player.currentHp, 90); assert.equal(player.damageTaken, 34);
 });

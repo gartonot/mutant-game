@@ -21,7 +21,7 @@ export function createGameWorld(bonuses: Bonuses = emptyBonuses(), character: Ch
     player.x = arena.width / 2;
     player.y = arena.height / 2;
     const input = new InputSystem();
-    const controller = new PlayerController(player, input, weapons, createRunWeapon);
+    const controller = new PlayerController(player, input, weapons, createRunWeapon, bonuses.normalAmmo);
     const gameWorld = new GameWorld(controller, undefined, undefined, undefined,
         loadout.consumables, loadout.consumableSlotsUnlocked);
     const disposeWorld = gameWorld.dispose.bind(gameWorld);

@@ -131,7 +131,7 @@ export class ExtendedCharacterAbilities {
         } else if (kind === 'half-mutant' || kind === 'fanatic' || kind === 'telepath' || kind === 'witcher') {
             if (kind === 'witcher') {
                 this.followAim(delta, 360);
-                this.player.heal(3 * delta / 1000);
+                this.player.healAtRate(3, delta);
             }
             this.pulseElapsed += delta;
             const interval = kind === 'telepath' ? 500 : 250;
@@ -146,9 +146,10 @@ export class ExtendedCharacterAbilities {
                     struck = true;
                     if (kind === 'telepath') enemy.applyEffect({ burnMs: 1000, burnDps: 1 });
                     enemy.receiveDamage(kind === 'half-mutant' || kind === 'fanatic' ? 1 : .5);
-                    if (kind === 'half-mutant' && healed < 2) { this.player.heal(.5); healed += .5; }
+                    if (kind === 'half-mutant' && healed < 2) healed += .5;
                 }
                 if (kind === 'half-mutant' && struck) {
+                    this.player.heal(healed, interval);
                     this.mutantStrikeTimes[this.mutantNextHand] = this.elapsed - this.pulseElapsed;
                     this.mutantNextHand = 1 - this.mutantNextHand;
                 }

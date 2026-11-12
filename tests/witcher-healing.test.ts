@@ -47,7 +47,7 @@ test('swarm healing caps at max HP without banking overheal and adds to normal r
     player.currentHp = 30;
     ability.update(4000);
     close(player.currentHp, 42);
-    player.updateRegeneration(6000);
+    player.updateHealing(6400);
     close(player.currentHp, 46.8);
 });
 

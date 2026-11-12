@@ -2,6 +2,8 @@ import { achievements, bonusesOf, formatBonus, formatTime, levelOf, progressOf }
 import type { Achievement, Bonuses, RunStats, Totals } from '@/progression/Achievements';
 import './rewards.css';
 
+const activeRewardEffects = new Set<keyof Bonuses>(['health', 'damage', 'speed', 'normalAmmo']);
+
 function icon(achievement: Achievement, level: number) {
     const tier = level >= 4 ? 'gold' : level >= 2 ? 'blue' : 'silver';
     return `<span class="award-icon ${tier} ${level === 0 ? 'locked' : ''}" data-award-icon="${achievement.icon}" aria-hidden="true"><b>${level}</b></span>`;
@@ -69,7 +71,7 @@ export class RewardsScreen {
         const bonuses = bonusesOf(totals);
         const bonusItems = (Object.keys(bonuses) as (keyof Bonuses)[])
             .filter((effect) => bonuses[effect] > 0)
-            .map((effect) => `<li>${formatBonus(effect, bonuses[effect])}${['health', 'damage', 'speed'].includes(effect) ? '' : ' · позже'}</li>`).join('');
+            .map((effect) => `<li>${formatBonus(effect, bonuses[effect])}${activeRewardEffects.has(effect) ? '' : ' · позже'}</li>`).join('');
         this.frame('Достижения', `<div class="achievement-layout"><aside class="player-summary"><h3 class="panel-tab">Моя статистика</h3><div class="summary-interior"><div class="player-profile">${icon(achievements[0], 0)}<strong>Игрок</strong></div><dl><div><dt>Сыграно боёв</dt><dd>${totals.games}</dd></div><div><dt>Уничтожено мутантов</dt><dd>${totals.kills}</dd></div><div><dt>Время в выживании</dt><dd>${formatTime(totals.seconds)}</dd></div><div><dt>Лучшее время</dt><dd>${formatTime(totals.bestSeconds)}</dd></div><div><dt>Пережито волн</dt><dd>${totals.waves}</dd></div></dl><h3 class="green-heading">Бонусы наград</h3><ul class="bonus-list">${bonusItems || '<li>Награды пока не получены.</li>'}</ul>${!storageAvailable ? '<p class="storage-notice" role="status">Браузер не разрешил сохранение. Прогресс доступен до закрытия страницы.</p>' : ''}</div></aside><section class="awards-panel"><h3 class="panel-tab">Мои награды</h3><div class="awards-interior"><h3 class="green-heading">Полученные награды (${earned.length})</h3>${earned.length ? `<div class="award-grid">${earned.map((achievement) => earnedTile(achievement, totals)).join('')}</div>` : '<p class="empty-awards">Пока нет полученных наград.</p>'}<h3 class="green-heading">Продвижение в наградах</h3><div class="award-progress-grid">${achievements.map((achievement) => progressRow(achievement, totals)).join('')}</div></div></section></div>`);
     }
 
@@ -94,7 +96,7 @@ export class RewardsScreen {
         const amount = achievement.perLevel * level;
         const currentBonus = formatBonus(achievement.effect, amount);
         const trackingNote = achievement.tracking === 'pending' ? '<small>Подсчёт подключим после добавления соответствующей игровой механики.</small>' : '';
-        const bonusNote = ['health', 'damage', 'speed'].includes(achievement.effect) ? 'Бонусы применяются в начале нового боя.' : 'Механика этого бонуса появится позже.';
+        const bonusNote = activeRewardEffects.has(achievement.effect) ? 'Бонусы применяются в начале нового боя.' : 'Механика этого бонуса появится позже.';
         this.tooltip.innerHTML = `<div class="tooltip-heading">${icon(achievement, level)}<div><strong>${achievement.name}</strong><span>${level} уровень${!complete ? ` · ${current} / ${target}${unit}` : ' · Максимум'}</span></div></div>${!complete ? `<progress max="${target}" value="${current}"></progress>` : ''}<p>${achievement.requirement}</p><div class="tooltip-bonus">${achievement.bonus}</div><small>Текущий бонус: ${currentBonus}.<br>${bonusNote}</small>${trackingNote}`;
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             for (const child of this.tooltip.children) {
