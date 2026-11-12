@@ -163,14 +163,14 @@ export class UpgradesScreen {
         this.element.querySelector('.upgrade-drawer-total')!.textContent = `${title}: ${total} / ${this.state.limit}`;
         const remaining = this.element.querySelector('.upgrade-drawer-points b')!;
         remaining.textContent = String(this.state.remaining);
-        remaining.setAttribute('aria-label', `Доступные очки: ${this.state.remaining}`);
+        remaining.setAttribute('aria-label', `Общий остаток очков улучшений: ${this.state.remaining}`);
         this.element.querySelectorAll<HTMLElement>('.upgrade-card').forEach((card, index) => {
             const item = this.items[index], points = this.points(item.id);
             const value = card.querySelector('.upgrade-value')!;
             value.textContent = String(points);
             value.setAttribute('aria-label', `Прокачка: ${points}`);
             card.querySelector<HTMLButtonElement>('[data-change="-1"]')!.disabled = points === 0;
-            card.querySelector<HTMLButtonElement>('[data-change="1"]')!.disabled = this.state.remaining === 0;
+            card.querySelector<HTMLButtonElement>('[data-change="1"]')!.disabled = !this.state.canIncrease;
             card.querySelector('.upgrade-card-summary')!.innerHTML = this.summary(item);
             const step = this.state.section === 'weapons' ? ARSENAL_STEP : IMPLANT_STEP;
             card.querySelectorAll('.upgrade-segments > span').forEach((segment, i) => segment.classList.toggle('active', i < points / step));

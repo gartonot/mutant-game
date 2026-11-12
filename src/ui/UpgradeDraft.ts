@@ -2,6 +2,7 @@ import { ARSENAL_CATEGORIES, ARSENAL_LIMIT, ARSENAL_STEP, EMPTY_ARSENAL, validat
 import type { ArsenalAllocation } from '@/gameplay/arsenal';
 import { EMPTY_IMPLANTS, IMPLANT_LIMIT, IMPLANT_STEP, validateImplants } from '@/gameplay/implants';
 import type { ImplantAllocation } from '@/gameplay/implants';
+import { remainingUpgradePoints } from '@/gameplay/upgradePoints';
 
 export type UpgradeSection = 'weapons' | 'implants';
 const implantIds: readonly (keyof ImplantAllocation)[] = ['health', 'attackSpeed', 'damage', 'moveSpeed', 'armor'];
@@ -30,7 +31,11 @@ export class UpgradeDraft {
         const allocation = this.section === 'weapons' ? this.draftArsenal : this.draftImplants;
         return Object.values(allocation).reduce((sum, value) => sum + value, 0);
     }
-    get remaining(): number { return this.limit - this.total; }
+    get remaining(): number { return remainingUpgradePoints(this.draftImplants, this.draftArsenal); }
+    get canIncrease(): boolean {
+        const step = this.section === 'weapons' ? ARSENAL_STEP : IMPLANT_STEP;
+        return !!this.section && this.remaining >= step && this.total + step <= this.limit;
+    }
 
     open(section: UpgradeSection): void {
         this.cancel();
@@ -43,6 +48,7 @@ export class UpgradeDraft {
         if (!this.section) return false;
         const step = this.section === 'weapons' ? ARSENAL_STEP : IMPLANT_STEP;
         if (delta !== step && delta !== -step) return false;
+        if (delta > 0 && !this.canIncrease) return false;
         if (this.section === 'weapons') {
             if (!ARSENAL_CATEGORIES.includes(id as keyof ArsenalAllocation)) return false;
             const key = id as keyof ArsenalAllocation;
